@@ -1,7 +1,7 @@
 ﻿'use client'
 
 import { useState } from 'react'
-import { X, CreditCard, Building2, Smartphone, Check, Copy, Loader2, ArrowRight, Wallet } from 'lucide-react'
+import { X, CreditCard, Building2, Smartphone, Check, Copy, Loader2, ArrowRight } from 'lucide-react'
 
 interface PaymentModalProps {
   isOpen: boolean
@@ -24,8 +24,8 @@ export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES'
 
   if (!isOpen) return null
 
-  const presetAmounts = selectedCurrency === 'KES' 
-    ? [500, 1000, 2500, 5000, 10000] 
+  const presetAmounts = selectedCurrency === 'KES'
+    ? [500, 1000, 2500, 5000, 10000]
     : [5, 10, 25, 50, 100]
 
   const handleCopy = (text: string) => {
@@ -35,88 +35,46 @@ export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES'
   }
 
   const paymentMethods = [
-    {
-      id: 'mpesa' as PaymentMethod,
-      name: 'M-PESA',
-      icon: Smartphone,
-      description: 'Pay via M-PESA STK Push',
-      color: 'bg-green-500',
-    },
-    {
-      id: 'card' as PaymentMethod,
-      name: 'Card Payment',
-      icon: CreditCard,
-      description: 'Visa, Mastercard, Amex',
-      color: 'bg-blue-500',
-    },
-    {
-      id: 'bank' as PaymentMethod,
-      name: 'Bank Transfer',
-      icon: Building2,
-      description: 'Direct bank transfer',
-      color: 'bg-purple-500',
-    },
+    { id: 'mpesa' as PaymentMethod, name: 'M-PESA', icon: Smartphone, description: 'Pay via M-PESA STK Push', color: 'bg-green-500' },
+    { id: 'card' as PaymentMethod, name: 'Card Payment', icon: CreditCard, description: 'Visa, Mastercard, Amex', color: 'bg-blue-500' },
+    { id: 'bank' as PaymentMethod, name: 'Bank Transfer', icon: Building2, description: 'Direct bank transfer', color: 'bg-purple-500' },
   ]
 
   const renderAmountStep = () => (
     <div className='space-y-6'>
       <div className='flex gap-2'>
         {(['KES', 'USD'] as const).map((curr) => (
-          <button
-            key={curr}
-            onClick={() => setSelectedCurrency(curr)}
-            className={`flex-1 py-2 px-4 rounded-lg font-mono text-sm font-medium transition-all ${
-              selectedCurrency === curr
-                ? 'bg-gradient-to-r from-titan-maroon to-red-700 text-white'
-                : 'bg-white/5 text-gray-400 hover:bg-white/10'
-            }`}
-          >
+          <button key={curr} onClick={() => setSelectedCurrency(curr)}
+            className={`flex-1 py-2 px-4 rounded-lg font-mono text-sm font-medium transition-all ${selectedCurrency === curr ? 'bg-gradient-to-r from-titan-maroon to-red-700 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
             {curr}
           </button>
         ))}
       </div>
-
       <div className='text-center py-6'>
         <p className='text-sm text-gray-400 mb-2'>Amount</p>
         <div className='flex items-center justify-center gap-2'>
-          <span className='text-3xl font-mono text-gray-500'>
-            {selectedCurrency === 'KES' ? 'KSh' : '$'}
-          </span>
-          <input
-            type='number'
-            value={customAmount}
-            onChange={(e) => setCustomAmount(e.target.value)}
-            className='text-5xl font-display font-bold bg-transparent text-white text-center w-48 focus:outline-none'
-          />
+          <span className='text-3xl font-mono text-gray-500'>{selectedCurrency === 'KES' ? 'KSh' : '$'}</span>
+          <input type='number' value={customAmount} onChange={(e) => setCustomAmount(e.target.value)}
+            className='text-5xl font-display font-bold bg-transparent text-white text-center w-48 focus:outline-none' />
         </div>
       </div>
-
       <div className='flex flex-wrap gap-2'>
         {presetAmounts.map((preset) => (
-          <button
-            key={preset}
-            onClick={() => setCustomAmount(preset.toString())}
-            className='px-4 py-2 rounded-lg bg-white/5 text-gray-300 font-mono text-sm hover:bg-white/10 transition-all border border-white/10'
-          >
+          <button key={preset} onClick={() => setCustomAmount(preset.toString())}
+            className='px-4 py-2 rounded-lg bg-white/5 text-gray-300 font-mono text-sm hover:bg-white/10 transition-all border border-white/10'>
             {selectedCurrency === 'KES' ? 'KSh' : '$'}{preset}
           </button>
         ))}
       </div>
-
       {jobTitle && (
         <div className='p-4 rounded-xl bg-white/5 border border-white/10'>
           <p className='text-xs text-gray-500 mb-1'>Paying for</p>
           <p className='text-sm text-white font-medium truncate'>{jobTitle}</p>
         </div>
       )}
-
-      <button
-        onClick={() => setStep('method')}
-        disabled={!customAmount || parseFloat(customAmount) <= 0}
-        className='w-full py-4 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-      >
-        Continue
-        <ArrowRight className='w-4 h-4' />
+      <button onClick={() => setStep('method')} disabled={!customAmount || parseFloat(customAmount) <= 0}
+        className='w-full py-4 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed'>
+        Continue <ArrowRight className='w-4 h-4' />
       </button>
     </div>
   )
@@ -124,25 +82,15 @@ export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES'
   const renderMethodStep = () => (
     <div className='space-y-4'>
       <div className='text-center mb-6'>
-        <p className='text-3xl font-display font-bold text-white'>
-          {selectedCurrency === 'KES' ? 'KSh' : '$'}{parseFloat(customAmount).toLocaleString()}
-        </p>
+        <p className='text-3xl font-display font-bold text-white'>{selectedCurrency === 'KES' ? 'KSh' : '$'}{parseFloat(customAmount).toLocaleString()}</p>
         <p className='text-sm text-gray-400 mt-1'>Select payment method</p>
       </div>
-
       <div className='space-y-3'>
         {paymentMethods.map((method) => {
           const Icon = method.icon
           return (
-            <button
-              key={method.id}
-              onClick={() => setPaymentMethod(method.id)}
-              className={`w-full p-4 rounded-xl border transition-all flex items-center gap-4 ${
-                paymentMethod === method.id
-                  ? 'border-titan-maroon bg-titan-maroon/10'
-                  : 'border-white/10 bg-white/5 hover:bg-white/10'
-              }`}
-            >
+            <button key={method.id} onClick={() => setPaymentMethod(method.id)}
+              className={`w-full p-4 rounded-xl border transition-all flex items-center gap-4 ${paymentMethod === method.id ? 'border-titan-maroon bg-titan-maroon/10' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}>
               <div className={`w-10 h-10 rounded-lg ${method.color} flex items-center justify-center`}>
                 <Icon className='w-5 h-5 text-white' />
               </div>
@@ -150,27 +98,14 @@ export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES'
                 <p className='text-white font-medium'>{method.name}</p>
                 <p className='text-xs text-gray-400'>{method.description}</p>
               </div>
-              {paymentMethod === method.id && (
-                <Check className='w-5 h-5 text-titan-maroon' />
-              )}
+              {paymentMethod === method.id && <Check className='w-5 h-5 text-titan-maroon' />}
             </button>
           )
         })}
       </div>
-
       <div className='flex gap-3 mt-6'>
-        <button
-          onClick={() => setStep('amount')}
-          className='flex-1 py-3 rounded-xl bg-white/5 text-gray-300 font-medium hover:bg-white/10 transition-all'
-        >
-          Back
-        </button>
-        <button
-          onClick={() => setStep('processing')}
-          className='flex-1 py-3 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium hover:opacity-90 transition-all'
-        >
-          Pay Now
-        </button>
+        <button onClick={() => setStep('amount')} className='flex-1 py-3 rounded-xl bg-white/5 text-gray-300 font-medium hover:bg-white/10 transition-all'>Back</button>
+        <button onClick={() => setStep('processing')} className='flex-1 py-3 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium hover:opacity-90 transition-all'>Pay Now</button>
       </div>
     </div>
   )
@@ -188,34 +123,6 @@ export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES'
           {paymentMethod === 'bank' && 'Verifying bank transfer...'}
         </p>
       </div>
-      {paymentMethod === 'mpesa' && (
-        <div className='p-4 rounded-xl bg-white/5 border border-white/10 max-w-xs mx-auto'>
-          <p className='text-xs text-gray-500 mb-2'>Enter M-PESA PIN on your phone</p>
-          <p className='font-mono text-lg text-white tracking-widest'>• • • •</p>
-        </div>
-      )}
-      {paymentMethod === 'bank' && (
-        <div className='p-4 rounded-xl bg-white/5 border border-white/10 max-w-xs mx-auto space-y-2'>
-          <p className='text-xs text-gray-500 mb-3'>Transfer to this account:</p>
-          <div className='flex justify-between text-sm'>
-            <span className='text-gray-400'>Bank</span>
-            <span className='text-white font-mono'>KCB Bank</span>
-          </div>
-          <div className='flex justify-between text-sm'>
-            <span className='text-gray-400'>Account</span>
-            <div className='flex items-center gap-2'>
-              <span className='text-white font-mono'>1234567890</span>
-              <button onClick={() => handleCopy('1234567890')} className='text-titan-maroon hover:text-titan-gold'>
-                {copied ? <Check className='w-3 h-3' /> : <Copy className='w-3 h-3' />}
-              </button>
-            </div>
-          </div>
-          <div className='flex justify-between text-sm'>
-            <span className='text-gray-400'>Amount</span>
-            <span className='text-white font-mono'>{selectedCurrency} {customAmount}</span>
-          </div>
-        </div>
-      )}
     </div>
   )
 
@@ -231,17 +138,14 @@ export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES'
       <div className='p-4 rounded-xl bg-white/5 border border-white/10 max-w-xs mx-auto'>
         <div className='flex justify-between text-sm'>
           <span className='text-gray-400'>Amount</span>
-          <span className='text-white font-mono'>{selectedCurrency === 'KES' ? 'KSh' : '$'}{parseFloat(customAmount).toLocaleString()}</span>
+          <span className='text-white font-mono'>{selectedCurrency} {customAmount}</span>
         </div>
         <div className='flex justify-between text-sm mt-2'>
           <span className='text-gray-400'>Reference</span>
           <span className='text-white font-mono'>TXN{Date.now().toString(36).toUpperCase()}</span>
         </div>
       </div>
-      <button
-        onClick={onClose}
-        className='w-full py-3 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium hover:opacity-90 transition-all'
-      >
+      <button onClick={onClose} className='w-full py-3 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium hover:opacity-90 transition-all'>
         Done
       </button>
     </div>
@@ -252,7 +156,6 @@ export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES'
       <div className='absolute inset-0 bg-black/80 backdrop-blur-sm' onClick={onClose} />
       <div className='relative w-full max-w-md bg-gradient-to-b from-[#1a1a2e] to-[#16213e] rounded-2xl border border-white/10 shadow-2xl overflow-hidden'>
         <div className='absolute inset-0 bg-gradient-to-r from-titan-maroon/5 via-transparent to-titan-gold/5' />
-        
         <div className='relative p-6 border-b border-white/10'>
           <div className='flex items-center justify-between'>
             <h2 className='text-xl font-display font-bold text-white'>
@@ -261,15 +164,11 @@ export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES'
               {step === 'processing' && 'Processing'}
               {step === 'success' && 'Complete'}
             </h2>
-            <button
-              onClick={onClose}
-              className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all'
-            >
+            <button onClick={onClose} className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all'>
               <X className='w-4 h-4 text-gray-400' />
             </button>
           </div>
         </div>
-
         <div className='relative p-6'>
           {step === 'amount' && renderAmountStep()}
           {step === 'method' && renderMethodStep()}
