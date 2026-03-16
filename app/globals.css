@@ -1,0 +1,59 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --titan-dark: #070F1A;
+  --titan-gold: #C9A84C;
+  --titan-maroon: #4A0404;
+  --titan-blue: #1A2A44;
+  --titan-silver: #B8B8B8;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--titan-gold) var(--titan-dark);
+}
+
+*::-webkit-scrollbar { width: 6px; }
+*::-webkit-scrollbar-track { background: var(--titan-dark); }
+*::-webkit-scrollbar-thumb { background: var(--titan-gold); border-radius: 3px; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #020202;
+  color: #F5F5DC;
+}
+
+.embossed-gold {
+  color: #C9A84C;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5), -1px -1px 0px rgba(255,255,255,0.1);
+  letter-spacing: 2px;
+}
+
+.glass-panel {
+  background: rgba(7, 15, 26, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.gold-glow {
+  box-shadow: 0 0 30px rgba(201, 168, 76, 0.2), 0 0 60px rgba(201, 168, 76, 0.1);
+}
+
+.gradient-mesh {
+  background: 
+    radial-gradient(ellipse at 20% 30%, rgba(74, 4, 4, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(26, 42, 68, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(201, 168, 76, 0.05) 0%, transparent 70%),
+    #020202;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
