@@ -1,228 +1,280 @@
 ﻿'use client'
 
 import { useState } from 'react'
+import { X, CreditCard, Building2, Smartphone, Check, Copy, Loader2, ArrowRight, Wallet } from 'lucide-react'
 
 interface PaymentModalProps {
+  isOpen: boolean
   onClose: () => void
+  amount: number
+  currency?: string
+  jobId?: string
+  jobTitle?: string
 }
 
-const paymentMethods = [
-  { id: 'mpesa', name: 'M-Pesa', icon: '📱', currencies: ['KES'] },
-  { id: 'stripe', name: 'Stripe', icon: '💳', currencies: ['USD', 'KES'] },
-  { id: 'crypto', name: 'Crypto', icon: '₿', currencies: ['USD'] },
-]
+type PaymentMethod = 'mpesa' | 'card' | 'bank'
+type Currency = 'KES' | 'USD'
 
-export default function PaymentModal({ onClose }: PaymentModalProps) {
-  const [amount, setAmount] = useState('')
-  const [currency, setCurrency] = useState<'KES' | 'USD'>('KES')
-  const [method, setMethod] = useState('mpesa')
-  const [phone, setPhone] = useState('')
-  const [step, setStep] = useState<'amount' | 'details' | 'processing' | 'success'>('amount')
-  const [error, setError] = useState('')
+export default function PaymentModal({ isOpen, onClose, amount, currency = 'KES', jobId, jobTitle }: PaymentModalProps) {
+  const [step, setStep] = useState<'amount' | 'method' | 'processing' | 'success'>('amount')
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('mpesa')
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>(currency as Currency)
+  const [customAmount, setCustomAmount] = useState(amount.toString())
+  const [copied, setCopied] = useState(false)
 
-  const handleAmountSubmit = () => {
-    const numAmount = parseFloat(amount)
-    if (isNaN(numAmount) || numAmount <= 0) {
-      setError('Please enter a valid amount')
-      return
-    }
-    setError('')
-    setStep('details')
+  if (!isOpen) return null
+
+  const presetAmounts = selectedCurrency === 'KES' 
+    ? [500, 1000, 2500, 5000, 10000] 
+    : [5, 10, 25, 50, 100]
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
-  const handlePayment = async () => {
-    if (method === 'mpesa' && !phone) {
-      setError('Please enter your M-Pesa phone number')
-      return
-    }
-    setError('')
-    setStep('processing')
-    await new Promise(resolve => setTimeout(resolve, 3000))
-    setStep('success')
-  }
+  const paymentMethods = [
+    {
+      id: 'mpesa' as PaymentMethod,
+      name: 'M-PESA',
+      icon: Smartphone,
+      description: 'Pay via M-PESA STK Push',
+      color: 'bg-green-500',
+    },
+    {
+      id: 'card' as PaymentMethod,
+      name: 'Card Payment',
+      icon: CreditCard,
+      description: 'Visa, Mastercard, Amex',
+      color: 'bg-blue-500',
+    },
+    {
+      id: 'bank' as PaymentMethod,
+      name: 'Bank Transfer',
+      icon: Building2,
+      description: 'Direct bank transfer',
+      color: 'bg-purple-500',
+    },
+  ]
+
+  const renderAmountStep = () => (
+    <div className='space-y-6'>
+      <div className='flex gap-2'>
+        {(['KES', 'USD'] as const).map((curr) => (
+          <button
+            key={curr}
+            onClick={() => setSelectedCurrency(curr)}
+            className={`flex-1 py-2 px-4 rounded-lg font-mono text-sm font-medium transition-all ${
+              selectedCurrency === curr
+                ? 'bg-gradient-to-r from-titan-maroon to-red-700 text-white'
+                : 'bg-white/5 text-gray-400 hover:bg-white/10'
+            }`}
+          >
+            {curr}
+          </button>
+        ))}
+      </div>
+
+      <div className='text-center py-6'>
+        <p className='text-sm text-gray-400 mb-2'>Amount</p>
+        <div className='flex items-center justify-center gap-2'>
+          <span className='text-3xl font-mono text-gray-500'>
+            {selectedCurrency === 'KES' ? 'KSh' : '$'}
+          </span>
+          <input
+            type='number'
+            value={customAmount}
+            onChange={(e) => setCustomAmount(e.target.value)}
+            className='text-5xl font-display font-bold bg-transparent text-white text-center w-48 focus:outline-none'
+          />
+        </div>
+      </div>
+
+      <div className='flex flex-wrap gap-2'>
+        {presetAmounts.map((preset) => (
+          <button
+            key={preset}
+            onClick={() => setCustomAmount(preset.toString())}
+            className='px-4 py-2 rounded-lg bg-white/5 text-gray-300 font-mono text-sm hover:bg-white/10 transition-all border border-white/10'
+          >
+            {selectedCurrency === 'KES' ? 'KSh' : '$'}{preset}
+          </button>
+        ))}
+      </div>
+
+      {jobTitle && (
+        <div className='p-4 rounded-xl bg-white/5 border border-white/10'>
+          <p className='text-xs text-gray-500 mb-1'>Paying for</p>
+          <p className='text-sm text-white font-medium truncate'>{jobTitle}</p>
+        </div>
+      )}
+
+      <button
+        onClick={() => setStep('method')}
+        disabled={!customAmount || parseFloat(customAmount) <= 0}
+        className='w-full py-4 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+      >
+        Continue
+        <ArrowRight className='w-4 h-4' />
+      </button>
+    </div>
+  )
+
+  const renderMethodStep = () => (
+    <div className='space-y-4'>
+      <div className='text-center mb-6'>
+        <p className='text-3xl font-display font-bold text-white'>
+          {selectedCurrency === 'KES' ? 'KSh' : '$'}{parseFloat(customAmount).toLocaleString()}
+        </p>
+        <p className='text-sm text-gray-400 mt-1'>Select payment method</p>
+      </div>
+
+      <div className='space-y-3'>
+        {paymentMethods.map((method) => {
+          const Icon = method.icon
+          return (
+            <button
+              key={method.id}
+              onClick={() => setPaymentMethod(method.id)}
+              className={`w-full p-4 rounded-xl border transition-all flex items-center gap-4 ${
+                paymentMethod === method.id
+                  ? 'border-titan-maroon bg-titan-maroon/10'
+                  : 'border-white/10 bg-white/5 hover:bg-white/10'
+              }`}
+            >
+              <div className={`w-10 h-10 rounded-lg ${method.color} flex items-center justify-center`}>
+                <Icon className='w-5 h-5 text-white' />
+              </div>
+              <div className='flex-1 text-left'>
+                <p className='text-white font-medium'>{method.name}</p>
+                <p className='text-xs text-gray-400'>{method.description}</p>
+              </div>
+              {paymentMethod === method.id && (
+                <Check className='w-5 h-5 text-titan-maroon' />
+              )}
+            </button>
+          )
+        })}
+      </div>
+
+      <div className='flex gap-3 mt-6'>
+        <button
+          onClick={() => setStep('amount')}
+          className='flex-1 py-3 rounded-xl bg-white/5 text-gray-300 font-medium hover:bg-white/10 transition-all'
+        >
+          Back
+        </button>
+        <button
+          onClick={() => setStep('processing')}
+          className='flex-1 py-3 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium hover:opacity-90 transition-all'
+        >
+          Pay Now
+        </button>
+      </div>
+    </div>
+  )
+
+  const renderProcessingStep = () => (
+    <div className='py-12 text-center space-y-6'>
+      <div className='w-20 h-20 mx-auto rounded-full bg-titan-maroon/20 flex items-center justify-center'>
+        <Loader2 className='w-10 h-10 text-titan-maroon animate-spin' />
+      </div>
+      <div>
+        <h3 className='text-xl font-display font-bold text-white mb-2'>Processing Payment</h3>
+        <p className='text-gray-400 text-sm'>
+          {paymentMethod === 'mpesa' && 'Waiting for M-PESA confirmation...'}
+          {paymentMethod === 'card' && 'Processing card payment...'}
+          {paymentMethod === 'bank' && 'Verifying bank transfer...'}
+        </p>
+      </div>
+      {paymentMethod === 'mpesa' && (
+        <div className='p-4 rounded-xl bg-white/5 border border-white/10 max-w-xs mx-auto'>
+          <p className='text-xs text-gray-500 mb-2'>Enter M-PESA PIN on your phone</p>
+          <p className='font-mono text-lg text-white tracking-widest'>• • • •</p>
+        </div>
+      )}
+      {paymentMethod === 'bank' && (
+        <div className='p-4 rounded-xl bg-white/5 border border-white/10 max-w-xs mx-auto space-y-2'>
+          <p className='text-xs text-gray-500 mb-3'>Transfer to this account:</p>
+          <div className='flex justify-between text-sm'>
+            <span className='text-gray-400'>Bank</span>
+            <span className='text-white font-mono'>KCB Bank</span>
+          </div>
+          <div className='flex justify-between text-sm'>
+            <span className='text-gray-400'>Account</span>
+            <div className='flex items-center gap-2'>
+              <span className='text-white font-mono'>1234567890</span>
+              <button onClick={() => handleCopy('1234567890')} className='text-titan-maroon hover:text-titan-gold'>
+                {copied ? <Check className='w-3 h-3' /> : <Copy className='w-3 h-3' />}
+              </button>
+            </div>
+          </div>
+          <div className='flex justify-between text-sm'>
+            <span className='text-gray-400'>Amount</span>
+            <span className='text-white font-mono'>{selectedCurrency} {customAmount}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+
+  const renderSuccessStep = () => (
+    <div className='py-12 text-center space-y-6'>
+      <div className='w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center'>
+        <Check className='w-10 h-10 text-green-500' />
+      </div>
+      <div>
+        <h3 className='text-xl font-display font-bold text-white mb-2'>Payment Successful!</h3>
+        <p className='text-gray-400 text-sm'>Your payment has been processed successfully.</p>
+      </div>
+      <div className='p-4 rounded-xl bg-white/5 border border-white/10 max-w-xs mx-auto'>
+        <div className='flex justify-between text-sm'>
+          <span className='text-gray-400'>Amount</span>
+          <span className='text-white font-mono'>{selectedCurrency === 'KES' ? 'KSh' : '$'}{parseFloat(customAmount).toLocaleString()}</span>
+        </div>
+        <div className='flex justify-between text-sm mt-2'>
+          <span className='text-gray-400'>Reference</span>
+          <span className='text-white font-mono'>TXN{Date.now().toString(36).toUpperCase()}</span>
+        </div>
+      </div>
+      <button
+        onClick={onClose}
+        className='w-full py-3 rounded-xl bg-gradient-to-r from-titan-maroon to-red-700 text-white font-medium hover:opacity-90 transition-all'
+      >
+        Done
+      </button>
+    </div>
+  )
 
   return (
-    <div className='fixed inset-0 z-[80] flex items-center justify-center p-4'>
-      <div className='absolute inset-0 bg-black/70 backdrop-blur-sm' onClick={onClose} />
-
-      <div className='relative w-full max-w-md glass-panel border border-titan-gold/30 rounded-lg overflow-hidden'>
-        <div className='bg-gradient-to-r from-titan-maroon/60 to-titan-blue/60 px-6 py-4 border-b border-titan-gold/20'>
-          <div className='flex justify-between items-center'>
-            <h2 className='font-display text-lg text-titan-gold'>Fund Wallet</h2>
-            <button onClick={onClose} className='text-titan-silver hover:text-titan-gold transition-colors'>
-              <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
-              </svg>
+    <div className='fixed inset-0 z-50 flex items-center justify-center p-4'>
+      <div className='absolute inset-0 bg-black/80 backdrop-blur-sm' onClick={onClose} />
+      <div className='relative w-full max-w-md bg-gradient-to-b from-[#1a1a2e] to-[#16213e] rounded-2xl border border-white/10 shadow-2xl overflow-hidden'>
+        <div className='absolute inset-0 bg-gradient-to-r from-titan-maroon/5 via-transparent to-titan-gold/5' />
+        
+        <div className='relative p-6 border-b border-white/10'>
+          <div className='flex items-center justify-between'>
+            <h2 className='text-xl font-display font-bold text-white'>
+              {step === 'amount' && 'Enter Amount'}
+              {step === 'method' && 'Payment Method'}
+              {step === 'processing' && 'Processing'}
+              {step === 'success' && 'Complete'}
+            </h2>
+            <button
+              onClick={onClose}
+              className='w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-all'
+            >
+              <X className='w-4 h-4 text-gray-400' />
             </button>
           </div>
         </div>
 
-        <div className='p-6'>
-          {step === 'amount' && (
-            <div className='space-y-6'>
-              <div className='flex gap-2'>
-                {(['KES', 'USD'] as const).map((curr) => (
-                  <button
-                    key={curr}
-                    onClick={() => setCurrency(curr)}
-                    className={\lex-1 py-3 text-sm font-accent uppercase tracking-wider transition-all \\}
-                  >
-                    {curr}
-                  </button>
-                ))}
-              </div>
-
-              <div>
-                <label className='block text-xs font-accent uppercase tracking-wider text-titan-silver mb-2'>
-                  Enter Amount
-                </label>
-                <div className='relative'>
-                  <span className='absolute left-4 top-1/2 -translate-y-1/2 text-titan-gold'>
-                    {currency === 'KES' ? 'KES' : '$'}
-                  </span>
-                  <input
-                    type='number'
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder={currency === 'KES' ? '1,000' : '50.00'}
-                    className='w-full bg-titan-dark/50 border border-titan-gold/20 rounded pl-16 pr-4 py-4 text-xl text-titan-cream placeholder-titan-silver/40 focus:outline-none focus:border-titan-gold/50 transition-colors'
-                  />
-                </div>
-              </div>
-
-              <div className='flex gap-2'>
-                {currency === 'KES' 
-                  ? [500, 1000, 2500, 5000].map((amt) => (
-                      <button
-                        key={amt}
-                        onClick={() => setAmount(amt.toString())}
-                        className={\lex-1 py-2 text-sm border transition-all \\}
-                      >
-                        {amt.toLocaleString()}
-                      </button>
-                    ))
-                  : [10, 25, 50, 100].map((amt) => (
-                      <button
-                        key={amt}
-                        onClick={() => setAmount(amt.toString())}
-                        className={\lex-1 py-2 text-sm border transition-all \\}
-                      >
-                        \
-                      </button>
-                    ))
-                }
-              </div>
-
-              <div>
-                <label className='block text-xs font-accent uppercase tracking-wider text-titan-silver mb-3'>
-                  Payment Method
-                </label>
-                <div className='space-y-2'>
-                  {paymentMethods.map((pm) => (
-                    <button
-                      key={pm.id}
-                      onClick={() => setMethod(pm.id)}
-                      className={\w-full flex items-center gap-4 p-4 border transition-all \\}
-                    >
-                      <span className='text-xl'>{pm.icon}</span>
-                      <span className='text-sm text-titan-cream'>{pm.name}</span>
-                      <span className='ml-auto text-[10px] text-titan-silver'>
-                        {pm.currencies.join(' / ')}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {error && <p className='text-red-400 text-sm'>{error}</p>}
-
-              <button
-                onClick={handleAmountSubmit}
-                className='w-full bg-titan-gold text-titan-dark py-4 font-accent font-bold text-xs uppercase tracking-widest hover:bg-titan-gold-light transition-all'
-              >
-                Continue
-              </button>
-            </div>
-          )}
-
-          {step === 'details' && (
-            <div className='space-y-6'>
-              <div className='bg-titan-dark/50 border border-titan-gold/10 p-4 space-y-3'>
-                <div className='flex justify-between'>
-                  <span className='text-titan-silver text-sm'>Amount</span>
-                  <span className='text-titan-gold font-display text-lg'>
-                    {currency === 'KES' ? \KES \\ : \$\\}
-                  </span>
-                </div>
-                <div className='flex justify-between'>
-                  <span className='text-titan-silver text-sm'>Method</span>
-                  <span className='text-titan-cream'>{paymentMethods.find(p => p.id === method)?.name}</span>
-                </div>
-              </div>
-
-              {method === 'mpesa' && (
-                <div>
-                  <label className='block text-xs font-accent uppercase tracking-wider text-titan-silver mb-2'>
-                    M-Pesa Phone Number
-                  </label>
-                  <input
-                    type='tel'
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder='+254 7XX XXX XXX'
-                    className='w-full bg-titan-dark/50 border border-titan-gold/20 rounded px-4 py-3 text-titan-cream placeholder-titan-silver/40 focus:outline-none focus:border-titan-gold/50 transition-colors'
-                  />
-                </div>
-              )}
-
-              {error && <p className='text-red-400 text-sm'>{error}</p>}
-
-              <div className='flex gap-3'>
-                <button
-                  onClick={() => setStep('amount')}
-                  className='flex-1 border border-titan-gold/30 text-titan-gold py-3 text-xs font-accent uppercase tracking-widest hover:bg-titan-gold/10 transition-all'
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handlePayment}
-                  className='flex-1 bg-titan-gold text-titan-dark py-3 text-xs font-accent font-bold uppercase tracking-widest hover:bg-titan-gold-light transition-all'
-                >
-                  Pay Now
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 'processing' && (
-            <div className='py-12 text-center'>
-              <div className='w-16 h-16 border-4 border-titan-gold/20 border-t-titan-gold rounded-full animate-spin mx-auto mb-6' />
-              <h3 className='font-display text-xl text-titan-gold mb-2'>Processing Payment</h3>
-              <p className='text-titan-silver text-sm'>
-                {method === 'mpesa' ? 'Check your phone for M-Pesa prompt...' : 'Processing...'}
-              </p>
-            </div>
-          )}
-
-          {step === 'success' && (
-            <div className='py-12 text-center'>
-              <div className='w-20 h-20 border-2 border-green-500 rounded-full flex items-center justify-center mx-auto mb-6'>
-                <svg className='w-10 h-10 text-green-500' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M5 13l4 4L19 7' />
-                </svg>
-              </div>
-              <h3 className='font-display text-xl text-titan-gold mb-2'>Payment Successful!</h3>
-              <p className='text-titan-silver text-sm mb-6'>
-                {currency === 'KES' ? \KES \\ : \$\\} has been added to your wallet
-              </p>
-              <button
-                onClick={onClose}
-                className='bg-titan-gold text-titan-dark px-8 py-3 text-xs font-accent font-bold uppercase tracking-widest hover:bg-titan-gold-light transition-all'
-              >
-                Done
-              </button>
-            </div>
-          )}
+        <div className='relative p-6'>
+          {step === 'amount' && renderAmountStep()}
+          {step === 'method' && renderMethodStep()}
+          {step === 'processing' && renderProcessingStep()}
+          {step === 'success' && renderSuccessStep()}
         </div>
       </div>
     </div>
