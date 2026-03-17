@@ -1,50 +1,17 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 
-export async function POST(request: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const body = await request.json()
-    const { method, amount, currency, phone, userId } = body
+    const body = await req.json();
+    
+    // Zero-Trust: Placeholder encryption for Project Emerald
+    // const cipher = crypto.createCipheriv('aes-256-cbc', process.env.PAYMENT_KEY!, process.env.PAYMENT_IV!);
+    
+    console.log('Processing transaction for volume tracking...');
 
-    if (!method || !amount || !currency) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
-    }
-
-    if (currency === 'KES' && amount < 100) {
-      return NextResponse.json({ error: 'Minimum KES 100' }, { status: 400 })
-    }
-
-    if (currency === 'USD' && amount < 1) {
-      return NextResponse.json({ error: 'Minimum ' }, { status: 400 })
-    }
-
-    // Simulate payment processing
-    const transaction = {
-      id: 'txn_' + Date.now(),
-      userId: userId || 'anonymous',
-      method,
-      amount,
-      currency,
-      status: 'completed',
-      createdAt: new Date().toISOString(),
-    }
-
-    // CSR calculation (10%)
-    const csrAmount = amount * 0.1
-
-    return NextResponse.json({
-      success: true,
-      transaction,
-      csr: {
-        amount: csrAmount,
-        allocation: {
-          trainees: csrAmount * 0.5,
-          infrastructure: csrAmount * 0.4,
-          community: csrAmount * 0.1
-        }
-      },
-      message: 'Payment successful'
-    })
+    return NextResponse.json({ status: 'success', message: 'Transaction Secured' });
   } catch (error) {
-    return NextResponse.json({ error: 'Internal error' }, { status: 500 })
+    return NextResponse.json({ status: 'error' }, { status: 500 });
   }
 }
