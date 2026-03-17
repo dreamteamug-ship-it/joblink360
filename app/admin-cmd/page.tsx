@@ -1,64 +1,64 @@
-﻿'use client'
-import { useState, useEffect } from 'react';
+﻿import Link from 'next/link';
 
-export default function CommandCentre() {
-  const [healthStatus, setHealthStatus] = useState("Initializing Sentinel...");
-  const [activeAgents, setActiveAgents] = useState(0);
-
-  useEffect(() => {
-    // Military-grade health check simulation
-    const timer = setTimeout(() => {
-      setHealthStatus("SENTINEL: Swarm Integrity 100%. Encryption Active. KES 12M Volume Stable.");
-      setActiveAgents(75);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+export default function AdminDashboard() {
+  const stats = [
+    { label: 'Total Users', value: '50,234', change: '+12%' },
+    { label: 'Active Jobs', value: '2,547', change: '+8%' },
+    { label: 'Matches Made', value: '15,893', change: '+23%' },
+    { label: 'Revenue (KES)', value: '1.2M', change: '+15%' }
+  ];
 
   return (
-    <div className="min-h-screen bg-black text-[#FFD700] p-8 font-sans" style={{ border: '4px solid #800000' }}>
-      <header className="flex justify-between items-center border-b border-[#800000] pb-6 mb-8">
-        <div>
-          <h1 className="text-4xl font-extrabold uppercase tracking-tighter">Titanium Command Centre</h1>
-          <p className="text-maroon font-mono text-sm mt-1">CTO ACCESS: SANDE ALLAN // PROJECT EMERALD</p>
-        </div>
-        <div className="text-right">
-          <p className="text-xs uppercase opacity-60">System Health</p>
-          <p className="text-green-500 font-mono font-bold">OPTIMAL</p>
-        </div>
-      </header>
-
-      <main className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Swarm Heartbeat */}
-        <div className="md:col-span-2 bg-[#111] p-6 rounded border border-[#800000] shadow-[0_0_30px_rgba(128,0,0,0.2)]">
-          <h2 className="text-xl font-bold mb-4 uppercase">Swarm Heartbeat (75 Units)</h2>
-          <div className="grid grid-cols-15 gap-1">
-            {[...Array(75)].map((_, i) => (
-              <div 
-                key={i} 
-                className={`h-3 w-3 rounded-full animate-pulse ${i < activeAgents ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 'bg-gray-800'}`}
-                title={`Agent ${i + 1} Operational`}
-              />
-            ))}
+    <div className="min-h-screen bg-titan-dark text-titan-cream p-8">
+      <h1 className="text-4xl font-bold text-titan-gold mb-8">Titanium ERP Dashboard</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {stats.map((stat, i) => (
+          <div key={i} className="bg-titan-deep p-6 rounded-lg border border-titan-gold/20">
+            <p className="text-titan-gold-light text-sm">{stat.label}</p>
+            <p className="text-3xl font-bold mt-2">{stat.value}</p>
+            <p className="text-green-500 text-sm mt-2">{stat.change}</p>
           </div>
-          <p className="mt-4 text-xs font-mono text-gray-500">
-            20 Scouts | 30 Guardians | 25 Creators - ALL SYSTEMS NOMINAL
-          </p>
-        </div>
+        ))}
+      </div>
 
-        {/* Financial Heartbeat */}
-        <div className="bg-[#111] p-6 rounded border border-[#FFD700]/30">
-          <h2 className="text-xl font-bold mb-4 uppercase">Financial Flow</h2>
-          <p className="text-xs text-gray-400">Weekly Business Volume</p>
-          <p className="text-3xl font-bold text-white mt-2">KES 12,000,000</p>
-          <div className="w-full bg-gray-800 h-2 mt-4 rounded-full overflow-hidden">
-            <div className="bg-[#FFD700] h-full w-[85%] animate-pulse" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-titan-deep p-6 rounded-lg">
+          <h2 className="text-xl font-bold text-titan-gold mb-4">Recent Matches</h2>
+          <table className="w-full">
+            <thead>
+              <tr className="text-left border-b border-titan-gold/20">
+                <th className="pb-2">Candidate</th>
+                <th className="pb-2">Job</th>
+                <th className="pb-2">Match %</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td className="py-2">John K.</td><td>Developer</td><td>94%</td></tr>
+              <tr><td className="py-2">Mary W.</td><td>PM</td><td>87%</td></tr>
+              <tr><td className="py-2">Peter O.</td><td>Designer</td><td>92%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <div className="bg-titan-deep p-6 rounded-lg">
+          <h2 className="text-xl font-bold text-titan-gold mb-4">System Status</h2>
+          <div className="space-y-3">
+            <div className="flex justify-between">
+              <span>AI Agents</span>
+              <span className="text-green-500">● Online</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Job Scanner</span>
+              <span className="text-green-500">● Active</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Payment Gateway</span>
+              <span className="text-yellow-500">● Test Mode</span>
+            </div>
           </div>
         </div>
-      </main>
-
-      <footer className="mt-8 p-4 bg-maroon/10 border border-maroon/30 rounded">
-        <p className="text-sm font-mono text-maroon italic">{healthStatus}</p>
-      </footer>
+      </div>
     </div>
   );
 }

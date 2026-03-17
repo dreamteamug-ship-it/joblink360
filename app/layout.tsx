@@ -2,8 +2,14 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'JobLink360 - Style Test',
-  description: 'Testing Titan theme styling',
+  title: 'JobLink360 - Titanium Enterprise',
+  description: 'East Africa\'s AI-Powered Career Platform',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+  },
 };
 
 export default function RootLayout({

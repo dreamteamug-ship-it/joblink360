@@ -1,17 +1,36 @@
 ﻿import { NextResponse } from 'next/server';
-import crypto from 'crypto';
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const { amount, phone, type } = await req.json();
     
-    // Zero-Trust: Placeholder encryption for Project Emerald
-    // const cipher = crypto.createCipheriv('aes-256-cbc', process.env.PAYMENT_KEY!, process.env.PAYMENT_IV!);
+    // Mock M-Pesa payment processing
+    const paymentResult = {
+      success: true,
+      transactionId: 'MP' + Date.now(),
+      amount: amount,
+      phone: phone,
+      status: 'completed',
+      message: 'Payment processed successfully',
+      timestamp: new Date().toISOString()
+    };
     
-    console.log('Processing transaction for volume tracking...');
-
-    return NextResponse.json({ status: 'success', message: 'Transaction Secured' });
+    return NextResponse.json(paymentResult);
   } catch (error) {
-    return NextResponse.json({ status: 'error' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Payment failed' },
+      { status: 500 }
+    );
   }
+}
+
+export async function GET() {
+  // Return payment history
+  return NextResponse.json({
+    success: true,
+    payments: [
+      { id: 1, amount: 15000, date: '2026-03-15', status: 'completed' },
+      { id: 2, amount: 5000, date: '2026-03-10', status: 'completed' }
+    ]
+  });
 }
