@@ -2,28 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Force dark background */
-html, body {
-  background-color: #0a0a0f !important;
-  color: #f5f0e8 !important;
+:root {
+  --titan-dark: #070F1A;
+  --titan-deep: #020202;
+  --titan-maroon: #4A0404;
+  --titan-gold: #C9A84C;
+  --titan-silver: #B8B8B8;
+  --titan-blue: #1A2A44;
 }
 
-/* Explicit color classes */
-.bg-titan-dark { background-color: #0a0a0f !important; }
-.bg-titan-deep { background-color: #12121a !important; }
-.bg-titan-maroon { background-color: #8B0000 !important; }
-.bg-titan-gold { background-color: #D4AF37 !important; }
-.text-titan-cream { color: #f5f0e8 !important; }
-.text-titan-gold { color: #D4AF37 !important; }
-.text-titan-maroon { color: #8B0000 !important; }
-.border-titan-gold { border-color: #D4AF37 !important; }
-
-/* Gradient backgrounds */
-.bg-gradient-titan {
-  background: linear-gradient(135deg, #0a0a0f 0%, #12121a 100%) !important;
+body {
+  background-color: var(--titan-dark);
+  color: #F5F5DC;
+  font-family: 'Inter', sans-serif;
 }
 
-/* Ensure full height */
-.min-h-screen-full {
-  min-height: 100vh !important;
+.glass-panel {
+  background: rgba(7, 15, 26, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+.gold-border {
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+.text-gold {
+  color: var(--titan-gold);
+}
+
+.bg-gold {
+  background-color: var(--titan-gold);
 }
