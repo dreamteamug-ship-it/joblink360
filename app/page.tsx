@@ -1,19 +1,22 @@
-﻿import Navbar from '@/components/Navbar'
-import HeroSection from '@/components/HeroSection'
-import AgentCards from '@/components/AgentCards'
-import FeaturesSection from '@/components/FeaturesSection'
-import Footer from '@/components/Footer'
-import AmandaChat from '@/components/AmandaChat'
+﻿import HeroSection from "@/components/HeroSection";
+import FeaturesSection from "@/components/FeaturesSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import AgentCards from "@/components/AgentCards";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import PageTransition from "@/components/PageTransition";
 
 export default function Home() {
   return (
-    <main className="gradient-mesh min-h-screen">
+    <PageTransition>
       <Navbar />
-      <HeroSection />
-      <AgentCards />
-      <FeaturesSection />
+      <main>
+        <HeroSection />
+        <FeaturesSection />
+        <AgentCards />
+        <TestimonialsSection />
+      </main>
       <Footer />
-      <AmandaChat />
-    </main>
-  )
+    </PageTransition>
+  );
 }
