@@ -69,4 +69,33 @@ export default function PaymentsPage() {
       </div>
     </div>
   );
+}          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🔐</span>
+              <div>
+                <p className="font-bold">256-bit SSL</p>
+                <p className="text-xs text-titan-cream/60">Bank-grade encryption</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">✅</span>
+              <div>
+                <p className="font-bold">PCI Compliant</p>
+                <p className="text-xs text-titan-cream/60">Secure payment processing</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🌍</span>
+              <div>
+                <p className="font-bold">Global Coverage</p>
+                <p className="text-xs text-titan-cream/60">26+ countries supported</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+export default PaymentsPage;
