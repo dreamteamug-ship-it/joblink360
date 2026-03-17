@@ -1,6 +1,6 @@
-﻿'use client'
+'use client'
 import { useState } from 'react';
-import { useChat } from 'ai/react';
+import { useChat } from 'ai';
 
 export default function CVGenerator() {
   const { messages, append } = useChat({ api: '/api/chat' });
