@@ -1,6 +1,8 @@
-﻿{
-  "crons": [{
-    "path": "/api/health-audit",
-    "schedule": "0 4 * * *"
-  }]
+{
+  "crons": [
+    {
+      "path": "/api/health-audit",
+      "schedule": "0 4 * * *"
+    }
+  ]
 }
