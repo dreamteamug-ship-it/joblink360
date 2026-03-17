@@ -1,18 +1,22 @@
 ﻿import './globals.css';
-import CommandGuard from '@/components/CommandGuard';
+import type { Metadata } from 'next';
 
-export const metadata = {
-  title: 'JobLink 360 | Titanium Enterprise',
-  description: 'Ultra-Luxury Career & Logistics Management',
+export const metadata: Metadata = {
+  title: 'JobLink360 - Style Test',
+  description: 'Testing Titan theme styling',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        <CommandGuard>
+      <body className="bg-titan-dark text-titan-cream min-h-screen-full">
+        <div className="bg-titan-gradient min-h-screen-full">
           {children}
-        </CommandGuard>
+        </div>
       </body>
     </html>
   );
