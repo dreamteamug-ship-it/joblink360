@@ -1,21 +1,21 @@
-﻿{
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "includeFiles": [
-          "next.config.js",
-          "package.json",
-          "yarn.lock",
-          "pnpm-lock.yaml",
-          "package-lock.json"
-        ]
-      }
-    }
-  ],
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "framework": "nextjs"
+{
+    "buildCommand":  "npm run build",
+    "builds":  [
+                   {
+                       "config":  {
+                                      "includeFiles":  [
+                                                           "next.config.js",
+                                                           "package.json",
+                                                           "yarn.lock",
+                                                           "pnpm-lock.yaml",
+                                                           "package-lock.json"
+                                                       ]
+                                  },
+                       "use":  "@vercel/next",
+                       "src":  "package.json"
+                   }
+               ],
+    "framework":  "nextjs",
+    "version":  2,
+    "outputDirectory":  ".next"
 }
