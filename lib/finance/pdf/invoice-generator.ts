@@ -1,33 +1,32 @@
 ﻿import { jsPDF } from "jspdf";
 
-export const generateTitaniumInvoice = (data) => {
+interface InvoiceData {
+  clientName: string;
+  amount: number;
+  currency: string;
+  invoiceNumber: string;
+  date: string;
+  items?: Array<{ description: string; quantity: number; price: number }>;
+}
+
+export const generateTitaniumInvoice = (data: InvoiceData) => {
   const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-  
+
   // Luxury Design Theme: Maroon & Gold
-  doc.setFillColor(128, 0, 0); // Maroon
+  doc.setFillColor(139, 0, 0); // Titan Maroon
   doc.rect(0, 0, 297, 20, 'F');
   
-  doc.setTextColor(255, 215, 0); // Gold
-  doc.setFontSize(22);
-  doc.text("TITANIUM ENTERPRISE INVOICE", 10, 14);
+  doc.setTextColor(212, 175, 55); // Gold
+  doc.setFontSize(24);
+  doc.text('TITANIUM INVOICE', 20, 15);
   
-  // Content Body
-  doc.setTextColor(0, 0, 0);
+  // Add invoice details
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(12);
-  doc.text(`Transaction ID: ${data.id}`, 10, 40);
-  doc.text(`Date: ${new Date().toLocaleString()}`, 10, 50);
-  doc.text(`Client ID: ${data.userId}`, 10, 60);
-  
-  // Multi-Currency Precision Row
-  doc.setFont("helvetica", "bold");
-  doc.text(`Amount (KES): ${data.amountKES.toLocaleString()}`, 10, 80);
-  doc.text(`Amount (${data.targetCurrency}): ${data.convertedAmount.toFixed(2)}`, 10, 90);
-  
-  // Watermark for Authenticity
-  doc.setTextColor(240, 240, 240);
-  doc.setFontSize(60);
-  doc.text("TITANIUM SECURE", 50, 150, { angle: 45 });
-  
-  doc.save(`Invoice_${data.id}.pdf`);
-  console.log("√ Luxury Invoice Generated and Saved locally.");
+  doc.text(`Client: ${data.clientName}`, 20, 40);
+  doc.text(`Amount: ${data.currency} ${data.amount}`, 20, 50);
+  doc.text(`Invoice #: ${data.invoiceNumber}`, 20, 60);
+  doc.text(`Date: ${data.date}`, 20, 70);
+
+  return doc.output('datauristring');
 };
