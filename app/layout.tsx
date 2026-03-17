@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-titan-dark text-titan-cream min-h-screen-full">
-        <div className="bg-titan-gradient min-h-screen-full">
+        <div className="bg-gradient-titan min-h-screen-full">
           {children}
         </div>
       </body>

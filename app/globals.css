@@ -2,28 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Minimal Titan Theme */
-.bg-titan-dark { background-color: #0a0a0f; }
-.bg-titan-deep { background-color: #12121a; }
-.bg-titan-maroon { background-color: #8B0000; }
-.bg-titan-gold { background-color: #D4AF37; }
-.text-titan-cream { color: #f5f0e8; }
-.text-titan-gold { color: #D4AF37; }
-.text-titan-maroon { color: #8B0000; }
-.border-titan-gold { border-color: #D4AF37; }
+/* Force dark background */
+html, body {
+  background-color: #0a0a0f !important;
+  color: #f5f0e8 !important;
+}
+
+/* Explicit color classes */
+.bg-titan-dark { background-color: #0a0a0f !important; }
+.bg-titan-deep { background-color: #12121a !important; }
+.bg-titan-maroon { background-color: #8B0000 !important; }
+.bg-titan-gold { background-color: #D4AF37 !important; }
+.text-titan-cream { color: #f5f0e8 !important; }
+.text-titan-gold { color: #D4AF37 !important; }
+.text-titan-maroon { color: #8B0000 !important; }
+.border-titan-gold { border-color: #D4AF37 !important; }
 
 /* Gradient backgrounds */
-.bg-titan-gradient {
-  background: linear-gradient(135deg, #0a0a0f 0%, #12121a 100%);
+.bg-gradient-titan {
+  background: linear-gradient(135deg, #0a0a0f 0%, #12121a 100%) !important;
 }
 
 /* Ensure full height */
 .min-h-screen-full {
-  min-height: 100vh;
-}
-
-/* Force dark background on html/body */
-html, body {
-  background-color: #0a0a0f !important;
-  color: #f5f0e8 !important;
+  min-height: 100vh !important;
 }
