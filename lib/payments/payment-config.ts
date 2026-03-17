@@ -1,4 +1,4 @@
-﻿// lib/payments/payment-config.ts
+// lib/payments/payment-config.ts
 export interface PaymentChannel {
   name: string;
   type: 'mobile_money' | 'bank_transfer' | 'card' | 'crypto' | 'international';
@@ -19,7 +19,7 @@ export const PAYMENT_CHANNELS: Record<string, PaymentChannel> = {
     fees: "1% (max KES 150)",
     processingTime: "Instant",
     limits: { min: 10, max: 150000 },
-    instructions: ["Paybill: 400200", "Account: 40045731", "Amount: Enter amount"]
+    instructions: ["Paybill: 400200", "Account: 40045731"]
   },
   TIGOPESA: {
     name: "TigoPesa (Tanzania)",
@@ -29,17 +29,7 @@ export const PAYMENT_CHANNELS: Record<string, PaymentChannel> = {
     fees: "0.5%",
     processingTime: "Instant",
     limits: { min: 1000, max: 3000000 },
-    instructions: ["Dial *150*01#", "Select Lipa kwa TigoPesa", "Enter Business Number"]
-  },
-  MTN_MOMO: {
-    name: "MTN MoMo (Uganda)",
-    type: "mobile_money",
-    countries: ["UG"],
-    currencies: ["UGX"],
-    fees: "1%",
-    processingTime: "Instant",
-    limits: { min: 1000, max: 5000000 },
-    instructions: ["Dial *165#", "Select MoMoPay", "Enter Merchant Code"]
+    instructions: ["Dial *150*01#", "Enter Business Number"]
   },
   NCBA_KES: {
     name: "NCBA Bank Kenya (KES)",
@@ -49,7 +39,7 @@ export const PAYMENT_CHANNELS: Record<string, PaymentChannel> = {
     fees: "KES 50",
     processingTime: "1-2 hours",
     limits: { min: 1000, max: 10000000 },
-    instructions: ["Account Name: Delite Production House", "Account Number: 8515130017", "Bank: NCBA Bank Kenya"]
+    instructions: ["Account: 8515130017", "Name: Delite Production House"]
   },
   NCBA_USD: {
     name: "NCBA Bank Kenya (USD)",
@@ -57,9 +47,9 @@ export const PAYMENT_CHANNELS: Record<string, PaymentChannel> = {
     countries: ["KE"],
     currencies: ["USD"],
     fees: "$10",
-    processingTime: "1-2 business days",
+    processingTime: "1-2 days",
     limits: { min: 100, max: 500000 },
-    instructions: ["Account Name: Delite Production House", "Account Number: 8515130018", "SWIFT: CBAFKENX"]
+    instructions: ["Account: 8515130018", "SWIFT: CBAFKENX"]
   },
   CHINA_SILK_ROAD: {
     name: "China Silk Road",
@@ -69,29 +59,16 @@ export const PAYMENT_CHANNELS: Record<string, PaymentChannel> = {
     fees: "2.5%",
     processingTime: "Instant",
     limits: { min: 100, max: 500000 },
-    instructions: ["WeChat Pay: Scan QR Code", "Alipay: Scan QR Code", "UnionPay: Enter card details"]
+    instructions: ["WeChat Pay", "Alipay", "UnionPay"]
   },
   SWIFT: {
-    name: "SWIFT International Transfer",
+    name: "SWIFT International",
     type: "international",
     countries: ["Global"],
-    currencies: ["USD", "EUR", "GBP"],
+    currencies: ["USD", "EUR"],
     fees: "$25-50",
-    processingTime: "2-5 business days",
+    processingTime: "2-5 days",
     limits: { min: 500, max: 10000000 },
-    instructions: ["Beneficiary: Delite Production House", "SWIFT: CBAFKENX", "Account: 8515130018"]
-  },
-  BITCOIN: {
-    name: "Bitcoin (BTC)",
-    type: "crypto",
-    countries: ["Global"],
-    currencies: ["BTC"],
-    fees: "0.0001 BTC",
-    processingTime: "10-60 minutes",
-    limits: { min: 0.001, max: 10 },
-    instructions: ["Send to: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh", "Network: Bitcoin", "Confirmations: 3"]
+    instructions: ["SWIFT: CBAFKENX", "Account: 8515130018"]
   }
 };
-
-export const getChannelsForCountry = (code: string) => 
-  Object.values(PAYMENT_CHANNELS).filter(c => c.countries.includes(code) || c.countries.includes("Global"));
