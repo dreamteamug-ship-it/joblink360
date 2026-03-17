@@ -29,7 +29,7 @@
                          "@ai-sdk/react":  "0.0.70"
                      },
     "engines":  {
-                    "node":  "18.x"
+                    "node":  "24.x"
                 },
     "private":  true
 }
