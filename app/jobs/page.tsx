@@ -1,5 +1,4 @@
-﻿// app/jobs/page.tsx
-'use client';
+﻿'use client';
 import { useState, useEffect } from 'react';
 import Navbar from '@/app/components/layout/Navbar';
 import { Search, MapPin, Briefcase, DollarSign, ExternalLink, Filter, RefreshCw } from 'lucide-react';
@@ -15,7 +14,8 @@ export default function JobsPage() {
   const fetchJobs = async (refresh = false) => {
     setLoading(true);
     try {
-      const url = `/api/jobs?q=${encodeURIComponent(searchTerm || 'developer')}&location=${encodeURIComponent(location || 'Kenya')}${refresh ? '&refresh=true' : ''}`;
+      // Use the unified API to get jobs from ALL sources
+      const url = `/api/jobs/unified?q=${encodeURIComponent(searchTerm || 'developer')}&location=${encodeURIComponent(location || 'Remote')}${refresh ? '&refresh=true' : ''}`;
       const res = await fetch(url);
       const data = await res.json();
       
@@ -50,8 +50,11 @@ export default function JobsPage() {
     fetchJobs(true);
   };
 
+  // Get unique locations for filter
+  const locations = ['all', ...new Set(jobs.map((j: any) => j.location))];
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-900 text-white">
       <Navbar />
       
       <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -60,13 +63,13 @@ export default function JobsPage() {
           <div>
             <h1 className="text-4xl font-bold mb-2">🔍 Live Job Search</h1>
             <p className="text-gray-400">
-              Real-time jobs from LinkedIn, Indeed, Upwork, and remote sources
+              Real-time jobs from LinkedIn, Indeed, Upwork, Glassdoor, and remote sources
             </p>
           </div>
           
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 px-4 py-2 glass rounded-lg hover:bg-white/10 transition"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
@@ -75,7 +78,7 @@ export default function JobsPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="glass p-6 rounded-2xl">
+          <div className="bg-gray-800/30 p-6 rounded-2xl">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
                 <Briefcase className="w-6 h-6 text-yellow-400" />
@@ -87,37 +90,37 @@ export default function JobsPage() {
             </div>
           </div>
           
-          <div className="glass p-6 rounded-2xl">
+          <div className="bg-gray-800/30 p-6 rounded-2xl">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
                 <DollarSign className="w-6 h-6 text-yellow-400" />
               </div>
               <div>
                 <div className="text-2xl font-bold">
-                  KES {stats.avgSalary.toFixed(0)}
+                  {stats.avgSalary > 0 ? `$${Math.round(stats.avgSalary).toLocaleString()}` : 'N/A'}
                 </div>
                 <div className="text-sm text-gray-400">Avg. Salary</div>
               </div>
             </div>
           </div>
           
-          <div className="glass p-6 rounded-2xl">
+          <div className="bg-gray-800/30 p-6 rounded-2xl">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
                 <Filter className="w-6 h-6 text-yellow-400" />
               </div>
               <div>
                 <div className="text-2xl font-bold">
-                  {Object.keys(sources).length}
+                  {Object.keys(sources).filter(k => sources[k]).length}
                 </div>
-                <div className="text-sm text-gray-400">Job Sources</div>
+                <div className="text-sm text-gray-400">Active Sources</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Search Form */}
-        <form onSubmit={handleSearch} className="glass p-6 rounded-2xl mb-8">
+        <form onSubmit={handleSearch} className="bg-gray-800/30 p-6 rounded-2xl mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -152,10 +155,12 @@ export default function JobsPage() {
           {/* Source indicators */}
           <div className="flex flex-wrap gap-4 mt-4">
             {Object.entries(sources).map(([key, value]: [string, any]) => (
-              <div key={key} className="flex items-center gap-2 text-sm">
-                <span className={`w-2 h-2 rounded-full ${value ? 'bg-green-500' : 'bg-gray-500'}`}></span>
-                <span className="text-gray-400">{key}</span>
-              </div>
+              value && (
+                <div key={key} className="flex items-center gap-2 text-sm">
+                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <span className="text-gray-400 capitalize">{key}</span>
+                </div>
+              )
             ))}
           </div>
         </form>
@@ -164,35 +169,25 @@ export default function JobsPage() {
         {loading ? (
           <div className="grid grid-cols-1 gap-4">
             {[1,2,3,4,5,6].map((i) => (
-              <div key={i} className="glass p-6 rounded-2xl">
-                <div className="flex flex-col md:flex-row justify-between">
-                  <div className="flex-1 space-y-3">
-                    <div className="h-6 w-48 bg-gray-700 rounded skeleton"></div>
-                    <div className="h-4 w-32 bg-gray-700 rounded skeleton"></div>
-                    <div className="h-4 w-24 bg-gray-700 rounded skeleton"></div>
-                    <div className="space-y-2">
-                      <div className="h-3 bg-gray-700 rounded skeleton"></div>
-                      <div className="h-3 bg-gray-700 rounded skeleton w-3/4"></div>
-                    </div>
-                  </div>
-                  <div className="mt-4 md:mt-0 md:ml-6">
-                    <div className="h-10 w-24 bg-gray-700 rounded-lg skeleton"></div>
-                  </div>
-                </div>
+              <div key={i} className="bg-gray-800/30 p-6 rounded-2xl animate-pulse">
+                <div className="h-6 w-48 bg-gray-700 rounded mb-4"></div>
+                <div className="h-4 w-32 bg-gray-700 rounded mb-2"></div>
+                <div className="h-4 w-24 bg-gray-700 rounded mb-4"></div>
+                <div className="h-3 w-full bg-gray-700 rounded"></div>
               </div>
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
             {jobs.map((job: any, index: number) => (
-              <div key={index} className="glass p-6 rounded-2xl card-hover">
+              <div key={index} className="bg-gray-800/30 p-6 rounded-2xl hover:bg-gray-800/50 transition border border-gray-700 hover:border-yellow-400/30">
                 <div className="flex flex-col md:flex-row justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="text-xl font-bold text-yellow-400">{job.title}</h3>
-                      {job.match && (
-                        <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
-                          {job.match}% Match
+                      {job.source && (
+                        <span className="px-3 py-1 bg-gray-700 rounded-full text-xs capitalize">
+                          {job.source}
                         </span>
                       )}
                     </div>
@@ -202,7 +197,7 @@ export default function JobsPage() {
                     <div className="flex flex-wrap gap-4 mb-3">
                       <span className="flex items-center gap-1 text-sm text-gray-400">
                         <MapPin className="w-4 h-4" />
-                        {job.location || 'Location TBD'}
+                        {job.location || 'Remote'}
                       </span>
                       {job.salary && (
                         <span className="flex items-center gap-1 text-sm text-green-400">
@@ -210,36 +205,29 @@ export default function JobsPage() {
                           {job.salary}
                         </span>
                       )}
-                      <span className="text-xs text-gray-500">
-                        {job.postedDate || 'Recently posted'}
-                      </span>
                     </div>
                     
                     <p className="text-gray-400 text-sm line-clamp-2 mb-3">
                       {job.description}
                     </p>
                     
-                    {job.requirements && (
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {job.requirements.slice(0, 3).map((req: string, i: number) => (
-                          <span key={i} className="px-2 py-1 bg-gray-800 rounded-full text-xs text-gray-300">
-                            {req}
-                          </span>
-                        ))}
-                      </div>
+                    {job.match && (
+                      <span className="inline-block px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
+                        {job.match}% Match
+                      </span>
                     )}
                     
-                    <div className="text-xs text-gray-500">
-                      Source: {job.source || 'LinkedIn'} • {job.postedDate || 'Recently'}
+                    <div className="text-xs text-gray-500 mt-2">
+                      Posted: {job.postedDate || 'Recently'}
                     </div>
                   </div>
                   
-                  <div className="flex flex-row md:flex-col gap-2 items-center md:items-end">
+                  <div className="flex items-center justify-end">
                     <a
                       href={job.applyUrl || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 py-2 bg-yellow-600 text-black rounded-lg font-bold hover:bg-yellow-500 transition inline-flex items-center gap-2"
+                      className="px-6 py-2 bg-yellow-600 text-black rounded-lg font-bold hover:bg-yellow-500 transition inline-flex items-center gap-2 whitespace-nowrap"
                     >
                       Apply <ExternalLink className="w-4 h-4" />
                     </a>
@@ -249,7 +237,7 @@ export default function JobsPage() {
             ))}
             
             {jobs.length === 0 && (
-              <div className="text-center py-12 glass rounded-2xl">
+              <div className="text-center py-12 bg-gray-800/30 rounded-2xl">
                 <p className="text-gray-400">No jobs found. Try different search terms.</p>
               </div>
             )}
