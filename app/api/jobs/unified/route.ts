@@ -1,71 +1,81 @@
 ﻿export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
+import { COUNTRIES } from '@/lib/countries/data';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const keyword = searchParams.get('q') || 'developer';
   const location = searchParams.get('location') || 'Remote';
-  
-  try {
-    // Fetch from multiple sources in parallel
-    const [glassdoorPPR, allJobs, linkedin] = await Promise.allSettled([
-      fetch(`${req.nextUrl.origin}/api/jobs/glassdoor/ppr?q=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}`),
-      fetch(`${req.nextUrl.origin}/api/jobs/all?q=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}`),
-      fetch(`${req.nextUrl.origin}/api/jobs/linkedin?q=${encodeURIComponent(keyword)}&location=${encodeURIComponent(location)}`)
-    ]);
+  const country = searchParams.get('country') || 'all';
 
-    let allJobsList = [];
-    const sources = [];
+  const sources = [];
 
-    if (glassdoorPPR.status === 'fulfilled') {
-      const data = await glassdoorPPR.value.json();
-      if (data.jobs) {
-        allJobsList.push(...data.jobs);
-        sources.push('glassdoor');
-      }
-    }
-    
-    if (allJobs.status === 'fulfilled') {
-      const data = await allJobs.value.json();
-      if (data.jobs) {
-        allJobsList.push(...data.jobs);
-        sources.push('multi-platform');
-      }
-    }
+  // Fetch from all job sources in parallel
+  const [glassdoor, indeed, upwork, linkedin, remote] = await Promise.allSettled([
+    fetch(`${req.nextUrl.origin}/api/jobs/glassdoor/ppr?q=${keyword}&location=${location}`),
+    fetch(`${req.nextUrl.origin}/api/jobs/indeed?q=${keyword}&location=${location}`),
+    fetch(`${req.nextUrl.origin}/api/jobs/upwork?q=${keyword}`),
+    fetch(`${req.nextUrl.origin}/api/jobs/linkedin?q=${keyword}&location=${location}`),
+    fetch(`${req.nextUrl.origin}/api/jobs/remote?q=${keyword}`)
+  ]);
 
-    if (linkedin.status === 'fulfilled') {
-      const data = await linkedin.value.json();
-      if (data.jobs) {
-        allJobsList.push(...data.jobs);
-        sources.push('linkedin');
-      }
-    }
+  let allJobs = [];
 
-    // Remove duplicates by company + title
-    const uniqueJobs = Array.from(
-      new Map(allJobsList.map(job => [`${job.company}-${job.title}`, job])).values()
-    );
-
-    return NextResponse.json({
-      success: true,
-      total: uniqueJobs.length,
-      jobs: uniqueJobs,
-      sources: {
-        glassdoor: glassdoorPPR.status === 'fulfilled',
-        multiPlatform: allJobs.status === 'fulfilled',
-        linkedin: linkedin.status === 'fulfilled',
-        activeSources: sources
-      }
-    });
-    
-  } catch (error) {
-    console.error('Unified API error:', error);
-    return NextResponse.json({ 
-      success: false, 
-      jobs: [],
-      error: error.message 
-    }, { status: 500 });
+  // Process Glassdoor
+  if (glassdoor.status === 'fulfilled') {
+    const data = await glassdoor.value.json();
+    allJobs.push(...(data.jobs || []).map(j => ({ ...j, source: 'glassdoor' })));
+    sources.push('glassdoor');
   }
-}
 
+  // Process Indeed
+  if (indeed.status === 'fulfilled') {
+    const data = await indeed.value.json();
+    allJobs.push(...(data.jobs || []).map(j => ({ ...j, source: 'indeed' })));
+    sources.push('indeed');
+  }
+
+  // Process Upwork
+  if (upwork.status === 'fulfilled') {
+    const data = await upwork.value.json();
+    allJobs.push(...(data.jobs || []).map(j => ({ ...j, source: 'upwork' })));
+    sources.push('upwork');
+  }
+
+  // Process LinkedIn
+  if (linkedin.status === 'fulfilled') {
+    const data = await linkedin.value.json();
+    allJobs.push(...(data.jobs || []).map(j => ({ ...j, source: 'linkedin' })));
+    sources.push('linkedin');
+  }
+
+  // Process Remote
+  if (remote.status === 'fulfilled') {
+    const data = await remote.value.json();
+    allJobs.push(...(data.jobs || []).map(j => ({ ...j, source: 'remote' })));
+    sources.push('remote');
+  }
+
+  // Filter by country if specified
+  if (country !== 'all') {
+    const countryInfo = COUNTRIES[country];
+    allJobs = allJobs.filter(job => 
+      job.location?.includes(countryInfo.name) || 
+      job.location?.includes(country)
+    );
+  }
+
+  // Remove duplicates
+  const uniqueJobs = Array.from(
+    new Map(allJobs.map(job => [`${job.company}-${job.title}`, job])).values()
+  );
+
+  return NextResponse.json({
+    success: true,
+    total: uniqueJobs.length,
+    jobs: uniqueJobs,
+    sources: sources.reduce((acc, src) => ({ ...acc, [src]: true }), {}),
+    country: country
+  });
+}
