@@ -1,4 +1,6 @@
-﻿import { NextResponse } from 'next/server';
+﻿export const dynamic = 'force-dynamic';
+
+import { NextResponse } from 'next/server';
 import { ApifyClient } from 'apify-client';
 
 const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
@@ -48,3 +50,4 @@ export async function GET(req: Request) {
     }, { status: 500 });
   }
 }
+
