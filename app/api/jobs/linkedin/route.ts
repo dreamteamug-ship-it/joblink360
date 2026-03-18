@@ -1,4 +1,6 @@
-﻿// app/api/jobs/linkedin/route.ts
+export const dynamic = 'force-dynamic';
+
+// app/api/jobs/linkedin/route.ts
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
@@ -84,3 +86,6 @@ function getMockJobs(keyword: string, location: string) {
     }
   ];
 }
+
+
+

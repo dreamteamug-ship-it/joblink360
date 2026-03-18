@@ -1,4 +1,6 @@
-﻿// app/api/jobs/route.ts
+export const dynamic = 'force-dynamic';
+
+// app/api/jobs/route.ts
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
@@ -89,3 +91,6 @@ function getMockJobs(query: string, location: string) {
     }
   ];
 }
+
+
+

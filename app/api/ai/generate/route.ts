@@ -1,4 +1,6 @@
-﻿// app/api/ai/generate/route.ts
+export const dynamic = 'force-dynamic';
+
+// app/api/ai/generate/route.ts
 import { NextResponse } from 'next/server';
 import { aiOrchestrator } from '@/lib/ai/core/orchestrator';
 
@@ -52,3 +54,6 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
+

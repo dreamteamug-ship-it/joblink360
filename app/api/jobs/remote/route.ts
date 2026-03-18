@@ -1,4 +1,6 @@
-﻿// app/api/jobs/remote/route.ts
+export const dynamic = 'force-dynamic';
+
+// app/api/jobs/remote/route.ts
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
@@ -39,3 +41,6 @@ export async function GET(req: Request) {
     });
   }
 }
+
+
+
