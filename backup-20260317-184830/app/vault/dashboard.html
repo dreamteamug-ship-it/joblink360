@@ -1,0 +1,573 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ VAULT DASHBOARD | MASTER CONTROL</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background: #0A0A0F;
+            color: #F5F5DC;
+            font-family: 'Cormorant Garamond', serif;
+            padding: 40px;
+            background-image: linear-gradient(rgba(212,175,55,0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(212,175,55,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(128,0,0,0.2);
+            border: 2px solid #C9A84C;
+            border-radius: 15px;
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 36px;
+            color: #C9A84C;
+        }
+
+        .access-badge {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #800000, #4A0404);
+            border: 1px solid #C9A84C;
+            border-radius: 30px;
+            color: #C9A84C;
+            font-weight: bold;
+        }
+
+        /* Grid Layout */
+        .vault-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .vault-card {
+            background: rgba(20,20,30,0.8);
+            border: 2px solid rgba(201,168,76,0.3);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #C9A84C;
+        }
+
+        .card-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            color: #C9A84C;
+        }
+
+        .card-header .icon {
+            font-size: 32px;
+        }
+
+        /* Switches */
+        .switch-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .switch-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .switch-label {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .switch-status {
+            font-size: 12px;
+            color: #00FF00;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(255,0,0,0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: rgba(0,255,0,0.2);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: #C9A84C;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: 32px;
+        }
+
+        /* Passwords Table */
+        .passwords-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .passwords-table th {
+            text-align: left;
+            padding: 10px;
+            background: rgba(128,0,0,0.3);
+            color: #C9A84C;
+            font-size: 14px;
+        }
+
+        .passwords-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(201,168,76,0.1);
+        }
+
+        .copy-btn {
+            padding: 5px 10px;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid #C9A84C;
+            border-radius: 5px;
+            color: #C9A84C;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-btn:hover {
+            background: #C9A84C;
+            color: #0A0A0F;
+        }
+
+        /* API Keys */
+        .api-key {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reveal-btn {
+            padding: 5px 10px;
+            background: transparent;
+            border: 1px solid #C9A84C;
+            color: #C9A84C;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Emergency Section */
+        .emergency-section {
+            grid-column: span 2;
+            background: rgba(128,0,0,0.3);
+            border: 3px solid #FF0000;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .emergency-btn {
+            padding: 20px;
+            background: rgba(255,0,0,0.1);
+            border: 2px solid #FF0000;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .emergency-btn:hover {
+            background: rgba(255,0,0,0.3);
+            transform: scale(1.05);
+        }
+
+        /* Audit Log */
+        .audit-log {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            padding: 5px;
+            border-bottom: 1px solid rgba(201,168,76,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>⚡ THE VAULT • MASTER CONTROL</h1>
+            <div class="access-badge">CTO: SANDE ALLAN • ONLINE</div>
+        </div>
+
+        <div class="vault-grid">
+            <!-- MASTER SWITCHES -->
+            <div class="vault-card">
+                <div class="card-header">
+                    <h2>🔌 MASTER SWITCHES</h2>
+                    <div class="icon">⚡</div>
+                </div>
+                
+                <div class="switch-grid">
+                    <div class="switch-item">
+                        <div>
+                            <div class="switch-label">System Core</div>
+                            <div class="switch-status">● ONLINE</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="switch-item">
+                        <div>
+                            <div class="switch-label">Payment Gateway</div>
+                            <div class="switch-status">● ONLINE</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="switch-item">
+                        <div>
+                            <div class="switch-label">AI Agents</div>
+                            <div class="switch-status">● ONLINE</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="switch-item">
+                        <div>
+                            <div class="switch-label">Data Sync</div>
+                            <div class="switch-status">● ONLINE</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="switch-item">
+                        <div>
+                            <div class="switch-label">API Gateway</div>
+                            <div class="switch-status">● ONLINE</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="switch-item">
+                        <div>
+                            <div class="switch-label">Database</div>
+                            <div class="switch-status">● ONLINE</div>
+                        </div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MASTER PASSWORDS -->
+            <div class="vault-card">
+                <div class="card-header">
+                    <h2>🔑 MASTER PASSWORDS</h2>
+                    <div class="icon">🔐</div>
+                </div>
+
+                <table class="passwords-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Vercel</td>
+                            <td>sande@dreamteam</td>
+                            <td>••••••••••</td>
+                            <td><button class="copy-btn" onclick="copyToClipboard('Titanium2026!')">Copy</button></td>
+                        </tr>
+                        <tr>
+                            <td>GitHub</td>
+                            <td>dreamteamug-ship-it</td>
+                            <td>••••••••••</td>
+                            <td><button class="copy-btn" onclick="copyToClipboard('TitaniumGit2026!')">Copy</button></td>
+                        </tr>
+                        <tr>
+                            <td>Database</td>
+                            <td>postgres</td>
+                            <td>••••••••••</td>
+                            <td><button class="copy-btn" onclick="copyToClipboard('TitaniumDB2026!')">Copy</button></td>
+                        </tr>
+                        <tr>
+                            <td>OpenAI</td>
+                            <td>org-12345</td>
+                            <td>••••••••••</td>
+                            <td><button class="copy-btn" onclick="copyToClipboard('sk-...')">Copy</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 20px;">
+                    <div class="api-key">
+                        <span>OpenAI API Key</span>
+                        <span>••••••••••••••••</span>
+                        <button class="reveal-btn" onclick="revealKey('openai')">Reveal</button>
+                    </div>
+                    <div class="api-key">
+                        <span>Stripe Secret Key</span>
+                        <span>••••••••••••••••</span>
+                        <button class="reveal-btn" onclick="revealKey('stripe')">Reveal</button>
+                    </div>
+                    <div class="api-key">
+                        <span>M-PESA API Key</span>
+                        <span>••••••••••••••••</span>
+                        <button class="reveal-btn" onclick="revealKey('mpesa')">Reveal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMMAND SWITCHES -->
+        <div class="vault-grid">
+            <div class="vault-card">
+                <div class="card-header">
+                    <h2>🎮 COMMAND SWITCHES</h2>
+                    <div class="icon">🎚️</div>
+                </div>
+
+                <div class="switch-grid">
+                    <div class="switch-item">
+                        <div class="switch-label">Maintenance Mode</div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="switch-item">
+                        <div class="switch-label">Debug Mode</div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="switch-item">
+                        <div class="switch-label">Audit Logging</div>
+                        <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+
+                    <div class="switch-item">
+                        <div class="switch-label">Emergency Broadcast</div>
+                        <div class="toggle-switch" onclick="toggleSwitch(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECURITY STATUS -->
+            <div class="vault-card">
+                <div class="card-header">
+                    <h2>🛡️ SECURITY STATUS</h2>
+                    <div class="icon">✅</div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>Firewall</span>
+                        <span style="color: #00FF00;">ACTIVE</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>WAF</span>
+                        <span style="color: #00FF00;">ACTIVE</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>IDS/IPS</span>
+                        <span style="color: #00FF00;">MONITORING</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>MFA Enforcement</span>
+                        <span style="color: #00FF00;">ENABLED</span>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;">
+                    <p style="font-size: 14px; margin-bottom: 10px;">🔐 ACTIVE SESSIONS</p>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span>Current Session</span>
+                        <span>CTO • Nairobi</span>
+                        <span style="color: #00FF00;">ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMERGENCY SECTION -->
+        <div class="emergency-section">
+            <h2 style="color: #FF0000; margin-bottom: 15px;">🚨 EMERGENCY PROTOCOLS</h2>
+            
+            <div class="emergency-grid">
+                <button class="emergency-btn" onclick="emergency('kill')">⚡ KILL SWITCH</button>
+                <button class="emergency-btn" onclick="emergency('backup')">💾 EMERGENCY BACKUP</button>
+                <button class="emergency-btn" onclick="emergency('lockdown')">🔒 SYSTEM LOCKDOWN</button>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <p style="color: #FF6666; font-size: 14px;">⚠️ These actions are irreversible and will be logged immediately</p>
+            </div>
+        </div>
+
+        <!-- AUDIT LOG -->
+        <div class="vault-card" style="margin-top: 20px;">
+            <div class="card-header">
+                <h2>📋 AUDIT LOG</h2>
+                <div class="icon">📝</div>
+            </div>
+
+            <div class="audit-log" id="auditLog">
+                <div class="log-entry">✅ [2026-03-17 15:30:22] VAULT ACCESSED - CTO: SANDE ALLAN</div>
+                <div class="log-entry">✅ [2026-03-17 15:30:23] MASTER SWITCHES - ALL SYSTEMS ONLINE</div>
+                <div class="log-entry">✅ [2026-03-17 15:30:25] SECURITY CHECK - PASSED</div>
+                <div class="log-entry">✅ [2026-03-17 15:30:28] AUDIT LOGGING - ENABLED</div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="margin-top: 30px; padding: 20px; border-top: 1px solid rgba(201,168,76,0.3); display: flex; justify-content: space-between; font-size: 12px;">
+            <div>🔐 MILITARY GRADE ENCRYPTION • AES-256 • TLS 1.3</div>
+            <div>⚡ LAST AUDIT: <span id="timestamp"></span></div>
+        </div>
+    </div>
+
+    <script>
+        // Update timestamp
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+        // Toggle switches
+        function toggleSwitch(sw) {
+            sw.classList.toggle('active');
+            const status = sw.classList.contains('active') ? 'ONLINE' : 'OFFLINE';
+            const label = sw.parentElement.querySelector('.switch-label')?.textContent || 'System';
+            addLogEntry(`⚡ ${label} switched to ${status}`);
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            addLogEntry(`📋 Password copied to clipboard`);
+            alert('✅ Copied to clipboard');
+        }
+
+        // Reveal API key
+        function revealKey(service) {
+            const keys = {
+                'openai': 'sk-proj-3e94e111b84212efd90add786d91d63c8845883534c5d114e3f98fcfa05c1a0f',
+                'stripe': 'sk_live_4eC39HqLyjWDarjtT1zdp7dc',
+                'mpesa': 'MPESA_API_KEY_2026_LIVE'
+            };
+            alert(`🔑 ${service.toUpperCase()} Key: ${keys[service]}`);
+            addLogEntry(`🔍 API Key revealed: ${service}`);
+        }
+
+        // Emergency functions
+        function emergency(type) {
+            const actions = {
+                'kill': '💀 KILL SWITCH ACTIVATED - All systems shutting down',
+                'backup': '💾 EMERGENCY BACKUP INITIATED',
+                'lockdown': '🔒 SYSTEM LOCKDOWN - All access blocked'
+            };
+            
+            if (confirm(`🚨 Are you ABSOLUTELY sure you want to activate ${type}?`)) {
+                alert(actions[type]);
+                addLogEntry(`🚨 EMERGENCY: ${actions[type]}`);
+                
+                // Visual feedback
+                document.body.style.backgroundColor = '#330000';
+                setTimeout(() => {
+                    document.body.style.backgroundColor = '#0A0A0F';
+                }, 1000);
+            }
+        }
+
+        // Add audit log entry
+        function addLogEntry(message) {
+            const log = document.getElementById('auditLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = `✅ [${new Date().toLocaleString()}] ${message}`;
+            log.insertBefore(entry, log.firstChild);
+            
+            // Keep only last 20 entries
+            while (log.children.length > 20) {
+                log.removeChild(log.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>

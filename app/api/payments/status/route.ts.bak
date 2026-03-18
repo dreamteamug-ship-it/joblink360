@@ -1,0 +1,58 @@
+﻿// app/api/payments/status/route.ts
+import { NextResponse } from 'next/server';
+
+// Mock payment status storage - in production use database
+const payments: Record<string, any> = {};
+
+export async function POST(req: Request) {
+  try {
+    const { reference, status, amount } = await req.json();
+    
+    payments[reference] = {
+      reference,
+      status,
+      amount,
+      updatedAt: new Date().toISOString()
+    };
+    
+    return NextResponse.json({ 
+      success: true,
+      payment: payments[reference]
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to update status' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const reference = searchParams.get('reference');
+    
+    if (!reference) {
+      return NextResponse.json(
+        { error: 'Reference required' },
+        { status: 400 }
+      );
+    }
+    
+    const payment = payments[reference] || {
+      reference,
+      status: 'pending',
+      message: 'Payment not found'
+    };
+    
+    return NextResponse.json({ 
+      success: true,
+      payment 
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to get status' },
+      { status: 500 }
+    );
+  }
+}
