@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JobLink 360 | Sovereign Roadmap</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">        async function submitToMoodle() {
+            const status = document.getElementById('save-status');
+            status.innerText = "🚀 Uploading to JobLink 360...";
+            
+            const payload = {
+                student: document.getElementById('user-name').innerText,
+                content: document.getElementById('road-content').innerHTML,
+                milestones: document.getElementById('tech-milestones').innerHTML,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch('/local/amanda/save_roadmap.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    status.innerText = "✅ Submitted Successfully!";
+                    alert("Your Career Roadmap has been saved to your Moodle profile.");
+                }
+            } catch (e) {
+                status.innerText = "❌ Submission Failed.";
+                console.error(e);
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #1a1a1a; color: white; padding: 20px; }
+        #doc { width: 210mm; min-height: 297mm; background: white; color: #333; margin: auto; padding: 20mm; position: relative; border-top: 10px solid #0A192F; box-shadow: 0 0 50px rgba(0,0,0,0.5); }
+        h1 { color: #0A192F; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid #C5A059; }
+        .editable { padding: 15px; border: 1px dashed #eee; min-height: 150px; outline: none; transition: 0.3s; line-height: 1.6; }
+        .editable:focus { border: 1px solid #C5A059; background: #FFFDF5; }
+        .controls { position: fixed; top: 20px; left: 20px; display: flex; flex-direction: column; gap: 10px; }
+        button { background: #0A192F; color: #C5A059; border: 1px solid #C5A059; padding: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        button:hover { background: #C5A059; color: #0A192F; }
+        .status-tag { font-size: 10px; color: #888; margin-top: 5px; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="submitToMoodle()" style="border-color: #5cb85c; color: #5cb85c;">📤 Submit to Moodle</button><button onclick="savePDF()">📥 Export to PDF</button>
+        <button onclick="clearData()" style="border-color: #d9534f; color: #d9534f;">🗑️ Reset Template</button>
+    </div>
+    <div id="doc">
+        <h1>Career Roadmap: <span id="user-name" contenteditable="true">Sande Allan</span></h1>
+        <p style="color: #C5A059; font-weight: bold;">JOBLINK 360 | SOVEREIGN INTELLIGENCE PHASE 2</p>
+        
+        <h3>1. Strategic Focus & AI Integration</h3>
+        <div class="editable" id="road-content" contenteditable="true">
+            Fetching Amanda's advice... (Type here to override)
+        </div>
+
+        <h3>2. Technical Milestones</h3>
+        <div class="editable" id="tech-milestones" contenteditable="true">
+            • Complete Moodle-Ollama Direct Handshake<br>
+            • Optimize 1.5B Model Inference for 8GB RAM<br>
+            • Harden A4 Portrait Documentation Engine
+        </div>
+
+        <div class="status-tag" id="save-status">Draft Auto-Saved</div>
+    </div>
+
+    <script>
+        // AUTO-SAVE LOGIC
+        const fields = ['user-name', 'road-content', 'tech-milestones'];
+        
+        window.onload = () => {
+            fields.forEach(id => {
+                const saved = localStorage.getItem(id);
+                if (saved) document.getElementById(id).innerHTML = saved;
+            });
+        };
+
+        document.addEventListener('input', (e) => {
+            if (fields.includes(e.target.id)) {
+                localStorage.setItem(e.target.id, e.target.innerHTML);
+                document.getElementById('save-status').innerText = "Last saved: " + new Date().toLocaleTimeString();
+            }
+        });
+
+        function savePDF() {
+            const element = document.getElementById('doc');
+            html2pdf().from(element).set({
+                margin: 0,
+                filename: 'JobLink360_Sovereign_Roadmap.pdf',
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).save();
+        }
+
+        function clearData() {
+            if(confirm("Are you sure? This will wipe your current draft.")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+            async function submitToMoodle() {
+            const status = document.getElementById('save-status');
+            status.innerText = "🚀 Uploading to JobLink 360...";
+            
+            const payload = {
+                student: document.getElementById('user-name').innerText,
+                content: document.getElementById('road-content').innerHTML,
+                milestones: document.getElementById('tech-milestones').innerHTML,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch('/local/amanda/save_roadmap.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    status.innerText = "✅ Submitted Successfully!";
+                    alert("Your Career Roadmap has been saved to your Moodle profile.");
+                }
+            } catch (e) {
+                status.innerText = "❌ Submission Failed.";
+                console.error(e);
+            }
+        }
+    </script>
+</body>
+</html>

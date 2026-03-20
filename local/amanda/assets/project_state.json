@@ -1,0 +1,16 @@
+﻿{
+    "project": "JobLink 360",
+    "version": "2.1.0",
+    "infrastructure": {
+        "ai_bridge": "Direct PHP-to-Ollama",
+        "ollama_port": 11434,
+        "monitor_status": "Bypassed (RAM Optimization)",
+        "model": "qwen2.5-coder:1.5b"
+    },
+    "artifacts": {
+        "roadmap_type": "A4 Portrait",
+        "export_engine": "html2pdf.js",
+        "database_table": "mdl_local_amanda_roadmaps"
+    },
+    "hardware_baseline": "8GB RAM / Windows 11 / WSL2"
+}

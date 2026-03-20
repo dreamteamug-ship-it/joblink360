@@ -1,0 +1,22 @@
+﻿SUBJECT: Welcome to JobLink 360 | Your Career Roadmap with Amanda AI
+
+Hello [Student Name],
+
+Welcome to the JobLink 360 Pilot Program. You have been selected as one of the first 10 participants to utilize our Sovereign AI Mentor, Amanda.
+
+Getting Started:
+1. Log in to the Moodle portal at: http://[Your-Server-IP-or-Localhost]/moodle
+2. Navigate to the "Career Roadmap" activity.
+3. Introduce yourself to Amanda. She is trained to analyze your current skills and build a strategic path for your professional growth.
+
+Pro-Tips for a Smooth Experience:
+- Be Patient: Amanda runs on our private, secure hardware. If she takes 5–10 seconds to respond, she is "thinking"—please do not refresh the page.
+- Be Specific: The more you tell her about your background, the more accurate your A4 Roadmap will be.
+- Export Your Future: Once you are satisfied with your goals, click "Save to PDF" to keep a physical copy of your career strategy.
+
+Your data is stored locally and securely within our JobLink 360 ecosystem. We look forward to seeing your progress.
+
+Best regards,
+
+Sande Allan
+Lead Mentor, JobLink 360
