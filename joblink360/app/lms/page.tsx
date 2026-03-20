@@ -1,12 +1,16 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getLanguageOptions } from '@/lib/i18n/languages';
 
 export default function LMSHome() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState('en');
   const [translations, setTranslations] = useState({});
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  
+  const languages = getLanguageOptions();
   
   useEffect(() => {
     fetch(`/api/language?lang=${language}`)
@@ -21,15 +25,6 @@ export default function LMSHome() {
       });
   }, [language]);
   
-  const languages = [
-    { code: 'en', name: 'English', flag: '????' },
-    { code: 'sw', name: 'Kiswahili', flag: '????' },
-    { code: 'yo', name: 'Yorùbá', flag: '????' },
-    { code: 'ha', name: 'Hausa', flag: '????' },
-    { code: 'zu', name: 'isiZulu', flag: '????' },
-    { code: 'xh', name: 'isiXhosa', flag: '????' }
-  ];
-  
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -40,22 +35,67 @@ export default function LMSHome() {
   
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Language Selector */}
+      {/* Enhanced Language Selector with Regional Groups */}
       <div className="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-2 flex justify-end gap-2">
-          {languages.map(lang => (
+        <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+          <div className="text-xs text-zinc-500">
+            ?? 26+ Languages • 16 Countries
+          </div>
+          <div className="relative">
             <button
-              key={lang.code}
-              onClick={() => setLanguage(lang.code)}
-              className={`px-3 py-1 rounded text-sm transition ${
-                language === lang.code 
-                  ? 'bg-amber-500 text-black' 
-                  : 'hover:bg-zinc-800'
-              }`}
+              onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+              className="px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition flex items-center gap-2"
             >
-              {lang.flag} {lang.name}
+              <span>{languages.find(l => l.code === language)?.flag || '??'}</span>
+              <span>{languages.find(l => l.code === language)?.name || 'English'}</span>
+              <span>?</span>
             </button>
-          ))}
+            
+            {showLanguageMenu && (
+              <div className="absolute right-0 mt-2 w-80 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
+                <div className="p-2">
+                  <div className="text-xs text-zinc-500 px-3 py-2 border-b border-zinc-800">East Africa</div>
+                  {languages.filter(l => ['sw','kik','lug','kin','run','amh','som','lin'].includes(l.code)).map(lang => (
+                    <button
+                      key={lang.code}
+                      onClick={() => { setLanguage(lang.code); setShowLanguageMenu(false); }}
+                      className={`w-full text-left px-3 py-2 rounded hover:bg-zinc-800 transition flex items-center gap-2 ${language === lang.code ? 'bg-zinc-800 text-amber-500' : ''}`}
+                    >
+                      <span>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                      <span className="text-xs text-zinc-500 ml-auto">{lang.region}</span>
+                    </button>
+                  ))}
+                  
+                  <div className="text-xs text-zinc-500 px-3 py-2 border-t border-zinc-800 mt-2">Southern Africa</div>
+                  {languages.filter(l => ['bem','nya','ndo','sna','tso','ven','ndb','loz'].includes(l.code)).map(lang => (
+                    <button
+                      key={lang.code}
+                      onClick={() => { setLanguage(lang.code); setShowLanguageMenu(false); }}
+                      className={`w-full text-left px-3 py-2 rounded hover:bg-zinc-800 transition flex items-center gap-2 ${language === lang.code ? 'bg-zinc-800 text-amber-500' : ''}`}
+                    >
+                      <span>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                      <span className="text-xs text-zinc-500 ml-auto">{lang.region}</span>
+                    </button>
+                  ))}
+                  
+                  <div className="text-xs text-zinc-500 px-3 py-2 border-t border-zinc-800 mt-2">West & Central Africa</div>
+                  {languages.filter(l => ['kng','sag','wo','ff','bm','tw'].includes(l.code)).map(lang => (
+                    <button
+                      key={lang.code}
+                      onClick={() => { setLanguage(lang.code); setShowLanguageMenu(false); }}
+                      className={`w-full text-left px-3 py-2 rounded hover:bg-zinc-800 transition flex items-center gap-2 ${language === lang.code ? 'bg-zinc-800 text-amber-500' : ''}`}
+                    >
+                      <span>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                      <span className="text-xs text-zinc-500 ml-auto">{lang.region}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       
@@ -65,7 +105,7 @@ export default function LMSHome() {
             {translations.welcome || 'Sovereign'}
           </h1>
           <p className="text-zinc-500 text-sm tracking-widest mt-2">
-            {translations.courses || 'CAREER ARCHITECTURE v1.0'}
+            {translations.courses || 'CAREER ARCHITECTURE v1.0'} • 26 Countries • 16+ Languages
           </p>
         </div>
         
@@ -85,13 +125,18 @@ export default function LMSHome() {
                 <div className="bg-amber-500 h-1 rounded-full" style={{ width: `${course.Demand_Score}%` }}></div>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-amber-500 font-bold">KES {course.price || 1500}</span>
+                <span className="text-amber-500 font-bold">{translations.currency || 'KES'} {course.price || 1500}</span>
                 <Link href={`/lms/courses/${i}`} className="inline-flex items-center text-sm text-amber-500 hover:text-amber-400 transition">
                   {translations.learn_more || 'Enroll Now'} ?
                 </Link>
               </div>
             </div>
           ))}
+        </div>
+        
+        <div className="mt-12 text-center text-sm text-zinc-600 border-t border-zinc-800 pt-8">
+          <p>?? Serving 26 Countries Across Africa | ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ???? ????</p>
+          <p className="mt-2">Available in: English, Kiswahili, Gikuyu, Luganda, Kinyarwanda, Runyankole, Amharic, Soomaali, Lingala, ChiBemba, Chichewa, Oshiwambo, chiShona, Xitsonga, Tshivenda, isiNdebele, Silozi, Kikongo, Sango, Wolof, Fulfulde, Bamanankan, Twi</p>
         </div>
       </div>
     </div>
