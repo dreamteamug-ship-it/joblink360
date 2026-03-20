@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@700;800&display=swap');
+:root {
+  --deep-blue: #0A192F; --matte-gold: #D4AF37; --silver: #C0C0C0;
+  --matte-cream: #FFFDF5; --text-black: #1A1A1A;
+}
+.a4-page { width: 210mm; min-height: 297mm; padding: 20mm; margin: 10px auto; background: var(--matte-cream); font-family: 'Lato', sans-serif; }
+.cover-page { background: var(--deep-blue); color: white; text-align: center; padding: 40mm 20mm; }
+.cover-title { font-family: 'Montserrat', sans-serif; color: var(--matte-gold); font-size: 36pt; text-transform: uppercase; }
+.cover-subtitle { font-family: 'Montserrat', sans-serif; color: var(--silver); font-size: 16pt; }
+.inner-header { border-bottom: 2px solid var(--matte-gold); margin-bottom: 20px; }

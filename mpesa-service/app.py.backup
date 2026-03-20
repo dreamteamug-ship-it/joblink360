@@ -1,0 +1,3 @@
+﻿def get_base_url():
+    """Get base URL based on environment"""
+    return "https://sandbox.safaricom.co.ke"  # Hardcode for now to avoid DNS issues

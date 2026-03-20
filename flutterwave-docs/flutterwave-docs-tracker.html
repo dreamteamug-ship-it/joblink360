@@ -1,0 +1,469 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Flutterwave Kenya - Document Tracker</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0A0A0F;
+            color: #F5F5DC;
+            font-family: 'Inter', sans-serif;
+            padding: 30px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #FBBF24;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #9CA3AF;
+            margin-bottom: 30px;
+        }
+        .business-type {
+            background: #1A1A24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #FBBF24;
+        }
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .doc-card {
+            background: #1A1A24;
+            border: 1px solid #2A2A34;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+        .doc-card:hover {
+            border-color: #FBBF24;
+        }
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .doc-name {
+            font-weight: bold;
+            color: #FBBF24;
+        }
+        .doc-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-not-started { background: #4B5563; color: white; }
+        .status-in-progress { background: #FBBF24; color: black; }
+        .status-completed { background: #10B981; color: white; }
+        .doc-notes {
+            color: #9CA3AF;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        .doc-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        button {
+            background: #2A2A34;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #FBBF24;
+            color: black;
+        }
+        .progress-section {
+            background: #1A1A24;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .progress-bar {
+            height: 20px;
+            background: #2A2A34;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FBBF24, #F59E0B);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .payout-section {
+            background: linear-gradient(135deg, #1A1A24, #0A0A0F);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #FBBF24;
+            margin-top: 30px;
+        }
+        .payout-option {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+        }
+        .payout-card {
+            flex: 1;
+            background: #2A2A34;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payout-card.selected {
+            border: 2px solid #FBBF24;
+            background: #3A3A44;
+        }
+        .payout-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .action-btn {
+            background: #FBBF24;
+            color: black;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .action-btn:hover {
+            background: #F59E0B;
+        }
+        .floating-actions {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        .float-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: #FBBF24;
+            color: black;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌊 Flutterwave Kenya Registration</h1>
+        <div class="subtitle">Document Preparation & Tracking System</div>
+        
+        <div class="business-type" id="businessTypeDisplay">
+            <strong>Business Type:</strong> Sole Proprietorship<br>
+            <strong>Started:</strong> 2026-03-19 00:05
+        </div>
+        
+        <div class="progress-section">
+            <h3>📊 Overall Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div id="progressStats">0/0 documents completed</div>
+        </div>
+        
+        <h3>📋 Required Documents</h3>
+        <div class="requirements-grid" id="requirementsGrid">            <div class="doc-card" data-doc="Certificate of Registration (E-citizen with QR)">
+                <div class="doc-header">
+                    <span class="doc-name">Certificate of Registration (E-citizen with QR)</span>
+                    <span class="doc-status status-not-started" id="status--565511232">Not Started</span>
+                </div>
+                <div class="doc-notes">Get from e-citizen</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Certificate of Registration (E-citizen with QR)', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Certificate of Registration (E-citizen with QR)', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Certificate of Registration (E-citizen with QR)')">📖 Guide</button>
+                </div>
+            </div>            <div class="doc-card" data-doc="Business Owner ID">
+                <div class="doc-header">
+                    <span class="doc-name">Business Owner ID</span>
+                    <span class="doc-status status-not-started" id="status--798037218">Not Started</span>
+                </div>
+                <div class="doc-notes">National ID/Passport/Driver's License</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Business Owner ID', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Business Owner ID', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Business Owner ID')">📖 Guide</button>
+                </div>
+            </div>            <div class="doc-card" data-doc="Individual KRA PIN">
+                <div class="doc-header">
+                    <span class="doc-name">Individual KRA PIN</span>
+                    <span class="doc-status status-not-started" id="status-1958537254">Not Started</span>
+                </div>
+                <div class="doc-notes">Personal KRA certificate</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Individual KRA PIN', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Individual KRA PIN', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Individual KRA PIN')">📖 Guide</button>
+                </div>
+            </div>            <div class="doc-card" data-doc="Proof of Address (Owner)">
+                <div class="doc-header">
+                    <span class="doc-name">Proof of Address (Owner)</span>
+                    <span class="doc-status status-not-started" id="status-2124186924">Not Started</span>
+                </div>
+                <div class="doc-notes">Bank statement/Utility bill</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Proof of Address (Owner)', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Proof of Address (Owner)', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Proof of Address (Owner)')">📖 Guide</button>
+                </div>
+            </div>            <div class="doc-card" data-doc="Proof of Address (Business)">
+                <div class="doc-header">
+                    <span class="doc-name">Proof of Address (Business)</span>
+                    <span class="doc-status status-not-started" id="status-1861491183">Not Started</span>
+                </div>
+                <div class="doc-notes">Operational business address proof</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Proof of Address (Business)', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Proof of Address (Business)', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Proof of Address (Business)')">📖 Guide</button>
+                </div>
+            </div>            <div class="doc-card" data-doc="Payout Details">
+                <div class="doc-header">
+                    <span class="doc-name">Payout Details</span>
+                    <span class="doc-status status-not-started" id="status--267766683">Not Started</span>
+                </div>
+                <div class="doc-notes">Bank account or M-Pesa details</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Payout Details', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Payout Details', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Payout Details')">📖 Guide</button>
+                </div>
+            </div>            <div class="doc-card" data-doc="Verifiable Website URL">
+                <div class="doc-header">
+                    <span class="doc-name">Verifiable Website URL</span>
+                    <span class="doc-status status-not-started" id="status--1749163172">Not Started</span>
+                </div>
+                <div class="doc-notes">Showing business activities</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Verifiable Website URL', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Verifiable Website URL', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Verifiable Website URL')">📖 Guide</button>
+                </div>
+            </div>            <div class="doc-card" data-doc="Estimated Monthly Sales">
+                <div class="doc-header">
+                    <span class="doc-name">Estimated Monthly Sales</span>
+                    <span class="doc-status status-not-started" id="status--1436026835">Not Started</span>
+                </div>
+                <div class="doc-notes">Amount in KES</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Estimated Monthly Sales', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Estimated Monthly Sales', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Estimated Monthly Sales')">📖 Guide</button>
+                </div>
+            </div>            <div class="doc-card" data-doc="Resident Permit (if foreigner)">
+                <div class="doc-header">
+                    <span class="doc-name">Resident Permit (if foreigner)</span>
+                    <span class="doc-status status-not-started" id="status--1336383619">Not Started</span>
+                </div>
+                <div class="doc-notes">Only if applicable</div>
+                <div class="doc-actions">
+                    <button onclick="updateStatus('Resident Permit (if foreigner)', 'in-progress')">▶ Start</button>
+                    <button onclick="updateStatus('Resident Permit (if foreigner)', 'completed')">✅ Done</button>
+                    <button onclick="openHelper('Resident Permit (if foreigner)')">📖 Guide</button>
+                </div>
+            </div>        </div>
+        
+        <div class="payout-section">
+            <h3>💰 Payout Method Selection</h3>
+            <p>Choose how you want to receive funds from Flutterwave:</p>
+            
+            <div class="payout-option">
+                <div class="payout-card" id="payout-bank" onclick="selectPayout('bank')">
+                    <div class="payout-icon">🏦</div>
+                    <strong>Bank Account</strong>
+                    <p style="font-size:12px; margin-top:8px;">Direct to your business bank account</p>
+                </div>
+                <div class="payout-card" id="payout-mpesa" onclick="selectPayout('mpesa')">
+                    <div class="payout-icon">📱</div>
+                    <strong>M-Pesa</strong>
+                    <p style="font-size:12px; margin-top:8px;">Receive directly to M-Pesa (faster)</p>
+                </div>
+                <div class="payout-card" id="payout-airtel" onclick="selectPayout('airtel')">
+                    <div class="payout-icon">📱</div>
+                    <strong>Airtel Money</strong>
+                    <p style="font-size:12px; margin-top:8px;">Alternative mobile money</p>
+                </div>
+            </div>
+            
+            <div id="payout-details" style="margin-top:20px; display:none;">
+                <h4>Enter your payout details:</h4>
+                <input type="text" id="payoutAccount" placeholder="Account number / M-Pesa number" style="width:100%; padding:10px; margin:10px 0; background:#2A2A34; border:1px solid #FBBF24; color:white; border-radius:5px;">
+                <input type="text" id="payoutName" placeholder="Account name" style="width:100%; padding:10px; margin:10px 0; background:#2A2A34; border:1px solid #FBBF24; color:white; border-radius:5px;">
+            </div>
+        </div>
+        
+        <button class="action-btn" onclick="generateSummary()">📄 Generate Registration Summary</button>
+        
+        <div style="margin-top: 30px; background: #1A1A24; padding: 20px; border-radius: 10px;">
+            <h3>🔗 Quick Links</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px;">
+                <button onclick="window.open('https://dashboard.flutterwave.com/register')">Flutterwave Signup</button>
+                <button onclick="window.open('https://flutterwave.com/ke/support')">Support</button>
+                <button onclick="window.open('https://developer.flutterwave.com/docs')">API Docs</button>
+                <button onclick="window.open('mailto:hi.kenya@flutterwave.com')">Email Support</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="floating-actions">
+        <button class="float-btn" onclick="saveProgress()">💾</button>
+        <button class="float-btn" onclick="loadProgress()">↻</button>
+    </div>
+    
+    <script>
+        let selectedPayout = null;
+        let docStatus = {};
+        
+        function updateStatus(docName, status) {
+            const docCard = document.querySelector([data-doc=""]);
+            const statusSpan = document.getElementById(status-);
+            
+            docStatus[docName] = status;
+            
+            if (status === 'in-progress') {
+                statusSpan.textContent = 'In Progress';
+                statusSpan.className = 'doc-status status-in-progress';
+            } else if (status === 'completed') {
+                statusSpan.textContent = 'Completed';
+                statusSpan.className = 'doc-status status-completed';
+            }
+            
+            updateProgress();
+            saveToLocalStorage();
+        }
+        
+        function openHelper(docName) {
+            alert(How to prepare: \n\n1. Gather the original document\n2. Ensure it's valid (>6 months expiry)\n3. Scan or take a clear photo\n4. Save as PDF in your documents folder);
+        }
+        
+        function selectPayout(type) {
+            selectedPayout = type;
+            document.getElementById('payout-bank').classList.remove('selected');
+            document.getElementById('payout-mpesa').classList.remove('selected');
+            document.getElementById('payout-airtel').classList.remove('selected');
+            document.getElementById(payout-Sole Proprietorship).classList.add('selected');
+            document.getElementById('payout-details').style.display = 'block';
+        }
+        
+        function updateProgress() {
+            const docs = Object.keys(docStatus);
+            const total = docs.length;
+            const completed = docs.filter(d => docStatus[d] === 'completed').length;
+            const percent = total > 0 ? (completed / total) * 100 : 0;
+            
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressStats').textContent = ${completed}/ documents completed (%);
+        }
+        
+        function saveToLocalStorage() {
+            localStorage.setItem('flutterwaveDocs', JSON.stringify({
+                status: docStatus,
+                payout: selectedPayout,
+                payoutDetails: {
+                    account: document.getElementById('payoutAccount')?.value || '',
+                    name: document.getElementById('payoutName')?.value || ''
+                }
+            }));
+        }
+        
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('flutterwaveDocs');
+            if (saved) {
+                const data = JSON.parse(saved);
+                docStatus = data.status || {};
+                selectedPayout = data.payout || null;
+                
+                if (selectedPayout) {
+                    document.getElementById(payout-).classList.add('selected');
+                    document.getElementById('payout-details').style.display = 'block';
+                }
+                
+                if (data.payoutDetails) {
+                    document.getElementById('payoutAccount').value = data.payoutDetails.account || '';
+                    document.getElementById('payoutName').value = data.payoutDetails.name || '';
+                }
+                
+                // Update UI for each doc
+                Object.keys(docStatus).forEach(doc => {
+                    const statusSpan = document.getElementById(status-);
+                    if (statusSpan) {
+                        if (docStatus[doc] === 'in-progress') {
+                            statusSpan.textContent = 'In Progress';
+                            statusSpan.className = 'doc-status status-in-progress';
+                        } else if (docStatus[doc] === 'completed') {
+                            statusSpan.textContent = 'Completed';
+                            statusSpan.className = 'doc-status status-completed';
+                        }
+                    }
+                });
+                
+                updateProgress();
+            }
+        }
+        
+        function saveProgress() {
+            saveToLocalStorage();
+            alert('Progress saved!');
+        }
+        
+        function loadProgress() {
+            loadFromLocalStorage();
+            alert('Progress loaded!');
+        }
+        
+        function generateSummary() {
+            const completed = Object.keys(docStatus).filter(d => docStatus[d] === 'completed').length;
+            const total = Object.keys(docStatus).length;
+            const summary = 
+Flutterwave Kenya Registration Summary
+======================================
+Business Type: Sole Proprietorship
+Progress: / documents ready
+
+Payout Method: 
+
+Next Steps:
+1. Visit https://dashboard.flutterwave.com/register
+2. Complete the online application
+3. Upload all completed documents
+4. Submit for review (takes ~72 hours)
+5. Check email for approval
+
+Support: hi.kenya@flutterwave.com
+            ;
+            alert(summary);
+            console.log(summary);
+        }
+        
+        // Load saved progress on page load
+        window.onload = loadFromLocalStorage;
+    </script>
+</body>
+</html>
