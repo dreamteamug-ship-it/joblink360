@@ -44,7 +44,7 @@
             <section class="industrial-border mb-8">
                 <h2 class="text-2xl font-bold mb-2">01. EXECUTIVE SUMMARY</h2>
                 <div id="main-content" contenteditable="true" class="text-zinc-300 leading-relaxed text-sm">
-                    This deep-delve roadmap identifies the gap between your current technical stack and the high-yield demand found in the Nairobi and Lusaka tech corridors. Our analysis shows a significant opportunity in the integration of industrial-grade IoT for agribusiness monitoring across the Rift Valley.
+                    Analysis complete. Detected 2 high-yield gaps. Primary target: Cloud Systems Architect in Nairobi, KE. This roadmap reflects a 512-point data injection from the Sovereign Hunter Agent. Our analysis shows a significant opportunity in the integration of industrial-grade IoT for agribusiness monitoring across the Rift Valley.
                 </div>
             </div>
 
