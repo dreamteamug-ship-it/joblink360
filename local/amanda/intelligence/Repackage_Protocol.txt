@@ -1,0 +1,7 @@
+[REPACKAGING PROTOCOL: AMANDA V1]
+INPUT: Raw PDF/Audio data from owned_intake.
+OUTPUT: 
+1. REPACKAGED PDF (Maasai Gold Branding, KES/UGX Pricing).
+2. AUDIO SCRIPT (High-energy, ruthless mentor tone).
+3. 4K IMAGE PROMPT (For on-demand visual generation).
+STRATEGY: Strip all Western fluff. Focus on immediate 'Cash Cow' application.
