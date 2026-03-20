@@ -44,7 +44,7 @@
             <section class="industrial-border mb-8">
                 <h2 class="text-2xl font-bold mb-2">01. EXECUTIVE SUMMARY</h2>
                 <div id="main-content" contenteditable="true" class="text-zinc-300 leading-relaxed text-sm">
-                    Analysis complete. Detected 2 high-yield gaps. Primary target: Cloud Systems Architect in Nairobi, KE. This roadmap reflects a 512-point data injection from the Sovereign Hunter Agent. Our analysis shows a significant opportunity in the integration of industrial-grade IoT for agribusiness monitoring across the Rift Valley.
+                    Analysis complete. Detected 2 high-yield gaps. Primary target: Cloud Systems Architect in Nairobi, KE. This roadmap reflects a 512-point data injection from the Sovereign Hunter Agent. Analysis complete. The Sovereign Hunter Agent has validated 2 high-yield technical gaps across the Rift Valley corridor. The top priority vector is defined as: Cloud Systems Architect based in Nairobi, KE.
                 </div>
             </div>
 
@@ -66,8 +66,8 @@
             </div>
 
             <div class="border-2 border-dashed border-zinc-800 h-64 flex flex-col items-center justify-center relative overflow-hidden bg-zinc-900/50 mb-12">
-                <span class="text-zinc-600 text-xs uppercase mb-2 tracking-[0.5em]">VISUAL A: THE DATA FOUNDRY</span>
-                <div class="opacity-10 text-4xl font-black italic text-zinc-500">NANO BANANA 2</div>
+                <span class="text-zinc-600 text-xs uppercase mb-2 tracking-[0.5em]"><img src="/api/visuals/a" alt="Visual A" class="w-full h-full object-cover"/></span>
+                <div class="opacity-10 text-4xl font-black italic text-zinc-500"></div>
             </div>
 
             <footer class="absolute bottom-10 left-20 right-20 flex justify-between text-[10px] text-zinc-700 border-t border-zinc-800 pt-4">
