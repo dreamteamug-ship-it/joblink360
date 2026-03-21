@@ -1,44 +1,28 @@
-'use client';
-import { useState } from 'react';
-import Link from 'next/link';
-
-export default function SalesModule() {
-  const [deals, setDeals] = useState([
-    { id: 1, customer: "Tech Corp", value: 15000, stage: "Negotiation", probability: "60%" }
-  ]);
-  
+﻿"use client";
+import { useState } from "react";
+import Link from "next/link";
+export default function ERPPage() {
+  const [tab, setTab] = useState("overview");
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-amber-500">Sales CRM</h1>
-          <Link href="/erp" className="text-zinc-400 hover:text-amber-500">? Back to ERP</Link>
+    <div style={{ minHeight:"100vh", background:"#000", color:"#fff", fontFamily:"system-ui" }}>
+      <nav style={{ borderBottom:"1px solid #333", padding:"1rem 2rem", display:"flex", justifyContent:"space-between" }}>
+        <h1 style={{ color:"#f59e0b", margin:0 }}>📈 Sales & CRM</h1>
+        <div style={{ display:"flex", gap:"1rem" }}>
+          <Link href="/titanium-erp" style={{ color:"#9ca3af", textDecoration:"none" }}>← ERP Home</Link>
+          <Link href="/admin" style={{ color:"#9ca3af", textDecoration:"none" }}>Admin</Link>
         </div>
-        
-        <div className="bg-zinc-900 rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Active Deals</h2>
-          <table className="w-full text-left">
-            <thead className="border-b border-zinc-800">
-              <tr>
-                <th className="pb-2">Deal</th>
-                <th className="pb-2">Customer</th>
-                <th className="pb-2">Value (KES)</th>
-                <th className="pb-2">Stage</th>
-                <th className="pb-2">Probability</th>
-              </tr>
-            </thead>
-            <tbody>
-              {deals.map(deal => (
-                <tr key={deal.id} className="border-b border-zinc-800">
-                  <td className="py-2">{deal.id}</td>
-                  <td className="py-2">{deal.customer}</td>
-                  <td className="py-2">{deal.value}</td>
-                  <td className="py-2">{deal.stage}</td>
-                  <td className="py-2">{deal.probability}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      </nav>
+      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"2rem" }}>
+        <div style={{ display:"flex", gap:"1rem", marginBottom:"2rem" }}>
+          {["overview","reports","settings"].map(t => (
+            <button key={t} onClick={() => setTab(t)} style={{ padding:"0.5rem 1rem", background: tab===t ? "#f59e0b" : "#111", color: tab===t ? "#000" : "#fff", border:"1px solid #333", borderRadius:"0.5rem", cursor:"pointer", textTransform:"capitalize" }}>{t}</button>
+          ))}
+        </div>
+        <div style={{ background:"#111", border:"1px solid #222", borderRadius:"1rem", padding:"2rem", textAlign:"center" }}>
+          <p style={{ color:"#f59e0b", fontSize:"1.5rem" }}>📈 Sales & CRM Module</p>
+          <p style={{ color:"#9ca3af" }}>Active tab: {tab}</p>
+          <p style={{ color:"#6b7280", fontSize:"0.875rem" }}>Connect your Supabase database to see live data here.</p>
+          <Link href="/titanium-erp" style={{ color:"#f59e0b", textDecoration:"none" }}>← Back to ERP Dashboard</Link>
         </div>
       </div>
     </div>

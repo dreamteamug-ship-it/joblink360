@@ -1,109 +1,93 @@
-// app/shop/page.tsx
-'use client';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { supabase } from '@/lib/supabase/client';
+﻿"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+
+interface Product { id: string; name: string; price: number; category: string; description: string; image: string; stock: number; }
 
 export default function ShopPage() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [cartCount, setCartCount] = useState(0);
-  const [user, setUser] = useState(null);
+  const [cart, setCart] = useState<string[]>([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
+  const [added, setAdded] = useState<string | null>(null);
 
   useEffect(() => {
-    loadProducts();
-    loadCartCount();
-    checkUser();
+    setProducts([
+      { id:"1", name:"AI Prompt Engineering Course", price:5000, category:"Courses", description:"Master AI prompts and earn $500-1000/month", image:"🤖", stock:999 },
+      { id:"2", name:"Data Annotation Mastery", price:5000, category:"Courses", description:"Professional data labeling for AI companies", image:"📊", stock:999 },
+      { id:"3", name:"Virtual Sales Elite Program", price:5000, category:"Courses", description:"High-ticket remote sales techniques", image:"💼", stock:999 },
+      { id:"4", name:"JobLink 360 Premium Membership", price:2500, category:"Membership", description:"90-day job placement guarantee", image:"⭐", stock:999 },
+      { id:"5", name:"Business Plan Template Bundle", price:1500, category:"Templates", description:"10 investor-ready business plan templates", image:"📋", stock:999 },
+      { id:"6", name:"Grant Writing Masterclass", price:3500, category:"Courses", description:"Win funding across 26 African countries", image:"🏆", stock:999 },
+      { id:"7", name:"ERP Setup Consultation", price:15000, category:"Services", description:"1-hour Titanium ERP onboarding session", image:"⚙️", stock:50 },
+      { id:"8", name:"Pan-African Trade AI Course", price:5000, category:"Courses", description:"AI tools for cross-border trade", image:"🌍", stock:999 },
+    ]);
+    setLoading(false);
   }, []);
 
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
+  const addToCart = (id: string, name: string) => {
+    setCart([...cart, id]);
+    setAdded(name);
+    setTimeout(() => setAdded(null), 2000);
   };
 
-  const loadProducts = async () => {
-    const response = await fetch('/api/shop/products');
-    const data = await response.json();
-    setProducts(data.products || []);
-    setLoading(false);
-  };
+  const filtered = products.filter(p =>
+    (category === "all" || p.category === category) &&
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-  const loadCartCount = async () => {
-    const response = await fetch('/api/shop/cart/count');
-    const data = await response.json();
-    setCartCount(data.count || 0);
-  };
-
-  const addToCart = async (productId: string) => {
-    if (!user) {
-      alert('Please sign in to add items to cart');
-      window.location.href = '/login';
-      return;
-    }
-    
-    const response = await fetch('/api/shop/cart/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productId, quantity: 1 })
-    });
-    const data = await response.json();
-    if (data.success) {
-      loadCartCount();
-      alert('Added to cart!');
-    }
-  };
-
-  if (loading) return <div className="min-h-screen bg-black text-white p-8">Loading shop...</div>;
+  const categories = ["all", ...Array.from(new Set(products.map(p => p.category)))];
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-b from-zinc-900 to-black py-20">
-        <div className="container mx-auto px-4 text-center">
-          <div className="inline-block mb-4 px-4 py-1 border border-amber-500/30 rounded-full bg-amber-500/10">
-            <span className="text-amber-500 text-sm">Digital Marketplace</span>
-          </div>
-          <h1 className="text-6xl font-black text-amber-500 mb-4">JobLink Shop</h1>
-          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-            Premium courses, AI tools, and resources to accelerate your career
-          </p>
-          <div className="mt-8 flex gap-4 justify-center">
-            <Link href="/shop/cart" className="relative inline-block">
-              <span className="bg-amber-600 px-6 py-3 rounded-lg font-bold hover:bg-amber-500 transition">🛒 Cart ({cartCount})</span>
-            </Link>
-            <Link href="/lms" className="border border-amber-500 px-6 py-3 rounded-lg font-bold hover:bg-amber-500/10 transition">Browse Courses</Link>
+    <div style={{ minHeight:"100vh", background:"#000", color:"#fff", fontFamily:"system-ui" }}>
+      <nav style={{ borderBottom:"1px solid #333", padding:"1rem 2rem", display:"flex", justifyContent:"space-between", alignItems:"center", position:"sticky", top:0, background:"#000", zIndex:100 }}>
+        <h1 style={{ color:"#f59e0b", margin:0 }}>🛒 JobLink 360 Shop</h1>
+        <div style={{ display:"flex", gap:"1rem", alignItems:"center" }}>
+          <Link href="/" style={{ color:"#9ca3af", textDecoration:"none" }}>Home</Link>
+          <Link href="/shop/checkout" style={{ background:"#f59e0b", color:"#000", padding:"0.5rem 1rem", borderRadius:"0.5rem", textDecoration:"none", fontWeight:"bold" }}>
+            🛒 Cart ({cart.length})
+          </Link>
+        </div>
+      </nav>
+
+      {added && (
+        <div style={{ position:"fixed", top:"80px", right:"20px", background:"#10b981", color:"#000", padding:"1rem 1.5rem", borderRadius:"0.5rem", fontWeight:"bold", zIndex:200 }}>
+          ✅ {added} added to cart!
+        </div>
+      )}
+
+      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"2rem" }}>
+        <div style={{ display:"flex", gap:"1rem", marginBottom:"2rem", flexWrap:"wrap" }}>
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..." style={{ flex:1, minWidth:"200px", padding:"0.75rem", background:"#111", border:"1px solid #333", borderRadius:"0.5rem", color:"#fff" }} />
+          <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
+            {categories.map(c => (
+              <button key={c} onClick={() => setCategory(c)} style={{ padding:"0.5rem 1rem", background: category === c ? "#f59e0b" : "#111", color: category === c ? "#000" : "#fff", border:"1px solid #333", borderRadius:"0.5rem", cursor:"pointer", fontWeight: category === c ? "bold" : "normal" }}>
+                {c === "all" ? "All" : c}
+              </button>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* Products Grid */}
-      <div className="container mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold mb-8">Featured Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product: any) => (
-            <div key={product.id} className="group border border-zinc-800 bg-zinc-900/50 rounded-2xl overflow-hidden hover:border-amber-500/50 transition-all hover:bg-zinc-900">
-              <div className="aspect-square bg-zinc-800 relative">
-                {product.image_url ? (
-                  <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-4xl">{product.icon || '📚'}</div>
-                )}
-                {product.discount && <div className="absolute top-2 right-2 bg-red-600 px-2 py-1 rounded text-xs">-{product.discount}%</div>}
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2 group-hover:text-amber-500 transition">{product.name}</h3>
-                <p className="text-zinc-400 text-sm mb-4">{product.description}</p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    {product.original_price && <span className="text-zinc-500 line-through text-sm mr-2">KES {product.original_price}</span>}
-                    <span className="text-amber-500 font-bold text-xl">KES {product.price}</span>
-                  </div>
-                  <button onClick={() => addToCart(product.id)} className="bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded-lg text-sm font-bold transition">Add to Cart</button>
+        {loading ? <p style={{ color:"#9ca3af", textAlign:"center" }}>Loading products...</p> : (
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))", gap:"1.5rem" }}>
+            {filtered.map(p => (
+              <div key={p.id} style={{ background:"#111", border:"1px solid #222", borderRadius:"1rem", padding:"1.5rem", display:"flex", flexDirection:"column" }}>
+                <div style={{ fontSize:"3rem", marginBottom:"1rem", textAlign:"center" }}>{p.image}</div>
+                <span style={{ background:"rgba(245,158,11,0.2)", color:"#f59e0b", padding:"0.25rem 0.75rem", borderRadius:"2rem", fontSize:"0.75rem", alignSelf:"flex-start", marginBottom:"0.75rem" }}>{p.category}</span>
+                <h3 style={{ color:"#fff", margin:"0 0 0.5rem", fontSize:"1rem" }}>{p.name}</h3>
+                <p style={{ color:"#9ca3af", fontSize:"0.875rem", margin:"0 0 1rem", flex:1 }}>{p.description}</p>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                  <span style={{ color:"#f59e0b", fontWeight:"bold", fontSize:"1.25rem" }}>KES {p.price.toLocaleString()}</span>
+                  <button onClick={() => addToCart(p.id, p.name)} style={{ background:"#f59e0b", color:"#000", padding:"0.5rem 1rem", borderRadius:"0.5rem", border:"none", fontWeight:"bold", cursor:"pointer" }}>
+                    Add to Cart
+                  </button>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+        {filtered.length === 0 && !loading && <p style={{ color:"#9ca3af", textAlign:"center", padding:"2rem" }}>No products found.</p>}
       </div>
     </div>
   );
