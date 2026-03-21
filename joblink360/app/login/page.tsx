@@ -1,137 +1,116 @@
-// app/login/page.tsx
-'use client';
-import { useState } from 'react';
-import { signIn, signUp, signInWithMagicLink } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+﻿"use client";
+export const dynamic = 'force-dynamic';
+import { useState } from "react";
+import { supabase } from "@/lib/supabase/client";
+import Link from "next/link";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
-  const [useMagicLink, setUseMagicLink] = useState(false);
+  const [mode, setMode] = useState<"magic"|"password"|"signup">("magic");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const router = useRouter();
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess('');
+  const handleMagicLink = async () => {
+    if (!email) { setError("Enter your email"); return; }
+    setLoading(true); setError(""); setMessage("");
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
+    });
+    if (error) setError(error.message);
+    else setMessage(`✅ Magic link sent to ${email}! Check your inbox and click the link to sign in.`);
+    setLoading(false);
+  };
 
-    if (useMagicLink) {
-      const { error } = await signInWithMagicLink(email);
-      if (error) {
-        setError(error.message);
-      } else {
-        setSuccess('Magic link sent! Check your email to log in.');
-      }
-      setLoading(false);
-      return;
-    }
+  const handlePassword = async () => {
+    if (!email || !password) { setError("Enter email and password"); return; }
+    setLoading(true); setError("");
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) setError(error.message);
+    else window.location.href = "/dashboard";
+    setLoading(false);
+  };
 
-    if (isLogin) {
-      const { error } = await signIn(email, password);
-      if (error) {
-        setError(error.message);
-      } else {
-        router.push('/account');
+  const handleSignup = async () => {
+    if (!email || !password) { setError("Enter email and password"); return; }
+    setLoading(true); setError("");
+    const { error } = await supabase.auth.signUp({
+      email, password,
+      options: {
+        data: { full_name: name || email.split("@")[0] },
+        emailRedirectTo: `${window.location.origin}/auth/callback`
       }
-    } else {
-      const { error } = await signUp(email, password);
-      if (error) {
-        setError(error.message);
-      } else {
-        setSuccess('Account created! Please check your email to confirm.');
-      }
-    }
+    });
+    if (error) setError(error.message);
+    else setMessage("✅ Account created! Check your email to confirm, then sign in.");
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-      <div className="bg-zinc-900 p-8 rounded-2xl w-full max-w-md border border-amber-500/30">
-        <h1 className="text-3xl font-bold text-amber-500 mb-2 text-center">JobLink 360</h1>
-        <p className="text-zinc-500 text-center mb-6">Sovereign Career Platform</p>
-        
-        {error && (
-          <div className="bg-red-500/20 border border-red-500 p-3 rounded mb-4 text-red-500 text-sm">
-            {error}
-          </div>
-        )}
-        {success && (
-          <div className="bg-green-500/20 border border-green-500 p-3 rounded mb-4 text-green-500 text-sm">
-            {success}
-          </div>
-        )}
-        
-        <div className="flex gap-2 mb-4">
-          <button
-            onClick={() => { setUseMagicLink(false); setIsLogin(true); }}
-            className={`flex-1 py-2 rounded ${!useMagicLink && isLogin ? 'bg-amber-600' : 'bg-zinc-800'}`}
-          >
-            Sign In
-          </button>
-          <button
-            onClick={() => { setUseMagicLink(false); setIsLogin(false); }}
-            className={`flex-1 py-2 rounded ${!useMagicLink && !isLogin ? 'bg-amber-600' : 'bg-zinc-800'}`}
-          >
-            Sign Up
-          </button>
-          <button
-            onClick={() => setUseMagicLink(true)}
-            className={`flex-1 py-2 rounded ${useMagicLink ? 'bg-amber-600' : 'bg-zinc-800'}`}
-          >
-            Magic Link
-          </button>
+    <div style={{ minHeight: "100vh", background: "#000", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "system-ui", padding: "1rem" }}>
+      <div style={{ width: "100%", maxWidth: "420px" }}>
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h1 style={{ color: "#f59e0b", fontSize: "2rem", fontWeight: "bold", margin: "0 0 0.5rem" }}>⚡ JobLink 360</h1>
+          <p style={{ color: "#9ca3af", margin: 0 }}>Transform Learners into Earners in 90 Days</p>
         </div>
-        
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="Email"
-            className="w-full p-3 mb-3 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-amber-500"
-            required
-          />
-          
-          {!useMagicLink && (
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Password"
-              className="w-full p-3 mb-4 rounded-lg bg-zinc-800 border border-zinc-700 focus:outline-none focus:border-amber-500"
-              required={!useMagicLink}
-            />
+
+        <div style={{ background: "#111", border: "1px solid #222", borderRadius: "1rem", padding: "2rem" }}>
+          {/* Mode tabs */}
+          <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem" }}>
+            {[
+              { key: "magic", label: "✨ Magic Link" },
+              { key: "password", label: "🔑 Password" },
+              { key: "signup", label: "📝 Sign Up" },
+            ].map(t => (
+              <button key={t.key} onClick={() => { setMode(t.key as any); setError(""); setMessage(""); }} style={{ flex: 1, padding: "0.6rem", background: mode === t.key ? "#f59e0b" : "#1a1a1a", color: mode === t.key ? "#000" : "#9ca3af", border: "1px solid #333", borderRadius: "0.5rem", cursor: "pointer", fontSize: "0.75rem", fontWeight: mode === t.key ? "bold" : "normal" }}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {mode === "signup" && (
+            <div style={{ marginBottom: "1rem" }}>
+              <label style={{ color: "#9ca3af", fontSize: "0.8rem", display: "block", marginBottom: "0.4rem" }}>Full Name</label>
+              <input value={name} onChange={e => setName(e.target.value)} placeholder="Wanjiku Kamau" style={{ width: "100%", padding: "0.75rem", background: "#0a0a0a", border: "1px solid #333", borderRadius: "0.5rem", color: "#fff", boxSizing: "border-box" }} />
+            </div>
           )}
-          
+
+          <div style={{ marginBottom: "1rem" }}>
+            <label style={{ color: "#9ca3af", fontSize: "0.8rem", display: "block", marginBottom: "0.4rem" }}>Email Address</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" style={{ width: "100%", padding: "0.75rem", background: "#0a0a0a", border: "1px solid #333", borderRadius: "0.5rem", color: "#fff", boxSizing: "border-box" }} />
+          </div>
+
+          {(mode === "password" || mode === "signup") && (
+            <div style={{ marginBottom: "1rem" }}>
+              <label style={{ color: "#9ca3af", fontSize: "0.8rem", display: "block", marginBottom: "0.4rem" }}>Password</label>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" onKeyDown={e => e.key === "Enter" && (mode === "password" ? handlePassword() : handleSignup())} style={{ width: "100%", padding: "0.75rem", background: "#0a0a0a", border: "1px solid #333", borderRadius: "0.5rem", color: "#fff", boxSizing: "border-box" }} />
+            </div>
+          )}
+
+          {error && <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "0.5rem", padding: "0.75rem", color: "#ef4444", fontSize: "0.85rem", marginBottom: "1rem" }}>{error}</div>}
+          {message && <div style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "0.5rem", padding: "0.75rem", color: "#10b981", fontSize: "0.85rem", marginBottom: "1rem" }}>{message}</div>}
+
           <button
-            type="submit"
+            onClick={mode === "magic" ? handleMagicLink : mode === "password" ? handlePassword : handleSignup}
             disabled={loading}
-            className="w-full bg-amber-600 hover:bg-amber-500 p-3 rounded-lg font-bold transition disabled:opacity-50"
-          >
-            {loading ? 'Processing...' : (useMagicLink ? 'Send Magic Link' : (isLogin ? 'Sign In' : 'Create Account'))}
+            style={{ width: "100%", padding: "0.875rem", background: loading ? "#333" : "#f59e0b", color: loading ? "#666" : "#000", border: "none", borderRadius: "0.5rem", fontWeight: "bold", cursor: loading ? "not-allowed" : "pointer", fontSize: "1rem" }}>
+            {loading ? "Processing..." : mode === "magic" ? "✨ Send Magic Link" : mode === "password" ? "🔑 Sign In" : "📝 Create Account"}
           </button>
-        </form>
-        
-        {!useMagicLink && isLogin && (
-          <button
-            onClick={() => {
-              const email = prompt('Enter your email to reset password:');
-              if (email) {
-                fetch('/api/auth/reset-password', { method: 'POST', body: JSON.stringify({ email }) });
-                alert('Password reset email sent!');
-              }
-            }}
-            className="w-full mt-4 text-zinc-500 text-sm hover:text-amber-500 transition"
-          >
-            Forgot password?
-          </button>
-        )}
+
+          {mode === "magic" && !message && (
+            <p style={{ color: "#6b7280", fontSize: "0.75rem", textAlign: "center", marginTop: "1rem" }}>No password needed — we email you a one-click sign in link</p>
+          )}
+        </div>
+
+        <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
+          <p style={{ color: "#6b7280", fontSize: "0.8rem", margin: "0 0 0.5rem" }}>New to JobLink 360?</p>
+          <Link href="/pay" style={{ color: "#f59e0b", textDecoration: "none", fontWeight: "bold" }}>Enroll Now — KES 5,000 via M-Pesa Paybill 400200</Link>
+        </div>
       </div>
     </div>
   );
 }
+

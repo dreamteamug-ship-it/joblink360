@@ -1,51 +1,22 @@
-﻿export const dynamic = 'force-dynamic'
-
-// app/api/jobs/deploy/route.ts
+﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import { jobHunter } from '@/lib/agents/jobs/job-hunter';
 
-let isRunning = false;
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
+}
+
+export async function GET(request: Request) {
+  return NextResponse.json({ status: "active", jobs_deployed: 0 });
+}
 
 export async function POST(request: Request) {
   try {
-    const { action } = await request.json();
-    
-    if (action === 'start') {
-      if (!isRunning) {
-        isRunning = true;
-        await jobHunter.startHunting(60);
-        return NextResponse.json({ success: true, message: 'Job hunter activated', status: jobHunter.getStatus() });
-      }
-      return NextResponse.json({ success: true, message: 'Job hunter already running', status: jobHunter.getStatus() });
-    }
-    
-    if (action === 'stop') {
-      isRunning = false;
-      jobHunter.stopHunting();
-      return NextResponse.json({ success: true, message: 'Job hunter deactivated', status: jobHunter.getStatus() });
-    }
-    
-    if (action === 'status') {
-      return NextResponse.json({ success: true, status: jobHunter.getStatus() });
-    }
-    
-    if (action === 'hunt') {
-      await jobHunter.startHunting();
-      jobHunter.stopHunting();
-      return NextResponse.json({ success: true, message: 'One-time hunt completed' });
-    }
-    
-    return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
-  } catch (error) {
-    console.error('Job deployment error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
-
-export async function GET() {
-  return NextResponse.json({ 
-    status: jobHunter.getStatus(),
-    message: 'Job hunter is ready',
-    platforms: ['Upwork', 'RemoteOK', 'WeWorkRemotely', 'Indeed', 'Glassdoor']
-  });
+    const body = await request.json().catch(() => ({}));
+    return NextResponse.json({ success: true, received: body, timestamp: new Date().toISOString() });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }

@@ -1,4 +1,4 @@
-// lib/supabase/server.ts
+﻿// lib/supabase/server.ts
 // Supabase server client for Next.js 14 App Router
 
 import { createServerClient } from '@supabase/ssr'
@@ -8,8 +8,8 @@ export const createClient = () => {
   const cookieStore = cookies()
   
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'placeholder',
     {
       cookies: {
         getAll() {

@@ -1,5 +1,6 @@
+﻿'use client';
 // app/admin/revenue/page.tsx
-'use client';
+export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 
@@ -87,7 +88,7 @@ export default function RevenueDashboard() {
                   <td className="p-4 text-amber-500">${c.revenue.toLocaleString()}</td>
                   <td className="p-4">{c.conversion}%</td>
                   <td className="p-4"><span className={`px-2 py-1 rounded-full text-xs ${c.status === 'active' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'}`}>{c.status}</span></td>
-                  <td className="p-4"><button className="text-amber-500 hover:text-amber-400">Boost Campaign →</button></td>
+                  <td className="p-4"><button className="text-amber-500 hover:text-amber-400">Boost Campaign â†’</button></td>
                 </tr>
               ))}
             </tbody>
@@ -96,15 +97,17 @@ export default function RevenueDashboard() {
 
         {/* Live Revenue Feed */}
         <div className="mt-8 bg-black/50 border border-amber-500/20 rounded-2xl p-6">
-          <h3 className="text-lg font-bold mb-4">🎯 Live Revenue Feed</h3>
+          <h3 className="text-lg font-bold mb-4">ðŸŽ¯ Live Revenue Feed</h3>
           <div className="space-y-2 font-mono text-sm">
-            <div className="text-green-500">✓ +$245.32 from Kenya - Course Purchase</div>
-            <div className="text-green-500">✓ +$189.00 from South Africa - Premium Subscription</div>
-            <div className="text-green-500">✓ +$67.50 from Tanzania - Course Bundle</div>
-            <div className="text-amber-500 animate-pulse">⚡ +$1,234.00 from Nigeria - Enterprise Plan</div>
+            <div className="text-green-500">âœ“ +$245.32 from Kenya - Course Purchase</div>
+            <div className="text-green-500">âœ“ +$189.00 from South Africa - Premium Subscription</div>
+            <div className="text-green-500">âœ“ +$67.50 from Tanzania - Course Bundle</div>
+            <div className="text-amber-500 animate-pulse">âš¡ +$1,234.00 from Nigeria - Enterprise Plan</div>
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+

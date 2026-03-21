@@ -1,19 +1,32 @@
-﻿export const dynamic = 'force-dynamic'
-
-// app/auth/callback/route.ts
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+﻿export const dynamic = "force-dynamic";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const requestUrl = new URL(request.url)
-  const code = requestUrl.searchParams.get('code')
-  
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const token_hash = searchParams.get("token_hash");
+  const type = searchParams.get("type");
+  const next = searchParams.get("next") ?? "/dashboard";
+
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'placeholder',
+    { cookies: { getAll() { return cookieStore.getAll(); }, setAll(c) { c.forEach(({ name, value, options }) => cookieStore.set(name, value, options)); } } }
+  );
+
   if (code) {
-    const supabase = createRouteHandlerClient({ cookies })
-    await supabase.auth.exchangeCodeForSession(code)
+    await supabase.auth.exchangeCodeForSession(code);
+    return NextResponse.redirect(`${origin}/dashboard`);
   }
-  
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(new URL('/account', request.url))
+
+  if (token_hash && type) {
+    const { error } = await supabase.auth.verifyOtp({ token_hash, type: type as any });
+    if (!error) return NextResponse.redirect(`${origin}/dashboard`);
+  }
+
+  return NextResponse.redirect(`${origin}/login?error=auth_failed`);
 }
+

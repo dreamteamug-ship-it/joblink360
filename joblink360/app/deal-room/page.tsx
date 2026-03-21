@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase/client';
@@ -49,7 +50,7 @@ export default function DealRoom() {
               onClick={createMeeting}
               className="bg-amber-600 hover:bg-amber-500 px-8 py-4 rounded-xl font-bold text-lg transition-all hover:scale-105"
             >
-              🎯 Create Deal Room
+              ðŸŽ¯ Create Deal Room
             </button>
           </div>
         </div>
@@ -57,3 +58,4 @@ export default function DealRoom() {
     </div>
   );
 }
+

@@ -1,5 +1,6 @@
+﻿'use client';
 // app/funding/matchmaking/page.tsx
-'use client';
+export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -111,9 +112,9 @@ export default function FundingMatchmaking() {
                     <h3 className="text-xl font-bold mb-2">{match.title}</h3>
                     <p className="text-zinc-400 mb-4">{match.description}</p>
                     <div className="flex flex-wrap gap-4 text-sm mb-4">
-                      <span>💰 Up to: {match.amount}</span>
-                      <span>📅 Deadline: {new Date(match.deadline).toLocaleDateString()}</span>
-                      <span>🎯 Your Commission: {commissionRate}% = KES {Math.round(estimatedCommission).toLocaleString()}</span>
+                      <span>ðŸ’° Up to: {match.amount}</span>
+                      <span>ðŸ“… Deadline: {new Date(match.deadline).toLocaleDateString()}</span>
+                      <span>ðŸŽ¯ Your Commission: {commissionRate}% = KES {Math.round(estimatedCommission).toLocaleString()}</span>
                     </div>
                     <button onClick={() => acceptMatch(match)} className="bg-amber-600 hover:bg-amber-500 px-6 py-2 rounded-lg font-bold transition">Accept Match & Earn Commission</button>
                   </div>
@@ -127,3 +128,4 @@ export default function FundingMatchmaking() {
     </div>
   );
 }
+

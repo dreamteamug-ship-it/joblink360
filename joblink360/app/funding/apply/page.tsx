@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
 
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -33,3 +34,4 @@ export default function FundingApplyPage() {
     </Suspense>
   );
 }
+

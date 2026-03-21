@@ -1,4 +1,5 @@
 ﻿"use client";
+export const dynamic = 'force-dynamic';
 import { useState } from "react";
 import Link from "next/link";
 export default function ERPPage() {
@@ -28,3 +29,4 @@ export default function ERPPage() {
     </div>
   );
 }
+

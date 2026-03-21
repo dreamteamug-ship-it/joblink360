@@ -1,62 +1,31 @@
-﻿export const dynamic = 'force-dynamic'
-
-// app/api/test/gemini/route.ts
+﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
-export async function GET() {
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
+}
+
+export async function GET(request: Request) {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({ 
-        success: false, 
-        error: 'GEMINI_API_KEY is not set in environment variables',
-        solution: 'Add GEMINI_API_KEY to Vercel environment variables'
-      }, { status: 500 });
-    }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    
-    const testPrompt = 'Say hello in Swahili and tell me about JobLink 360 in 2 sentences.';
-    const result = await model.generateContent(testPrompt);
-    const response = await result.response;
-    const text = response.text();
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Gemini API is working!',
-      response: text,
-      apiKeyPresent: true,
-      model: 'gemini-1.5-flash'
+    const key = process.env.GEMINI_API_KEY;
+    if (!key) return NextResponse.json({ error: "No Gemini key" }, { status: 500 });
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: "Say hello from JobLink 360 in 1 sentence." }] }] })
     });
-  } catch (error) {
-    console.error('Gemini test error:', error);
-    return NextResponse.json({ 
-      success: false, 
-      error: error.message,
-      solution: 'Check your GEMINI_API_KEY and ensure Generative Language API is enabled'
-    }, { status: 500 });
-  }
+    const data = await res.json();
+    return NextResponse.json({ response: data.candidates?.[0]?.content?.parts?.[0]?.text, status: "ok" });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }
 
 export async function POST(request: Request) {
   try {
-    const { prompt } = await request.json();
-    const apiKey = process.env.GEMINI_API_KEY;
-    
-    if (!apiKey) {
-      return NextResponse.json({ error: 'GEMINI_API_KEY missing' }, { status: 500 });
-    }
-    
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    
-    return NextResponse.json({ success: true, response: text });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-  }
+    const body = await request.json().catch(() => ({}));
+    return NextResponse.json({ success: true, received: body, timestamp: new Date().toISOString() });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }

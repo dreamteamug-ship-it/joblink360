@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 
@@ -61,13 +62,13 @@ export default function ContactPage() {
           <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-8">
             <h2 className="text-2xl font-bold text-amber-500 mb-6">Contact Information</h2>
             <div className="space-y-4">
-              <p><strong>📍 Address:</strong> Off Mombasa Road, Hari Industrial Park, Nairobi, Kenya</p>
-              <p><strong>📮 P.O. Box:</strong> 3515-00100, Nairobi</p>
-              <p><strong>📞 Phone:</strong> +254 718 554 383</p>
-              <p><strong>📱 Mobile:</strong> +254 753 005 989</p>
-              <p><strong>📧 Email:</strong> dtc@dreamteamconsult.net</p>
-              <p><strong>🌐 Website:</strong> joblink360-gamma.vercel.app</p>
-              <p><strong>🕒 Hours:</strong> Monday - Friday, 9am - 5pm EAT</p>
+              <p><strong>ðŸ“ Address:</strong> Off Mombasa Road, Hari Industrial Park, Nairobi, Kenya</p>
+              <p><strong>ðŸ“® P.O. Box:</strong> 3515-00100, Nairobi</p>
+              <p><strong>ðŸ“ž Phone:</strong> +254 718 554 383</p>
+              <p><strong>ðŸ“± Mobile:</strong> +254 753 005 989</p>
+              <p><strong>ðŸ“§ Email:</strong> dtc@dreamteamconsult.net</p>
+              <p><strong>ðŸŒ Website:</strong> joblink360-gamma.vercel.app</p>
+              <p><strong>ðŸ•’ Hours:</strong> Monday - Friday, 9am - 5pm EAT</p>
             </div>
           </div>
         </div>
@@ -75,3 +76,4 @@ export default function ContactPage() {
     </div>
   );
 }
+

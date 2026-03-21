@@ -1,5 +1,6 @@
+﻿'use client'
 // app/pay/page.tsx
-'use client'
+export const dynamic = 'force-dynamic';
 import { useState } from 'react'
 import Link from 'next/link'
 
@@ -18,12 +19,12 @@ export default function PaymentPage() {
     }
 
     setStatus('verifying')
-    setMessage('⚡ Vulture-Eye verifying your payment...')
+    setMessage('âš¡ Vulture-Eye verifying your payment...')
 
     // Simulate API call
     setTimeout(() => {
       setStatus('success')
-      setMessage('✅ Payment verified! Redirecting to LMS...')
+      setMessage('âœ… Payment verified! Redirecting to LMS...')
       setTimeout(() => {
         window.location.href = '/lms'
       }, 2000)
@@ -46,7 +47,7 @@ export default function PaymentPage() {
         </div>
 
         <div className="bg-gradient-to-r from-green-600/10 to-transparent border border-green-500/30 rounded-2xl p-6 mb-6">
-          <h2 className="text-xl font-bold text-green-400 mb-4">📱 M-Pesa Paybill</h2>
+          <h2 className="text-xl font-bold text-green-400 mb-4">ðŸ“± M-Pesa Paybill</h2>
           <div className="space-y-3">
             <div className="flex justify-between"><span className="text-zinc-400">Paybill:</span><span className="font-mono font-bold">400200</span></div>
             <div className="flex justify-between"><span className="text-zinc-400">Account:</span><span className="font-mono font-bold">4045731</span></div>
@@ -72,14 +73,15 @@ export default function PaymentPage() {
           )}
 
           <button type="submit" disabled={status === 'verifying'} className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-zinc-600 text-white font-bold py-3 rounded-lg transition">
-            {status === 'verifying' ? '⚡ Verifying...' : '💰 Pay KES 5,000 & Unlock'}
+            {status === 'verifying' ? 'âš¡ Verifying...' : 'ðŸ’° Pay KES 5,000 & Unlock'}
           </button>
         </form>
 
         <div className="text-center mt-6 text-xs text-zinc-600">
-          <p>⚡ Vulture-Eye | 0.02s Verification | NCBA Bank 8515130017</p>
+          <p>âš¡ Vulture-Eye | 0.02s Verification | NCBA Bank 8515130017</p>
         </div>
       </div>
     </div>
   )
 }
+

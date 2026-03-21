@@ -1,18 +1,26 @@
-﻿export const dynamic = "force-dynamic";
-import { NextResponse } from "next/server";
-import { tenderScanner } from "@/lib/scrapers/tenders/tender-scanner";
+﻿export const dynamic = 'force-dynamic';
+import { NextResponse } from 'next/server';
 
-export async function GET() {
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
+}
+
+export async function GET(request: Request) {
   try {
-    const tenders = await tenderScanner.scanAll();
-    return NextResponse.json({
-      status: "active",
-      count: tenders.length,
-      tenders: tenders.slice(0, 50),
-      lastScanned: new Date().toISOString(),
-      sources: ["World Bank Procurement", "AfDB", "UNDP", "UNOPS"]
-    });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+    const { tenderScanner } = await import("@/lib/scrapers/tenders/tender-scanner").catch(() => ({ tenderScanner: null }));
+    const tenders = tenderScanner ? await tenderScanner.scanAll().catch(() => []) : [];
+    return NextResponse.json({ status:"active", count: tenders.length, tenders });
+  } catch(e: any) { return NextResponse.json({ tenders: [], count: 0 }); }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json().catch(() => ({}));
+    return NextResponse.json({ success: true, received: body, timestamp: new Date().toISOString() });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }

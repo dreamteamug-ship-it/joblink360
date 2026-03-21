@@ -1,4 +1,5 @@
-"use client";
+﻿"use client";
+export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -59,7 +60,7 @@ export default function AdminLegalPage() {
     return (
       <div style={{ minHeight: '100vh', background: '#000', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⚖️</div>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>âš–ï¸</div>
           <p>Loading legal documents...</p>
         </div>
       </div>
@@ -83,7 +84,7 @@ export default function AdminLegalPage() {
       {/* Navigation */}
       <nav style={{ borderBottom: '1px solid #333', background: '#000', padding: '1rem 2rem' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h1 style={{ color: '#f59e0b', margin: 0, fontSize: '1.5rem' }}>⚖️ JobLink 360 Legal</h1>
+          <h1 style={{ color: '#f59e0b', margin: 0, fontSize: '1.5rem' }}>âš–ï¸ JobLink 360 Legal</h1>
           <div style={{ display: 'flex', gap: '1rem' }}>
             <Link href="/admin" style={{ color: '#9ca3af', textDecoration: 'none' }}>Dashboard</Link>
             <Link href="/pay" style={{ background: '#f59e0b', color: '#000', padding: '0.5rem 1rem', borderRadius: '0.5rem', textDecoration: 'none', fontWeight: 'bold' }}>Pay KES 5,000</Link>
@@ -99,7 +100,7 @@ export default function AdminLegalPage() {
 
         {/* Contracts Section */}
         <div style={{ marginBottom: '2rem' }}>
-          <h2 style={{ color: '#f59e0b', marginBottom: '1rem' }}>📄 Active Contracts</h2>
+          <h2 style={{ color: '#f59e0b', marginBottom: '1rem' }}>ðŸ“„ Active Contracts</h2>
           {contracts.length === 0 ? (
             <div style={{ background: '#111', padding: '2rem', borderRadius: '0.5rem', textAlign: 'center', color: '#9ca3af' }}>
               No contracts found
@@ -128,7 +129,7 @@ export default function AdminLegalPage() {
 
         {/* Payments Section */}
         <div>
-          <h2 style={{ color: '#f59e0b', marginBottom: '1rem' }}>💰 Recent Payments</h2>
+          <h2 style={{ color: '#f59e0b', marginBottom: '1rem' }}>ðŸ’° Recent Payments</h2>
           {payments.length === 0 ? (
             <div style={{ background: '#111', padding: '2rem', borderRadius: '0.5rem', textAlign: 'center', color: '#9ca3af' }}>
               No payments found
@@ -157,8 +158,8 @@ export default function AdminLegalPage() {
 
         {/* Footer */}
         <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #222', textAlign: 'center', fontSize: '0.75rem', color: '#52525b' }}>
-          <p>⚖️ NCBA Bank Account: 8515130017 | M-Pesa Paybill: 400200 | Account: 4045731</p>
-          <p style={{ marginTop: '0.5rem' }}>© 2025 JobLink 360 - All contracts are legally binding under Kenyan law</p>
+          <p>âš–ï¸ NCBA Bank Account: 8515130017 | M-Pesa Paybill: 400200 | Account: 4045731</p>
+          <p style={{ marginTop: '0.5rem' }}>Â© 2025 JobLink 360 - All contracts are legally binding under Kenyan law</p>
         </div>
       </div>
     </div>

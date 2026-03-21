@@ -1,11 +1,11 @@
-// lib/documents/response/response-handler.ts
+﻿// lib/documents/response/response-handler.ts
 // Response Handler for Funding Applications
 
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://placeholder.supabase.co',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'placeholder'
 );
 
 export interface ResponseData {

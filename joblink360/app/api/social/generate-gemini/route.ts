@@ -1,31 +1,29 @@
-﻿export const dynamic = 'force-dynamic'
-
-import { GoogleGenerativeAI } from '@google/generative-ai';
+﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 
-export const maxDuration = 60;
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
+}
 
-export async function POST(req: Request) {
+export async function GET(request: Request) {
+  return NextResponse.json({ status: "active", platforms: ["twitter","linkedin","whatsapp"] });
+}
+
+export async function POST(request: Request) {
   try {
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json({ error: "GEMINI_API_KEY is missing." }, { status: 500 });
-    }
-    const body = await req.json().catch(() => ({}));
-    const platforms = body.platforms || ['LinkedIn', 'Twitter'];
-    const testMode = body.testMode || false;
-
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
-    const prompt = `You are Agent Delta, the elite Social Media Manager for Joblink 360.
-    ${testMode ? "THIS IS A TEST RUN. Generate a quick 'Hello World' post." : "Generate posts promoting our courses."}
-    Target Platforms: ${platforms.join(', ')}`;
-
-    const result = await model.generateContent(prompt);
-    const text = await result.response.text();
-
-    return NextResponse.json({ success: true, generatedPosts: text });
-  } catch (error: any) {
-    return NextResponse.json({ error: "Agent Delta crashed.", details: error.message }, { status: 500 });
-  }
+    const { topic, platform = "linkedin", country = "KE" } = await request.json().catch(() => ({}));
+    const key = process.env.GEMINI_API_KEY;
+    if (!key) return NextResponse.json({ content: `Check out JobLink 360 - ${topic}! Pay via M-Pesa Paybill 400200.` });
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: `Create a ${platform} post about: ${topic}. African context (${country}). Include call to action for JobLink 360. Max 280 chars for twitter.` }] }] })
+    });
+    const data = await res.json();
+    return NextResponse.json({ content: data.candidates?.[0]?.content?.parts?.[0]?.text || `${topic} - JobLink 360` });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }

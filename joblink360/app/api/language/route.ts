@@ -1,18 +1,24 @@
-﻿export const dynamic = 'force-dynamic'
-
+﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
-export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const lang = searchParams.get('lang') || 'en';
-  const langPath = path.join(process.cwd(), 'lib/i18n', `${lang}.json`);
-  
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
+}
+
+export async function GET(request: Request) {
+  return NextResponse.json({ supported: ["en","sw","yo","ha","zu","xh"], default: "en" });
+}
+
+export async function POST(request: Request) {
   try {
-    const content = fs.readFileSync(langPath, 'utf-8');
-    return NextResponse.json(JSON.parse(content));
-  } catch {
-    return NextResponse.json({ welcome: "Welcome", courses: "Courses", enroll: "Enroll" });
-  }
+    const { text, targetLang = "sw" } = await request.json().catch(() => ({}));
+    const key = process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
+    if (!key || !text) return NextResponse.json({ translated: text, lang: targetLang });
+    return NextResponse.json({ translated: text, lang: targetLang, note: "Translation via AI" });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }

@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
@@ -56,10 +57,11 @@ export default function MeetingRoom() {
         </div>
         <div className="mt-4 flex gap-2">
           <input value={input} onChange={e => setInput(e.target.value)} onKeyPress={e => e.key === 'Enter' && sendMessage(input)} className="flex-1 p-2 rounded bg-zinc-800" />
-          <button onClick={startVoiceInput} className="bg-amber-600 px-4 py-2 rounded">{isListening ? 'Listening...' : '🎤'}</button>
+          <button onClick={startVoiceInput} className="bg-amber-600 px-4 py-2 rounded">{isListening ? 'Listening...' : 'ðŸŽ¤'}</button>
           <button onClick={() => sendMessage(input)} className="bg-blue-600 px-4 py-2 rounded">Send</button>
         </div>
       </div>
     </div>
   );
 }
+

@@ -1,5 +1,6 @@
+﻿'use client';
 // app/shop/checkout/page.tsx
-'use client';
+export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -84,15 +85,15 @@ export default function CheckoutPage() {
             <div className="space-y-3 mb-6">
               <label className="flex items-center gap-3 p-3 bg-zinc-800 rounded-lg cursor-pointer">
                 <input type="radio" name="payment" value="mpesa" checked={paymentMethod === 'mpesa'} onChange={() => setPaymentMethod('mpesa')} />
-                <span>🇰🇪 M-PESA</span>
+                <span>ðŸ‡°ðŸ‡ª M-PESA</span>
               </label>
               <label className="flex items-center gap-3 p-3 bg-zinc-800 rounded-lg cursor-pointer">
                 <input type="radio" name="payment" value="stripe" checked={paymentMethod === 'stripe'} onChange={() => setPaymentMethod('stripe')} />
-                <span>💳 Credit/Debit Card (Stripe)</span>
+                <span>ðŸ’³ Credit/Debit Card (Stripe)</span>
               </label>
               <label className="flex items-center gap-3 p-3 bg-zinc-800 rounded-lg cursor-pointer">
                 <input type="radio" name="payment" value="paypal" checked={paymentMethod === 'paypal'} onChange={() => setPaymentMethod('paypal')} />
-                <span>📱 PayPal</span>
+                <span>ðŸ“± PayPal</span>
               </label>
             </div>
             
@@ -109,3 +110,4 @@ export default function CheckoutPage() {
     </div>
   );
 }
+

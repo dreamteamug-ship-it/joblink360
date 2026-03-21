@@ -1,85 +1,40 @@
-// lib/supabase/client.ts
-import { createClient } from '@supabase/supabase-js'
+﻿import { createClient as _createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://placeholder.supabase.co";
+const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "placeholder";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = _createClient(url, key, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    flowType: 'pkce',
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined
-  }
-})
+    flowType: "pkce",
+    storage: typeof window !== "undefined" ? window.localStorage : undefined,
+  },
+});
 
 export async function getCurrentUser() {
-  const { data: { user } } = await supabase.auth.getUser()
-  return user
+  try { const { data: { user } } = await supabase.auth.getUser(); return user; } catch { return null; }
 }
-
 export async function signIn(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-  if (error) return { error }
-  
-  // Store session
-  if (data.session) {
-    localStorage.setItem('supabase_session', JSON.stringify(data.session))
-  }
-  
-  return { data, error }
+  return await supabase.auth.signInWithPassword({ email, password });
 }
-
 export async function signUp(email: string, password: string, fullName?: string) {
-  const redirectTo = `${window.location.origin}/auth/callback`
-  
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { full_name: fullName || email.split('@')[0] },
-      emailRedirectTo: redirectTo
-    }
-  })
-  
-  if (error) return { error }
-  return { data, error }
+  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : "";
+  return await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName || email.split("@")[0] }, emailRedirectTo: redirectTo } });
 }
-
 export async function signInWithMagicLink(email: string) {
-  const redirectTo = `${window.location.origin}/auth/callback`
-  
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: redirectTo,
-      shouldCreateUser: true
-    }
-  })
-  
-  return { data, error }
+  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : "";
+  return await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectTo, shouldCreateUser: true } });
 }
-
 export async function signOut() {
-  const { error } = await supabase.auth.signOut()
-  localStorage.removeItem('supabase_session')
-  return { error }
+  if (typeof window !== "undefined") localStorage.removeItem("supabase_session");
+  return await supabase.auth.signOut();
 }
-
 export async function resetPassword(email: string) {
-  const redirectTo = `${window.location.origin}/auth/reset-password`
-  
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo
-  })
-  
-  return { data, error }
+  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/auth/reset-password` : "";
+  return await supabase.auth.resetPasswordForEmail(email, { redirectTo });
 }
-
 export async function updatePassword(newPassword: string) {
-  const { data, error } = await supabase.auth.updateUser({
-    password: newPassword
-  })
-  return { data, error }
+  return await supabase.auth.updateUser({ password: newPassword });
 }

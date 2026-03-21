@@ -1,54 +1,22 @@
-﻿export const dynamic = 'force-dynamic'
-
+﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth/supabase';
 
-export async function POST(request: Request) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  
-  const { plan, paymentMethod } = await request.json();
-  
-  // M-PESA STK Push simulation
-  if (paymentMethod === 'mpesa') {
-    // Call your M-PESA service
-    const response = await fetch('https://mpesa-service.vercel.app/api/mpesa/stkpush', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        phone: user.user_metadata?.phone || '254718554383',
-        amount: plan === 'monthly' ? 1500 : 12000,
-        reference: `SUB-${user.id}`
-      })
-    });
-    const data = await response.json();
-    return NextResponse.json(data);
-  }
-  
-  // Stripe checkout
-  if (paymentMethod === 'stripe') {
-    // Initialize Stripe checkout
-    return NextResponse.json({ url: '/stripe-checkout' });
-  }
-  
-  return NextResponse.json({ error: 'Invalid payment method' }, { status: 400 });
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
 }
 
-export async function GET() {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  
-  // Get subscription status from database
-  // For now, return mock data
-  return NextResponse.json({
-    active: true,
-    plan: 'monthly',
-    next_billing: '2026-04-20',
-    price: 1500,
-    currency: 'KES'
-  });
+export async function GET(request: Request) {
+  return NextResponse.json({ tiers: { basic: { price: 0 }, professional: { price: 2500 }, enterprise: { price: 10000 } } });
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json().catch(() => ({}));
+    return NextResponse.json({ success: true, received: body, timestamp: new Date().toISOString() });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }

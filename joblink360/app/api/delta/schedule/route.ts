@@ -1,49 +1,22 @@
-﻿export const dynamic = 'force-dynamic'
-
-// app/api/delta/schedule/route.ts
-// Delta SMM - Auto Post Scheduler
-
+﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 
-const scheduledPosts = [];
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
+}
 
-export async function GET() {
-  return NextResponse.json({
-    scheduler: "Delta Auto-Post",
-    status: "ACTIVE",
-    schedule: [
-      { time: "09:00", platform: "whatsapp", message: "Morning motivation + payment link" },
-      { time: "12:00", platform: "linkedin", message: "Professional career content" },
-      { time: "15:00", platform: "twitter", message: "Quick tips + funding opportunities" },
-      { time: "18:00", platform: "instagram", message: "Visual success stories" },
-      { time: "21:00", platform: "whatsapp", message: "Evening engagement + offers" }
-    ],
-    next_post: "Coming soon - manual trigger for now"
-  });
+export async function GET(request: Request) {
+  return NextResponse.json({ status: 'active', service: 'Delta Scheduler', timestamp: new Date().toISOString() });
 }
 
 export async function POST(request: Request) {
   try {
-    const { platform, customMessage } = await request.json();
-    
-    const post = {
-      id: Date.now(),
-      platform: platform || "all",
-      message: customMessage || null,
-      scheduled_for: new Date().toISOString(),
-      status: "pending"
-    };
-    
-    scheduledPosts.push(post);
-    
-    return NextResponse.json({
-      success: true,
-      post_scheduled: post,
-      total_scheduled: scheduledPosts.length,
-      instruction: "Copy the generated content from /api/delta and post manually, or use the content below"
-    });
-    
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+    const body = await request.json().catch(() => ({}));
+    return NextResponse.json({ success: true, received: body, timestamp: new Date().toISOString() });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }

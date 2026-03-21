@@ -1,31 +1,28 @@
-﻿export const dynamic = 'force-dynamic'
-
+﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
-export async function GET() {
-  const csvPath = path.join(process.cwd(), 'local/amanda/assets/knowledge_base/Continental_Demand.csv');
-  
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
+}
+
+export async function GET(request: Request) {
+  const courses = [
+    { id:"1", title:"AI Prompt Engineering", level:"Beginner", price:5000, income:"$500-1000/mo" },
+    { id:"2", title:"Data Annotation Mastery", level:"Intermediate", price:5000, income:"$800-1500/mo" },
+    { id:"3", title:"High-Ticket Virtual Sales", level:"Advanced", price:5000, income:"$2000-5000/mo" },
+    { id:"4", title:"Pan-African Trade AI", level:"Expert", price:5000, income:"$3000-8000/mo" },
+  ];
+  return NextResponse.json({ courses, count: courses.length });
+}
+
+export async function POST(request: Request) {
   try {
-    const data = fs.readFileSync(csvPath, 'utf-8');
-    const lines = data.split('\n').slice(1);
-    const jobs = lines.map(line => {
-      const [Job_Title, Region, Demand_Score] = line.split(',');
-      return { 
-        Job_Title: Job_Title || 'AI Career Specialist', 
-        Region: Region || 'Africa', 
-        Demand_Score: parseInt(Demand_Score) || 85,
-        price: 1500
-      };
-    }).filter(j => j.Job_Title);
-    
-    return NextResponse.json(jobs.slice(0, 512));
-  } catch (error) {
-    return NextResponse.json([
-      { Job_Title: "Cloud Systems Architect", Region: "Nairobi", Demand_Score: 94, price: 1500 },
-      { Job_Title: "IoT Solutions Engineer", Region: "Lusaka", Demand_Score: 88, price: 1500 },
-      { Job_Title: "AI Infrastructure Lead", Region: "Lagos", Demand_Score: 91, price: 1500 }
-    ]);
-  }
+    const body = await request.json().catch(() => ({}));
+    return NextResponse.json({ success: true, received: body, timestamp: new Date().toISOString() });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }

@@ -1,4 +1,5 @@
-'use client';
+﻿'use client';
+export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -33,7 +34,7 @@ export default function CourseDetail() {
       <div className="min-h-screen bg-black text-white p-8">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl font-bold text-amber-500 mb-4">Course Not Found</h1>
-          <Link href="/lms" className="text-zinc-400 hover:text-amber-500">← Back to Courses</Link>
+          <Link href="/lms" className="text-zinc-400 hover:text-amber-500">â† Back to Courses</Link>
         </div>
       </div>
     );
@@ -53,7 +54,7 @@ export default function CourseDetail() {
             </div>
             <p className="text-xl text-zinc-300 mb-8">{course.description}</p>
             <button className="bg-amber-600 hover:bg-amber-500 text-white px-8 py-3 rounded-lg font-bold transition">
-              Enroll Now — KES 1,500
+              Enroll Now â€” KES 1,500
             </button>
           </div>
         </div>
@@ -67,7 +68,7 @@ export default function CourseDetail() {
               <ul className="space-y-2">
                 {course.skills?.map((skill, i) => (
                   <li key={i} className="flex items-center gap-2 text-zinc-300">
-                    <span className="text-amber-500">✓</span> {skill}
+                    <span className="text-amber-500">âœ“</span> {skill}
                   </li>
                 ))}
               </ul>
@@ -76,10 +77,10 @@ export default function CourseDetail() {
           <div className="bg-zinc-900 rounded-lg p-6 sticky top-24">
             <h3 className="font-bold mb-4">Course Includes</h3>
             <ul className="space-y-2 text-sm text-zinc-300">
-              <li>🎥 Video lessons</li>
-              <li>📝 Quizzes & assignments</li>
-              <li>🎓 Certificate on completion</li>
-              <li>💬 Amanda AI support</li>
+              <li>ðŸŽ¥ Video lessons</li>
+              <li>ðŸ“ Quizzes & assignments</li>
+              <li>ðŸŽ“ Certificate on completion</li>
+              <li>ðŸ’¬ Amanda AI support</li>
             </ul>
             <hr className="my-4 border-zinc-800" />
             <p className="text-2xl font-bold text-amber-500 text-center">KES {course.price || 1500}</p>
@@ -92,3 +93,4 @@ export default function CourseDetail() {
     </div>
   );
 }
+

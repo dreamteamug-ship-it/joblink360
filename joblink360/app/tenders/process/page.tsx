@@ -1,5 +1,6 @@
+﻿'use client';
 // app/tenders/process/page.tsx
-'use client';
+export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -94,10 +95,10 @@ export default function TenderProcessing() {
                     <h3 className="text-xl font-bold mb-2">{tender.title}</h3>
                     <p className="text-zinc-400 mb-4">{tender.description}</p>
                     <div className="flex flex-wrap gap-4 text-sm mb-4">
-                      <span>💰 Budget: {tender.budget}</span>
-                      <span>📅 Deadline: {new Date(tender.deadline).toLocaleDateString()}</span>
-                      <span>📍 {tender.location}</span>
-                      <span>🎯 Your Commission: {commissionRate}% = KES {Math.round(estimatedCommission).toLocaleString()}</span>
+                      <span>ðŸ’° Budget: {tender.budget}</span>
+                      <span>ðŸ“… Deadline: {new Date(tender.deadline).toLocaleDateString()}</span>
+                      <span>ðŸ“ {tender.location}</span>
+                      <span>ðŸŽ¯ Your Commission: {commissionRate}% = KES {Math.round(estimatedCommission).toLocaleString()}</span>
                     </div>
                     <button onClick={() => closeTender(tender)} className="bg-amber-600 hover:bg-amber-500 px-6 py-2 rounded-lg font-bold transition">Close Tender & Earn Commission</button>
                   </div>
@@ -111,3 +112,4 @@ export default function TenderProcessing() {
     </div>
   );
 }
+

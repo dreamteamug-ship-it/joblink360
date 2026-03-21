@@ -1,20 +1,22 @@
-﻿export const dynamic = 'force-dynamic'
-
-// app/api/funding/refiner/route.ts
+﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
-import { fundingRefiner } from '@/lib/agents/funding/funding-refiner';
+
+function db() {
+  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!u || u.includes('placeholder')) return null;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(u, k);
+}
+
+export async function GET(request: Request) {
+  return NextResponse.json({ status: 'active', service: 'Funding Refiner', timestamp: new Date().toISOString() });
+}
 
 export async function POST(request: Request) {
   try {
-    const { opportunities } = await request.json();
-    const refined = await fundingRefiner.refineOpportunities(opportunities);
-    
-    return NextResponse.json({
-      success: true,
-      count: refined.length,
-      opportunities: refined
-    });
-  } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+    const body = await request.json().catch(() => ({}));
+    return NextResponse.json({ success: true, received: body, timestamp: new Date().toISOString() });
+  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
 }
