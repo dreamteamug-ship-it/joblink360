@@ -27,6 +27,7 @@ export default function LMSPage() {
   }, []);
 
   const courses = [
+    { id: 'mastering-llms', title: 'Mastering LLMs: ChatGPT to Claude', level: 'All Levels', duration: '8 weeks', modules: 8, income: 'const courses = [,000-3,000/mo', icon: '🤖', free: true, description: 'Complete training on all major Language Models - ChatGPT, Claude, Gemini, DeepSeek, Llama, Mistral, Cohere, Perplexity' },
     { id: 'virtual-assistant-elite', title: 'Virtual Assistant Elite', level: 'Beginner', duration: '2 weeks', modules: 8, income: '$400-800/mo', icon: '🎯', free: true },
     { id: 'ai-prompt-engineering', title: 'AI Prompt Engineering', level: 'Beginner', duration: '2 weeks', modules: 8, income: '$500-1,000/mo', icon: '🤖', free: true },
     { id: 'data-annotation-mastery', title: 'Data Annotation Mastery', level: 'Intermediate', duration: '3 weeks', modules: 12, income: '$800-1,500/mo', icon: '📊', free: false },
@@ -202,3 +203,4 @@ export default function LMSPage() {
     </div>
   );
 }
+
