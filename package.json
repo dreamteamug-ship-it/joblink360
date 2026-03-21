@@ -16,6 +16,7 @@
     "@vercel/analytics": "^2.0.1",
     "apify-client": "^2.22.2",
     "clsx": "^2.1.1",
+    "express": "^5.2.1",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "lucide-react": "^0.577.0",
@@ -37,5 +38,22 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "5.9.3"
-  }
+  },
+  "description": "",
+  "main": "next.config.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dreamteamug-ship-it/joblink360.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dreamteamug-ship-it/joblink360/issues"
+  },
+  "homepage": "https://github.com/dreamteamug-ship-it/joblink360#readme"
 }
