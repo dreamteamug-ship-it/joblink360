@@ -1,0 +1,8 @@
+﻿theme:
+  primary: "#0A1A3F"   # Deep dark blue
+  secondary: "#F5F0E1" # Matte cream
+  accent_gold: "#D4AF37"
+  accent_silver: "#C0C0C0"
+branding:
+  slogan: "Stop Dreaming, Start Believing"
+  logo: "embossed"

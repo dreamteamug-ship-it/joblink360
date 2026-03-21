@@ -1,0 +1,46 @@
+﻿version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dreamnet
+
+  odoo:
+    image: odoo:17.0
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    volumes:
+      - odoo_data:/var/lib/odoo
+    networks:
+      - dreamnet
+
+  amanda:
+    build: ./amanda_microservice
+    depends_on:
+      - odoo
+    ports:
+      - "8000:8000"
+    networks:
+      - dreamnet
+    volumes:
+      - ./scraped_content:/app/scraped_content
+
+volumes:
+  postgres_data:
+  odoo_data:
+
+networks:
+  dreamnet:
+    driver: bridge

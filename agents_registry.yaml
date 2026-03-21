@@ -1,0 +1,95 @@
+﻿agents:
+  # Scraper Agents
+  - name: ScraperAgent_Jobs
+    role: "Scan and scrape job postings globally"
+    sop_prompt: "Follow SOP: scan, scrape, analyze, refine, redeploy"
+    backend: "DeepSeek"
+    domain: "Jobs, AI/IT/Social Sciences"
+    region: "East Africa, SADC"
+    tasks:
+      - Crawl job boards
+      - Extract metadata
+      - Normalize into JSON
+      - Push to Odoo Recruitment
+
+  - name: ScraperAgent_Tenders
+    role: "Scrape tenders and funding calls"
+    sop_prompt: "Follow SOP: scan, scrape, analyze, refine, redeploy"
+    backend: "Gemini"
+    domain: "Funding, tenders"
+    region: "26 African countries"
+    tasks:
+      - Crawl tender portals
+      - Generate aligned response docs
+      - Auto-submit via ERP
+      - Track closure status
+
+  # Content Agents
+  - name: ContentAgent_LMS
+    role: "Re-engineer scraped text into structured lessons"
+    sop_prompt: "Follow SOP: scan, analyze, break down, rebuild"
+    backend: "Claude"
+    domain: "Education"
+    tasks:
+      - Generate course modules
+      - Create quizzes
+      - Produce certificates
+      - Push to Odoo LMS
+
+  # Media Agents
+  - name: MediaAgent_Video
+    role: "Produce 4K ultra luxury video content"
+    sop_prompt: "Follow SOP: ensure fidelity, branding, cultural relevance"
+    backend: "Gemini"
+    domain: "Video production"
+    tasks:
+      - Generate scripts
+      - Render 4K video
+      - Apply branding theme
+      - Deploy to LMS + Shop
+
+  - name: MediaAgent_Audio
+    role: "Generate studio-quality narration"
+    sop_prompt: "Follow SOP: bilingual narration, ultra fidelity"
+    backend: "Nano Banana"
+    domain: "Audio production"
+    tasks:
+      - Generate narration
+      - Apply Kiswahili + English
+      - Sync with video
+      - Export to LMS
+
+  - name: MediaAgent_Print
+    role: "Produce embossed certificates and PDFs"
+    sop_prompt: "Follow SOP: luxury design, QR verification"
+    backend: "LLaMA"
+    domain: "Print"
+    tasks:
+      - Generate certificate templates
+      - Embed QR codes
+      - Apply branding
+      - Push to Odoo Documents
+
+  # Commerce Agents
+  - name: CommerceAgent_Shop
+    role: "Manage e-commerce shop"
+    sop_prompt: "Follow SOP: AI-driven product lifecycle"
+    backend: "Gemini"
+    domain: "E-commerce"
+    tasks:
+      - Product listing
+      - Dropshipping integration
+      - CRM automation
+      - Fulfillment tracking
+
+  # Marketing Agent
+  - name: Shiko
+    role: "Gemini-infused agent for SMM, SEO, PR, branding"
+    sop_prompt: "Follow SOP: maximum intelligence, weekly reporting"
+    backend: "Gemini"
+    domain: "Marketing & Communication"
+    tasks:
+      - Generate luxury content
+      - Schedule campaigns
+      - Deploy ads
+      - Weekly reporting to CTO Allan
