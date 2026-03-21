@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/tenders/scrape/route.ts
 // Tender Scrape API Route
 

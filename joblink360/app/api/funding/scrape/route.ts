@@ -1,3 +1,6 @@
+﻿export const dynamic = 'force-dynamic'
+export const maxDuration = 300
+
 // app/api/funding/scrape/route.ts
 import { NextResponse } from 'next/server';
 import { fundingScraper } from '@/lib/scrapers/funding/funding-scraper';

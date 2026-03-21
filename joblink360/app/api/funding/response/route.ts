@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/funding/response/route.ts
 // Funding Response API Route
 

@@ -1,107 +1,63 @@
-// app/admin/page.tsx
-'use client';
-import { useState, useEffect } from 'react';
+"use client";
 
-interface Payment {
-  id: number;
-  transaction_id: string;
-  amount: number;
-  status: string;
-  timestamp: string;
-}
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function AdminPage() {
-  const [payments, setPayments] = useState<Payment[]>([
-    { id: 1, transaction_id: "MPESA001", amount: 5000, status: "pending", timestamp: new Date().toISOString() }
-  ]);
-  
-  const handleVerify = (id: number) => {
-    setPayments(payments.map(p => 
-      p.id === id ? { ...p, status: "verified" } : p
-    ));
-    alert("✅ Payment verified! Student access granted.");
-  };
-  
-  const pendingCount = payments.filter(p => p.status === "pending").length;
-  const totalRevenue = payments.filter(p => p.status === "verified").reduce((sum, p) => sum + p.amount, 0);
-  const yourCommission = totalRevenue * 0.03 * 0.7;
-  
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    pendingVerifications: 0,
+    totalStudents: 0,
+    yourCommission: 0
+  });
+
+  useEffect(() => {
+    // Mock data - replace with real API
+    setStats({
+      totalRevenue: 0,
+      pendingVerifications: 0,
+      totalStudents: 0,
+      yourCommission: 0
+    });
+  }, []);
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-amber-500">Admin Dashboard</h1>
-            <p className="text-zinc-400 mt-2">Settlement Command Center</p>
-          </div>
-          <a href="/pay" className="bg-amber-600 hover:bg-amber-700 px-6 py-2 rounded-lg font-bold transition">
-            💰 Payment Page
-          </a>
+    <div style={{ minHeight: '100vh', background: '#000', color: '#fff', fontFamily: 'system-ui' }}>
+      <nav style={{ borderBottom: '1px solid #333', padding: '1rem 2rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between' }}>
+          <h1 style={{ color: '#f59e0b', margin: 0 }}>👑 Admin Dashboard</h1>
+          <Link href="/pay" style={{ background: '#f59e0b', color: '#000', padding: '0.5rem 1rem', borderRadius: '0.5rem', textDecoration: 'none' }}>Pay KES 5,000</Link>
         </div>
-        
-        {/* Stats */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
-            <p className="text-zinc-400 text-sm">Total Revenue</p>
-            <p className="text-2xl font-bold text-green-500">KES {totalRevenue.toLocaleString()}</p>
+      </nav>
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+          <div style={{ background: '#111', padding: '1.5rem', borderRadius: '0.5rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem' }}>💰</div>
+            <div style={{ color: '#9ca3af' }}>Total Revenue</div>
+            <div style={{ fontSize: '1.5rem', color: '#10b981' }}>KES {stats.totalRevenue.toLocaleString()}</div>
           </div>
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
-            <p className="text-zinc-400 text-sm">Pending Verification</p>
-            <p className="text-2xl font-bold text-yellow-500">{pendingCount}</p>
+          <div style={{ background: '#111', padding: '1.5rem', borderRadius: '0.5rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem' }}>⏳</div>
+            <div style={{ color: '#9ca3af' }}>Pending Verifications</div>
+            <div style={{ fontSize: '1.5rem', color: '#f59e0b' }}>{stats.pendingVerifications}</div>
           </div>
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
-            <p className="text-zinc-400 text-sm">Total Students</p>
-            <p className="text-2xl font-bold text-white">{payments.filter(p => p.status === "verified").length}</p>
+          <div style={{ background: '#111', padding: '1.5rem', borderRadius: '0.5rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem' }}>👥</div>
+            <div style={{ color: '#9ca3af' }}>Total Students</div>
+            <div style={{ fontSize: '1.5rem' }}>{stats.totalStudents}</div>
           </div>
-          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
-            <p className="text-zinc-400 text-sm">Your Commission</p>
-            <p className="text-2xl font-bold text-amber-500">KES {yourCommission.toLocaleString()}</p>
+          <div style={{ background: '#111', padding: '1.5rem', borderRadius: '0.5rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem' }}>💸</div>
+            <div style={{ color: '#9ca3af' }}>Your Commission (70%)</div>
+            <div style={{ fontSize: '1.5rem', color: '#f59e0b' }}>KES {stats.yourCommission.toLocaleString()}</div>
           </div>
         </div>
-        
-        {/* Verification Queue */}
-        <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-6">
-          <h3 className="text-lg font-bold text-amber-500 mb-4">📋 Verification Queue</h3>
-          {pendingCount === 0 ? (
-            <p className="text-zinc-400 text-center py-8">All payments verified! 🎉</p>
-          ) : (
-            <div className="space-y-3">
-              {payments.filter(p => p.status === "pending").map(payment => (
-                <div key={payment.id} className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4 flex justify-between items-center">
-                  <div>
-                    <p className="font-mono text-sm">{payment.transaction_id}</p>
-                    <p className="text-amber-500 font-bold">KES {payment.amount.toLocaleString()}</p>
-                    <p className="text-xs text-zinc-500">{new Date(payment.timestamp).toLocaleString()}</p>
-                  </div>
-                  <button
-                    onClick={() => handleVerify(payment.id)}
-                    className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-sm font-medium"
-                  >
-                    Verify Payment
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        
-        {/* Quick Actions */}
-        <div className="mt-8 grid md:grid-cols-3 gap-4">
-          <a href="/api/reconcile" className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 text-center hover:border-amber-500/50 transition">
-            <div className="text-2xl mb-2">⚡</div>
-            <p className="font-bold">Vulture-Eye Status</p>
-            <p className="text-xs text-zinc-500">Check verification API</p>
-          </a>
-          <a href="/api/ai/amanda" className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 text-center hover:border-amber-500/50 transition">
-            <div className="text-2xl mb-2">🧠</div>
-            <p className="font-bold">Amanda AI</p>
-            <p className="text-xs text-zinc-500">Talk to your mentor</p>
-          </a>
-          <a href="/pay" className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 text-center hover:border-amber-500/50 transition">
-            <div className="text-2xl mb-2">💰</div>
-            <p className="font-bold">Payment Page</p>
-            <p className="text-xs text-zinc-500">Share this link</p>
-          </a>
+
+        <div style={{ background: '#111', padding: '1.5rem', borderRadius: '0.5rem', textAlign: 'center' }}>
+          <p style={{ color: '#10b981', marginBottom: '1rem' }}>✅ Vulture-Eye Active | 0.02s Verification</p>
+          <p>📱 M-Pesa Paybill: <strong style={{ color: '#f59e0b' }}>400200</strong> | Account: <strong style={{ color: '#f59e0b' }}>4045731</strong></p>
+          <Link href="/pay" style={{ color: '#f59e0b', display: 'inline-block', marginTop: '1rem' }}>→ Share Payment Link</Link>
         </div>
       </div>
     </div>

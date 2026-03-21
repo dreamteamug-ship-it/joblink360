@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/subscription/upgrade/route.ts
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/client';

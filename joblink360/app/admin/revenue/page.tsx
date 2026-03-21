@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase/client';
 
 export default function RevenueDashboard() {
-  const [revenue, setRevenue] = useState({ daily: 0, weekly: 0, monthly: 0, target: 10000 });
+  const [revenue, setRevenue] = useState({ daily: 0, weekly: 0, monthly: 0, target: 10000, conversionRate: 3.2 });
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
 

@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/shop/cart/route.ts
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/client';

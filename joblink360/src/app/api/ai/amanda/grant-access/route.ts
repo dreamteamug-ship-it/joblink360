@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // src/app/api/ai/amanda/grant-access/route.ts
 // Amanda AI - Grant Course Access After Payment
 

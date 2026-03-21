@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/commission/summary/route.ts
 // Fixed commission route with proper Supabase client
 

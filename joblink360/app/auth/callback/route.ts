@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/auth/callback/route.ts
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'

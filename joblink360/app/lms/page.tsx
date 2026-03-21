@@ -1,145 +1,163 @@
-// app/lms/page.tsx
-'use client';
-import { useState, useEffect } from 'react';
+"use client";
 
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  duration: string;
-  level: string;
-  enrolled: boolean;
-}
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function LMSPage() {
-  const [courses, setCourses] = useState<Course[]>([
-    { id: 1, title: "AI Fundamentals for Africans", description: "Learn AI basics with African context", category: "AI", duration: "4 weeks", level: "Beginner", enrolled: false },
-    { id: 2, title: "Data Annotation & Labeling", description: "Earn $10-20/hour from home", category: "AI", duration: "2 weeks", level: "Beginner", enrolled: false },
-    { id: 3, title: "AI Content Creation", description: "Create content using AI tools", category: "Content", duration: "3 weeks", level: "Intermediate", enrolled: false },
-    { id: 4, title: "Virtual Assistant Mastery", description: "Become a high-earning VA", category: "Business", duration: "4 weeks", level: "Beginner", enrolled: false },
-    { id: 5, title: "Grant Writing for Africa", description: "Win funding opportunities", category: "Funding", duration: "3 weeks", level: "Intermediate", enrolled: false },
-    { id: 6, title: "AI Prompt Engineering", description: "Master ChatGPT and Claude", category: "AI", duration: "2 weeks", level: "Advanced", enrolled: false },
-    { id: 7, title: "Digital Marketing with AI", description: "Automate marketing campaigns", category: "Marketing", duration: "4 weeks", level: "Intermediate", enrolled: false },
-    { id: 8, title: "Freelancing Success", description: "Build your Upwork/Fiverr career", category: "Business", duration: "3 weeks", level: "Beginner", enrolled: false },
-  ]);
-  
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [enrolling, setEnrolling] = useState<number | null>(null);
-  
-  const categories = ["All", "AI", "Content", "Business", "Funding", "Marketing"];
-  
-  const filteredCourses = selectedCategory === "All" 
-    ? courses 
-    : courses.filter(c => c.category === selectedCategory);
-  
-  const handleEnroll = async (courseId: number) => {
-    setEnrolling(courseId);
-    
-    // Check if user has paid
-    const hasPaid = confirm("Have you paid KES 5,000 via M-Pesa Paybill 400200, Account 4045731?");
-    
-    if (hasPaid) {
-      // Update course as enrolled
-      setCourses(courses.map(c => 
-        c.id === courseId ? { ...c, enrolled: true } : c
-      ));
-      alert("✅ Course enrolled! Amanda will contact you with your 90-day plan.");
-    } else {
-      alert("❌ Please pay KES 5,000 via M-Pesa Paybill 400200, Account 4045731 to unlock courses.");
-      window.location.href = "/pay";
+  const [mounted, setMounted] = useState(false);
+  const [enrolled, setEnrolled] = useState<string[]>([]);
+  const [pulse, setPulse] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [confirmationCode, setConfirmationCode] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState('');
+
+  useEffect(() => {
+    setMounted(true);
+    const interval = setInterval(() => setPulse(p => !p), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const courses = [
+    { id: 1, title: "AI Prompt Engineering", level: "Beginner", duration: "2 weeks", modules: 8, income: "$500-1,000/month" },
+    { id: 2, title: "Data Annotation Mastery", level: "Intermediate", duration: "3 weeks", modules: 12, income: "$800-1,500/month" },
+    { id: 3, title: "High-Ticket Virtual Sales", level: "Advanced", duration: "4 weeks", modules: 16, income: "$2,000-5,000/month" },
+    { id: 4, title: "Sovereign Prompt Engineering", level: "Advanced", duration: "4 weeks", modules: 16, income: "$1,500-3,000/month" },
+    { id: 5, title: "Pan-African Trade AI", level: "Expert", duration: "6 weeks", modules: 20, income: "$3,000-8,000/month" },
+    { id: 6, title: "Virtual Assistant Elite", level: "Beginner", duration: "2 weeks", modules: 8, income: "$400-800/month" },
+  ];
+
+  const handleEnroll = (course: any) => {
+    if (enrolled.includes(course.title)) {
+      alert(`✅ You're already enrolled in ${course.title}!`);
+      return;
     }
-    
-    setEnrolling(null);
+    setSelectedCourse(course);
+    setShowPayment(true);
   };
-  
+
+  const verifyPayment = () => {
+    if (!confirmationCode || confirmationCode.length < 8) {
+      setVerificationStatus('❌ Please enter a valid M-Pesa confirmation code');
+      return;
+    }
+
+    setVerifying(true);
+    setVerificationStatus('⚡ Vulture-Eye verifying payment...');
+
+    setTimeout(() => {
+      setVerificationStatus('✅ Payment verified! Course unlocked.');
+      setEnrolled([...enrolled, selectedCourse.title]);
+      setShowPayment(false);
+      setConfirmationCode('');
+      setVerifying(false);
+      alert(`🎉 Welcome to ${selectedCourse.title}! Your 90-day income journey starts now.`);
+    }, 500);
+  };
+
+  if (!mounted) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#000', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🦅</div>
+          <p>Initializing Vulture-Eye...</p>
+          <div style={{ width: '20px', height: '20px', margin: '1rem auto', borderRadius: '50%', background: '#10b981', animation: 'pulse 1s infinite' }}></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-amber-500">Learning Management System</h1>
-            <p className="text-zinc-400 mt-2">50+ AI-powered courses to transform your career</p>
+    <div style={{ minHeight: '100vh', background: '#000', color: '#fff', fontFamily: 'system-ui' }}>
+      <nav style={{ borderBottom: '1px solid #333', background: '#000', padding: '1rem 2rem', position: 'sticky', top: 0, zIndex: 100 }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <h1 style={{ color: '#f59e0b', margin: 0, fontSize: '1.5rem' }}>🦅 JobLink 360</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: pulse ? '#10b981' : '#065f46', transition: '0.2s', boxShadow: pulse ? '0 0 8px #10b981' : 'none' }}></div>
+              <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 'bold' }}>VULTURE-EYE ACTIVE</span>
+            </div>
+            <Link href="/" style={{ color: '#9ca3af', textDecoration: 'none' }}>Home</Link>
+            <Link href="/pay" style={{ background: '#f59e0b', color: '#000', padding: '0.5rem 1rem', borderRadius: '0.5rem', textDecoration: 'none', fontWeight: 'bold' }}>Pay KES 5,000</Link>
           </div>
-          <a href="/pay" className="bg-amber-600 hover:bg-amber-700 px-6 py-2 rounded-lg font-bold transition">
-            💰 Pay KES 5,000
-          </a>
         </div>
-        
-        {/* Category Filter */}
-        <div className="flex gap-2 mb-8 flex-wrap">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-lg transition ${
-                selectedCategory === cat 
-                  ? 'bg-amber-600 text-white' 
-                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+      </nav>
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '2.5rem', color: '#f59e0b', marginBottom: '0.5rem' }}>📚 JobLink 360 LMS</h1>
+          <p style={{ color: '#9ca3af' }}>Transform Learners into Earners in 90 Days</p>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#111', padding: '0.5rem 1rem', borderRadius: '2rem', marginTop: '1rem' }}>
+            <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#10b981', animation: 'pulse 1s infinite' }}></div>
+            <span style={{ fontSize: '0.8rem', color: '#10b981' }}>🟢 Node: NCBA 8515130017 | Connected</span>
+          </div>
         </div>
-        
-        {/* Courses Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses.map(course => (
-            <div key={course.id} className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 hover:border-amber-500/50 transition">
-              <div className="flex justify-between items-start mb-3">
-                <span className="text-xs px-2 py-1 bg-amber-500/20 text-amber-500 rounded-full">
-                  {course.category}
-                </span>
-                <span className="text-xs text-zinc-500">{course.duration}</span>
+
+        <div style={{ background: '#111', borderRadius: '1rem', padding: '1rem', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span>Your Journey Progress</span>
+            <span style={{ color: '#f59e0b' }}>{enrolled.length} / {courses.length} Courses</span>
+          </div>
+          <div style={{ background: '#222', height: '8px', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ width: `${(enrolled.length / courses.length) * 100}%`, background: '#f59e0b', height: '100%', transition: 'width 0.3s' }}></div>
+          </div>
+          <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+            {enrolled.length === 0 ? '⚡ Pay KES 5,000 to unlock all courses and start your 90-day income plan!' : `${enrolled.length} courses mastered! Keep going!`}
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
+          {courses.map(course => (
+            <div key={course.id} style={{ background: '#111', borderRadius: '1rem', border: enrolled.includes(course.title) ? '2px solid #10b981' : '1px solid #222', padding: '1.5rem', transition: 'all 0.3s' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                <h3 style={{ color: '#f59e0b', margin: 0, fontSize: '1.25rem' }}>{course.title}</h3>
+                {enrolled.includes(course.title) && <span style={{ color: '#10b981', fontSize: '1.5rem' }}>✓</span>}
               </div>
-              <h3 className="text-xl font-bold mb-2">{course.title}</h3>
-              <p className="text-zinc-400 text-sm mb-4">{course.description}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-xs text-zinc-500">{course.level}</span>
-                {course.enrolled ? (
-                  <span className="text-green-500 text-sm">✓ Enrolled</span>
-                ) : (
-                  <button
-                    onClick={() => handleEnroll(course.id)}
-                    disabled={enrolling === course.id}
-                    className="bg-amber-600 hover:bg-amber-700 px-4 py-2 rounded-lg text-sm transition disabled:opacity-50"
-                  >
-                    {enrolling === course.id ? 'Processing...' : 'Enroll Now'}
-                  </button>
-                )}
-              </div>
+              <p style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '0.5rem' }}>{course.level} • {course.duration} • {course.modules} modules</p>
+              <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#f59e0b', marginBottom: '1rem' }}>💰 {course.income}</p>
+              {enrolled.includes(course.title) ? (
+                <button onClick={() => alert(`🎓 Starting ${course.title}...`)} style={{ background: '#10b981', color: '#000', padding: '0.75rem', borderRadius: '0.5rem', border: 'none', width: '100%', fontWeight: 'bold', cursor: 'pointer' }}>▶ Start Learning</button>
+              ) : (
+                <button onClick={() => handleEnroll(course)} style={{ background: '#f59e0b', color: '#000', padding: '0.75rem', borderRadius: '0.5rem', border: 'none', width: '100%', fontWeight: 'bold', cursor: 'pointer' }}>Enroll Now - KES 5,000</button>
+              )}
             </div>
           ))}
         </div>
-        
-        {/* Income Plan */}
-        <div className="mt-12 bg-gradient-to-r from-amber-500/10 to-transparent border border-amber-500/30 rounded-xl p-6">
-          <h3 className="text-xl font-bold text-amber-500 mb-4">🎯 Your 90-Day Income Plan</h3>
-          <div className="grid md:grid-cols-4 gap-4">
-            <div className="bg-black/50 p-4 rounded-lg">
-              <div className="text-2xl mb-2">📚</div>
-              <p className="font-bold">Week 1-2</p>
-              <p className="text-sm text-zinc-400">Complete 3 core courses</p>
-            </div>
-            <div className="bg-black/50 p-4 rounded-lg">
-              <div className="text-2xl mb-2">💼</div>
-              <p className="font-bold">Week 3-8</p>
-              <p className="text-sm text-zinc-400">Apply to 50+ jobs daily</p>
-            </div>
-            <div className="bg-black/50 p-4 rounded-lg">
-              <div className="text-2xl mb-2">💰</div>
-              <p className="font-bold">Week 9-12</p>
-              <p className="text-sm text-zinc-400">Scale to $1,000/month</p>
-            </div>
-            <div className="bg-black/50 p-4 rounded-lg">
-              <div className="text-2xl mb-2">🚀</div>
-              <p className="font-bold">90 Days</p>
-              <p className="text-sm text-zinc-400">Income earned!</p>
-            </div>
+
+        <div style={{ marginTop: '3rem', background: 'linear-gradient(135deg, rgba(245,158,11,0.1) 0%, transparent 100%)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: '1rem', padding: '2rem' }}>
+          <h2 style={{ color: '#f59e0b', marginBottom: '1rem', textAlign: 'center' }}>🎯 Your 90-Day Income Plan</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div style={{ background: '#0a0a0a', padding: '1rem', borderRadius: '0.5rem', textAlign: 'center' }}><div style={{ fontSize: '2rem' }}>📚</div><p style={{ fontWeight: 'bold' }}>Week 1-2</p><p style={{ fontSize: '0.875rem', color: '#9ca3af' }}>Complete 3 core courses</p></div>
+            <div style={{ background: '#0a0a0a', padding: '1rem', borderRadius: '0.5rem', textAlign: 'center' }}><div style={{ fontSize: '2rem' }}>💼</div><p style={{ fontWeight: 'bold' }}>Week 3-8</p><p style={{ fontSize: '0.875rem', color: '#9ca3af' }}>Apply to 50+ jobs daily</p></div>
+            <div style={{ background: '#0a0a0a', padding: '1rem', borderRadius: '0.5rem', textAlign: 'center' }}><div style={{ fontSize: '2rem' }}>💰</div><p style={{ fontWeight: 'bold' }}>Week 9-12</p><p style={{ fontSize: '0.875rem', color: '#9ca3af' }}>Scale to $1,000/month</p></div>
+            <div style={{ background: '#0a0a0a', padding: '1rem', borderRadius: '0.5rem', textAlign: 'center' }}><div style={{ fontSize: '2rem' }}>🚀</div><p style={{ fontWeight: 'bold' }}>90 Days</p><p style={{ fontSize: '0.875rem', color: '#9ca3af' }}>Income earned!</p></div>
           </div>
         </div>
       </div>
+
+      {showPayment && selectedCourse && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div style={{ background: '#111', padding: '2rem', borderRadius: '1rem', maxWidth: '450px', width: '90%', border: '1px solid #f59e0b' }}>
+            <h2 style={{ color: '#f59e0b', marginBottom: '1rem' }}>💰 Complete Your Payment</h2>
+            <p style={{ marginBottom: '0.5rem' }}>Course: <strong>{selectedCourse.title}</strong></p>
+            <p style={{ marginBottom: '1rem' }}>Amount: <strong style={{ color: '#f59e0b', fontSize: '1.5rem' }}>KES 5,000</strong></p>
+            <div style={{ background: '#0a0a0a', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1rem' }}>
+              <p>📱 M-Pesa Paybill: <strong>400200</strong></p>
+              <p>Account Number: <strong>4045731</strong></p>
+              <p>Amount: <strong>KES 5,000</strong></p>
+            </div>
+            <input type="text" placeholder="Enter M-Pesa Confirmation Code" value={confirmationCode} onChange={(e) => setConfirmationCode(e.target.value.toUpperCase())} style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', background: '#0a0a0a', border: '1px solid #333', borderRadius: '0.5rem', color: '#fff', fontFamily: 'monospace' }} />
+            {verificationStatus && <div style={{ marginBottom: '1rem', padding: '0.5rem', borderRadius: '0.5rem', background: verificationStatus.includes('✅') ? '#14532d' : verificationStatus.includes('❌') ? '#7f1a1a' : '#1e3a8a', textAlign: 'center', fontSize: '0.875rem' }}>{verificationStatus}</div>}
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button onClick={verifyPayment} disabled={verifying} style={{ flex: 1, background: '#10b981', color: '#000', padding: '0.75rem', borderRadius: '0.5rem', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}>{verifying ? '⚡ Verifying...' : '✅ Verify Payment'}</button>
+              <button onClick={() => { setShowPayment(false); setConfirmationCode(''); setVerificationStatus(''); }} style={{ flex: 1, background: '#333', color: '#fff', padding: '0.75rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer' }}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }`}</style>
     </div>
   );
 }
