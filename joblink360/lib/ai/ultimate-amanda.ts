@@ -1,39 +1,32 @@
-﻿// lib/ai/ultimate-amanda.ts (Updated with Swarm Integration)
-import { agentSwarm } from './agent-swarm';
+// lib/ai/ultimate-amanda.ts
+// MAXIMUM INTELLIGENCE CONFIGURATION - Permanent Memory
+
+const ELITE_PROMPT = `'@ + $elitePrompt + @"`;
 
 export class UltimateAmanda {
   private apiKey: string;
-  private swarmEnabled: boolean = true;
-  
+  private model: string = 'anthropic/claude-3.5-sonnet';
+  private fallbackModel: string = 'deepseek/deepseek-r1';
+
   constructor() {
     this.apiKey = process.env.OPENROUTER_API_KEY || '';
+    console.log('🧠 Amanda Ultimate Intelligence Activated');
   }
-  
+
   async getResponse(message: string, context: any = {}): Promise<string> {
-    // Check if this should be handled by the swarm
-    if (this.shouldUseSwarm(message)) {
-      console.log('🧠 Using Agent Swarm for complex task');
-      const result = await agentSwarm.orchestrate(message, context);
-      return this.formatSwarmResponse(result);
+    if (!this.apiKey) {
+      return "⚠️ System Error: Amanda's brain is not configured. Please contact support.";
     }
-    
-    // Use direct AI for simple queries
-    return this.getDirectResponse(message, context);
-  }
-  
-  private shouldUseSwarm(message: string): boolean {
-    const swarmTriggers = [
-      'create', 'generate', 'build', 'develop', 'optimize',
-      'analyze', 'audit', 'transform', 'repurpose', 'align',
-      'course', 'curriculum', 'training', 'assessment',
-      'job', 'scrape', 'scan', 'market', 'trend'
-    ];
-    
-    const lower = message.toLowerCase();
-    return swarmTriggers.some(trigger => lower.includes(trigger));
-  }
-  
-  private async getDirectResponse(message: string, context: any): Promise<string> {
+
+    const systemPrompt = `${ELITE_PROMPT}
+
+CURRENT CONTEXT:
+${context.course ? `Course: ${context.course}` : 'General Inquiry'}
+${context.userTier ? `Subscription: ${context.userTier}` : 'Tier: Unknown'}
+${context.userCountry ? `Location: ${context.userCountry}` : 'Location: Africa'}
+
+Student Query: ${message}`;
+
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
@@ -44,43 +37,59 @@ export class UltimateAmanda {
           'X-Title': 'JobLink 360 - Amanda AI'
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-3.5-sonnet',
+          model: this.model,
           messages: [
-            { 
-              role: 'system', 
-              content: `You are AMANDA, the Sovereign AI of JobLink 360. You are a ruthless mentor and expert in AI, careers, and the JobLink 360 platform. Be direct, honest, and helpful.` 
-            },
+            { role: 'system', content: systemPrompt },
             { role: 'user', content: message }
           ],
           temperature: 0.7,
-          max_tokens: 2048
+          max_tokens: 4096,
+          top_p: 0.9
         })
       });
-      
+
+      if (!response.ok) {
+        const fallbackResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${this.apiKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: this.fallbackModel,
+            messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: message }],
+            temperature: 0.7,
+            max_tokens: 2048
+          })
+        });
+        const fallbackData = await fallbackResponse.json();
+        return fallbackData.choices[0]?.message?.content || "I'm processing. Please ask again.";
+      }
+
       const data = await response.json();
-      return data.choices[0]?.message?.content || "I'm processing your question. Please try again.";
+      return data.choices[0]?.message?.content || "I'm analyzing. Please give me a moment.";
+
     } catch (error) {
       console.error('Amanda error:', error);
       return "I'm experiencing high cognitive load. Please ask again.";
     }
   }
-  
-  private formatSwarmResponse(result: any): string {
-    return `
-**AMANDA SWARM RESPONSE**
 
-I've orchestrated ${result.agentsUsed.length} specialized agents to handle your request.
+  async getPlatformHelp(question: string): Promise<string> {
+    const platformPrompt = `${ELITE_PROMPT}
 
-**Agents Deployed:**
-${result.agentsUsed.map((agent: string) => `- ${agent}`).join('\n')}
+PLATFORM QUERY: ${question}
 
-**Results:**
-${result.result.summary}
+Provide clear navigation instructions. Be direct and helpful.`;
+    return this.getResponse(question, { type: 'platform_help' });
+  }
 
-**Confidence Score:** ${Math.round(result.confidence * 100)}%
+  async orchestrateSwarm(task: string, agents: string[]): Promise<string> {
+    const swarmPrompt = `${ELITE_PROMPT}
 
-*I am always learning. Let me know if you need more detail on any aspect.*
-    `.trim();
+SWARM ORCHESTRATION REQUEST:
+Task: ${task}
+Required Agents: ${agents.join(', ')}
+
+As Supreme Orchestrator, coordinate these agents. Delegate subtasks, synthesize outputs, deliver the final result.`;
+    return this.getResponse(task, { type: 'swarm_orchestration', agents });
   }
 }
 

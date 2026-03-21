@@ -1,13 +1,16 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+// app/layout.tsx
 import './globals.css'
-import { AmandaWidget } from '@/components/AmandaWidget'
-
-const inter = Inter({ subsets: ['latin'] })
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'JobLink 360',
-  description: 'Africa\'s first AI-powered career platform',
+  title: 'JobLink 360 - Transform Learners into Earners',
+  description: 'Africa\'s premier AI-powered career platform. Pay KES 5,000 via M-Pesa Paybill 400200, Account 4045731.',
+  keywords: 'AI careers, African jobs, funding, M-Pesa, Kenya, Nigeria, South Africa, Ghana',
+  openGraph: {
+    title: 'JobLink 360',
+    description: 'Transform Learners into Earners in 90 Days',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
@@ -17,10 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
-        <AmandaWidget />
-      </body>
+      <body>{children}</body>
     </html>
   )
 }

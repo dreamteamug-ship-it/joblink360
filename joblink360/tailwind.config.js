@@ -7,10 +7,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        amber: {
-          500: '#D4AF37',
-          600: '#C5A028',
-        },
+        'maasai-red': '#E03A3A',
+        'savanna-gold': '#D4AF37',
+        'midnight-blue': '#1A2A3A',
+        'night-black': '#0A0A0A',
       },
     },
   },

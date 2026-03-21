@@ -1,56 +1,83 @@
 // app/api/ai/amanda/route.ts
 import { NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
-  try {
-    const { message, context, voiceMode } = await request.json();
-    
-    if (!message) {
-      return NextResponse.json({ error: 'Message is required' }, { status: 400 });
-    }
-    
-    console.log(`🎙️ Amanda processing: "${message}"`);
-    
-    // Use OpenRouter API with Claude 3.5 Sonnet
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://joblink360-gamma.vercel.app',
-        'X-Title': 'JobLink 360 - Amanda AI'
-      },
-      body: JSON.stringify({
-        model: 'anthropic/claude-3.5-sonnet',
-        messages: [
-          { 
-            role: 'system', 
-            content: `You are AMANDA, the Sovereign AI of JobLink 360. You are a ruthless mentor, career strategist, and ultra-intelligent AI assistant. You have complete knowledge of the JobLink 360 platform including the LMS at /lms, ERP at /titanium-erp, and Deal Room at /deal-room. Be direct, honest, and helpful.`
-          },
-          { role: 'user', content: message }
-        ],
-        temperature: 0.7,
-        max_tokens: 2048
-      })
-    });
-    
-    const data = await response.json();
-    const aiResponse = data.choices[0]?.message?.content || "I'm processing your question. Please try again.";
-    
-    return NextResponse.json({ response: aiResponse });
-  } catch (error) {
-    console.error('Amanda API error:', error);
-    return NextResponse.json({ 
-      response: "I'm experiencing high cognitive load. Please ask again." 
-    }, { status: 500 });
-  }
+export async function GET() {
+  return NextResponse.json({
+    name: 'Amanda',
+    role: 'Sovereign Intelligence',
+    status: 'ACTIVE',
+    mission: 'Transform learners into earners in 90 days',
+    paybill: '400200',
+    account: '4045731',
+    bank: 'NCBA 8515130017'
+  });
 }
 
-export async function GET() {
+export async function POST(request: Request) {
+  const { message } = await request.json();
+  const msg = message?.toLowerCase() || '';
+  
+  let response = '';
+  
+  if (msg.includes('earn') || msg.includes('income') || msg.includes('money')) {
+    response = `🎯 THE 3-MONTH INCOME TEST
+
+Week 1: Complete AI Fundamentals (free)
+Week 2-3: Master one high-income skill
+Week 4-8: Apply to 50+ jobs daily
+Week 9-12: Scale to $1,000/month
+
+Your first action TODAY:
+→ Pay KES 5,000 via Paybill 400200, Account 4045731
+→ Get instant access to all courses
+→ I'll create your personalized 90-day plan
+
+The market rewards action, not intention. Start now.`;
+  } 
+  else if (msg.includes('pay') || msg.includes('mpesa') || msg.includes('verify')) {
+    response = `💰 M-Pesa PAYMENT DETAILS
+
+Paybill: 400200
+Account: 4045731
+Amount: KES 5,000
+
+After payment:
+1. Enter your confirmation code at /pay
+2. Vulture-Eye verifies in <20ms
+3. Your courses unlock instantly
+4. I'll interview you for your 90-day plan
+
+What's your confirmation code? I'll verify it now.`;
+  }
+  else if (msg.includes('funding') || msg.includes('grant')) {
+    response = `🌍 ACTIVE FUNDING OPPORTUNITIES ACROSS AFRICA
+
+🇰🇪 Kenya: World Bank Digital Grant ($500,000)
+🇳🇬 Nigeria: AfDB Digital Skills Initiative ($300,000)
+🇿🇦 South Africa: Mastercard Foundation ($1.5M)
+🇬🇭 Ghana: EU Infrastructure Grant ($3,000,000)
+
+Your success probability: 85% for tech opportunities
+
+Visit /funding/matchmaking to apply. Share your industry for personalized matching.`;
+  }
+  else {
+    response = `🧠 AMANDA - Your Ruthless Mentor
+
+I can help you with:
+• "earn" → 90-day income plan
+• "pay" → M-Pesa payment details (Paybill 400200)
+• "funding" → Active grants across 26 African countries
+• "commission" → Your earning structure
+
+What would you like to know?
+
+Remember: I'm here to transform learners into earners. Let's go! 💪`;
+  }
+  
   return NextResponse.json({ 
-    status: 'Amanda AI is ONLINE',
-    intelligence: 'Claude 3.5 Sonnet via OpenRouter',
-    voiceEnabled: true,
-    platform: 'JobLink 360'
+    response,
+    timestamp: new Date().toISOString(),
+    agent: 'Amanda'
   });
 }

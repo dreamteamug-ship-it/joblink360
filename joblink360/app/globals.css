@@ -1,32 +1,31 @@
+/* app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --gold: #D4AF37;
-  --matte-black: #0A0A0A;
+  --maasai-red: #E03A3A;
+  --savanna-gold: #D4AF37;
+  --midnight-blue: #1A2A3A;
+  --night-black: #0A0A0A;
 }
 
 body {
-  background: var(--matte-black);
+  background: var(--night-black);
   color: white;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #1a1a1a;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #D4AF37;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #C5A028;
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
 }
