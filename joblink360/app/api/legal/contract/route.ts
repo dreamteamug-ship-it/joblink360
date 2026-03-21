@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/legal/contract/route.ts
 import { NextResponse } from 'next/server';
 import { legalAgent } from '@/lib/legal/legal-agent';

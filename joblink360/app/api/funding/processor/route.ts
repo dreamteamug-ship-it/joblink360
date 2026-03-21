@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/funding/processor/route.ts
 import { NextResponse } from 'next/server';
 import { fundingProcessor } from '@/lib/agents/funding/funding-processor';

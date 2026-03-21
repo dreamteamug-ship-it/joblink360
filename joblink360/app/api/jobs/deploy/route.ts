@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/jobs/deploy/route.ts
 import { NextResponse } from 'next/server';
 import { jobHunter } from '@/lib/agents/jobs/job-hunter';

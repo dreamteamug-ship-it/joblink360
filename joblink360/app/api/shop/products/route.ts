@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/shop/products/route.ts
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/client';
@@ -11,10 +13,10 @@ export async function GET() {
   
   return NextResponse.json({ 
     products: products || [
-      { id: 1, name: "AI Prompt Engineering Masterclass", description: "Learn advanced prompting techniques", price: 1500, icon: "🤖" },
-      { id: 2, name: "Full Stack Development Bootcamp", description: "Become a professional developer", price: 2500, icon: "💻" },
-      { id: 3, name: "Data Science & Analytics", description: "Master data-driven decision making", price: 2000, icon: "📊" },
-      { id: 4, name: "Digital Marketing Pro", description: "Grow your online presence", price: 1800, icon: "📈" }
+      { id: 1, name: "AI Prompt Engineering Masterclass", description: "Learn advanced prompting techniques", price: 1500, icon: "ðŸ¤–" },
+      { id: 2, name: "Full Stack Development Bootcamp", description: "Become a professional developer", price: 2500, icon: "ðŸ’»" },
+      { id: 3, name: "Data Science & Analytics", description: "Master data-driven decision making", price: 2000, icon: "ðŸ“Š" },
+      { id: 4, name: "Digital Marketing Pro", description: "Grow your online presence", price: 1800, icon: "ðŸ“ˆ" }
     ]
   });
 }

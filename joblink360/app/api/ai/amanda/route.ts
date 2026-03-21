@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/ai/amanda/route.ts
 import { NextResponse } from 'next/server';
 
@@ -20,7 +22,7 @@ export async function POST(request: Request) {
   let response = '';
   
   if (msg.includes('earn') || msg.includes('income') || msg.includes('money')) {
-    response = `🎯 THE 3-MONTH INCOME TEST
+    response = `ðŸŽ¯ THE 3-MONTH INCOME TEST
 
 Week 1: Complete AI Fundamentals (free)
 Week 2-3: Master one high-income skill
@@ -28,14 +30,14 @@ Week 4-8: Apply to 50+ jobs daily
 Week 9-12: Scale to $1,000/month
 
 Your first action TODAY:
-→ Pay KES 5,000 via Paybill 400200, Account 4045731
-→ Get instant access to all courses
-→ I'll create your personalized 90-day plan
+â†’ Pay KES 5,000 via Paybill 400200, Account 4045731
+â†’ Get instant access to all courses
+â†’ I'll create your personalized 90-day plan
 
 The market rewards action, not intention. Start now.`;
   } 
   else if (msg.includes('pay') || msg.includes('mpesa') || msg.includes('verify')) {
-    response = `💰 M-Pesa PAYMENT DETAILS
+    response = `ðŸ’° M-Pesa PAYMENT DETAILS
 
 Paybill: 400200
 Account: 4045731
@@ -50,29 +52,29 @@ After payment:
 What's your confirmation code? I'll verify it now.`;
   }
   else if (msg.includes('funding') || msg.includes('grant')) {
-    response = `🌍 ACTIVE FUNDING OPPORTUNITIES ACROSS AFRICA
+    response = `ðŸŒ ACTIVE FUNDING OPPORTUNITIES ACROSS AFRICA
 
-🇰🇪 Kenya: World Bank Digital Grant ($500,000)
-🇳🇬 Nigeria: AfDB Digital Skills Initiative ($300,000)
-🇿🇦 South Africa: Mastercard Foundation ($1.5M)
-🇬🇭 Ghana: EU Infrastructure Grant ($3,000,000)
+ðŸ‡°ðŸ‡ª Kenya: World Bank Digital Grant ($500,000)
+ðŸ‡³ðŸ‡¬ Nigeria: AfDB Digital Skills Initiative ($300,000)
+ðŸ‡¿ðŸ‡¦ South Africa: Mastercard Foundation ($1.5M)
+ðŸ‡¬ðŸ‡­ Ghana: EU Infrastructure Grant ($3,000,000)
 
 Your success probability: 85% for tech opportunities
 
 Visit /funding/matchmaking to apply. Share your industry for personalized matching.`;
   }
   else {
-    response = `🧠 AMANDA - Your Ruthless Mentor
+    response = `ðŸ§  AMANDA - Your Ruthless Mentor
 
 I can help you with:
-• "earn" → 90-day income plan
-• "pay" → M-Pesa payment details (Paybill 400200)
-• "funding" → Active grants across 26 African countries
-• "commission" → Your earning structure
+â€¢ "earn" â†’ 90-day income plan
+â€¢ "pay" â†’ M-Pesa payment details (Paybill 400200)
+â€¢ "funding" â†’ Active grants across 26 African countries
+â€¢ "commission" â†’ Your earning structure
 
 What would you like to know?
 
-Remember: I'm here to transform learners into earners. Let's go! 💪`;
+Remember: I'm here to transform learners into earners. Let's go! ðŸ’ª`;
   }
   
   return NextResponse.json({ 

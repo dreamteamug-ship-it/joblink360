@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/funding/refiner/route.ts
 import { NextResponse } from 'next/server';
 import { fundingRefiner } from '@/lib/agents/funding/funding-refiner';

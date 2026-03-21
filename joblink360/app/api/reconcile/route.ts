@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/reconcile/route.ts
 import { NextResponse } from 'next/server';
 

@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 import { NextResponse } from 'next/server';
 import { swarmOrchestrator } from '@/lib/erp/agents/swarm';
 import { supabase } from '@/lib/supabase/client';

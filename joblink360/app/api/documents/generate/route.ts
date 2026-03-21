@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/documents/generate/route.ts
 import { NextResponse } from 'next/server';
 import { documentGenerator } from '@/lib/documents/ultra-luxury-doc';

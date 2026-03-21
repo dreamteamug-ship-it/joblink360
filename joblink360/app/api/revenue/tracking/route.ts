@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/revenue/tracking/route.ts
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/client';

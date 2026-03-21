@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/funding/scanner/route.ts
 import { NextResponse } from 'next/server';
 import { fundingScanner } from '@/lib/scrapers/funding/funding-scanner';

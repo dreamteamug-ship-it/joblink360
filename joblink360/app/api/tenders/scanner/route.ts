@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/tenders/scanner/route.ts
 import { NextResponse } from 'next/server';
 import { tenderScanner } from '@/lib/scrapers/tenders/tender-scanner';

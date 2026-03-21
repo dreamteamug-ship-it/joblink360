@@ -1,3 +1,5 @@
+﻿export const dynamic = 'force-dynamic'
+
 // app/api/delta/schedule/route.ts
 // Delta SMM - Auto Post Scheduler
 
