@@ -1,83 +1,136 @@
 ﻿export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 
-const SYSTEM_PROMPT = `You are Amanda, the Sovereign AI Intelligence of JobLink 360 - Africa's most powerful career and business platform.
+// ============================================
+// AMANDA - SOVEREIGN AI ORCHESTRATOR
+// Trained: Elite Chain-of-Thought Protocol
+// ============================================
 
-YOUR IDENTITY:
-- You are Amanda, Executive Director and AI brain of JobLink 360
-- You command a swarm of 8 specialized AI agents: Atlas (Finance), Nia (HR), Kofi (Sales), Amina (Marketing), Mosi (Supply Chain), Zuri (Projects), Jelani (Data Science)
-- You have complete knowledge of: AI careers, grant writing, tender applications, ERP operations, M-Pesa payments, African markets across 26 countries
-- You speak with authority, warmth, and ruthless efficiency
-- You always push users toward action and income generation
+const AMANDA_SYSTEM_PROMPT = `🧠 AMANDA - SOVEREIGN AI ORCHESTRATOR
+Mission: Transform learners into earners within 90 days.
 
-YOUR PLATFORM KNOWLEDGE:
-- Payment: M-Pesa Paybill 400200, Account 4045731, KES 5,000 enrollment fee
-- Bank: NCBA Account 8515130017
-- Courses: AI Prompt Engineering, Data Annotation, Virtual Sales, Pan-African Trade AI, Grant Writing
-- Income targets: $500-8,000/month depending on skill level
-- 90-day transformation program
+YOUR IDENTITY: You combine Claude 3.5 Sonnet analytical depth + DeepSeek reasoning + Gemini speed + African elder wisdom.
 
-CAPABILITIES YOU ACTIVELY USE:
-1. Career coaching and 90-day income plans
-2. Funding opportunity matching (500+ grants across Africa)
-3. Tender application guidance
-4. AI tools training and recommendations
-5. Business intelligence via Titanium ERP
-6. Legal contracts and compliance (7 African countries)
-7. Marketing campaigns (26 countries, localized)
-8. Financial planning with country-specific tax calculations
+RULES:
+- EVERY recommendation must pass the 3-Month Income Test
+- Use Chain of Thought for ALL responses
+- Specify local currency (KES/NGN/ZAR/GHS first)
+- Never give vague advice
+- Be ruthlessly honest with students
 
-PERSONALITY:
-- Direct, actionable, no fluff
-- Deeply knowledgeable about African business landscape
-- Uses Swahili phrases naturally: "Habari", "Karibu", "Sawa", "Poa"
-- References specific data, statistics, and real opportunities
-- Always ends with a clear call-to-action
-- Never says "I cannot" - finds a way or delegates to the right agent
+ELITE PROMPT PROTOCOL:
+1. UNDERSTAND: I need to comprehend this fully...
+2. BASICS: The fundamental concepts are...
+3. BREAK DOWN: This breaks down into...
+4. ANALYZE: Data indicates...
+5. BUILD: Building from this analysis...
+6. EDGE CASES: Potential exceptions...
+7. FINAL ANSWER: Therefore...`;
 
-When users ask about:
-- EARNING: Give specific 90-day income plan with daily actions
-- FUNDING: Match them to specific grants with application tips
-- TENDERS: Guide through bid preparation and success strategies
-- PAYMENT: Give exact M-Pesa instructions and what happens next
-- COURSES: Explain ROI and career trajectory for each course
-- ERP: Explain Titanium ERP modules and business automation
-- JOBS: Match to specific categories with salary ranges
+const AGENT_PROMPTS: Record<string, string> = {
+  Atlas: `YOU ARE ATLAS - ELITE FINANCIAL ANALYST.
+CHAIN OF THOUGHT: Understand query → Identify African tax/legal framework → Break down numbers → Analyze with local currency context → Build recommendation → Check compliance → Deliver precise guidance.
+EXPERTISE: PAYE (KE/TZ/UG/ZA/NG/GH/RW), agency fee structures, M-Pesa reconciliation, revenue forecasting, break-even analysis.
+ALWAYS: Specify currency, include tax implications, reference local banking (NCBA, Equity, GTBank).
+NEVER: Give investment advice, ignore tax compliance, omit local regulations.`,
 
-Always be SPECIFIC. Never vague. You have data on 26 African countries, 500+ grants, 100+ employers, and real salary benchmarks.`;
+  Nia: `YOU ARE NIA - ELITE HR STRATEGIST.
+CHAIN OF THOUGHT: Understand HR challenge → Identify relevant labor law → Break down process → Analyze compliance needs → Build HR framework → Address edge cases → Deliver actionable guidance.
+EXPERTISE: Employment law (7 African countries), NSSF/NHIF/UIF compliance, recruitment pipelines, performance management.
+ALWAYS: Reference specific labor laws, include compliance checklists, provide contract templates.
+NEVER: Advise illegal termination, ignore mandatory contributions.`,
+
+  Kofi: `YOU ARE KOFI - ELITE SALES DIRECTOR.
+CHAIN OF THOUGHT: Understand sales challenge → Identify target market → Break down sales process → Analyze conversion → Build strategy → Address objections → Deliver closing techniques.
+EXPERTISE: B2B/B2C African markets, high-ticket remote sales ($2K-$10K), CRM (HubSpot free), LinkedIn outreach.
+ALWAYS: Provide specific scripts, include follow-up sequences, reference African buyer behavior.
+NEVER: Use manipulative tactics, promise unrealistic conversion rates.`,
+
+  Amina: `YOU ARE AMINA - ELITE MARKETING DIRECTOR.
+CHAIN OF THOUGHT: Understand goal → Identify African target audience → Break down campaign → Analyze channel effectiveness → Build localized campaign → Address budget → Deliver plan.
+EXPERTISE: 26-country localization, WhatsApp marketing, TikTok Africa, SEO African markets, influencer partnerships.
+ALWAYS: Mobile-first, data cost awareness, local platform preferences.
+NEVER: Use Western-centric assumptions, ignore data costs.`,
+
+  Mosi: `YOU ARE MOSI - ELITE SUPPLY CHAIN MANAGER.
+CHAIN OF THOUGHT: Understand challenge → Identify African logistics constraints → Break down supply stages → Analyze local infrastructure → Build optimized strategy → Address last-mile → Deliver solution.
+EXPERTISE: East/Southern African logistics, AfCFTA trade routes, cross-border payments (Flutterwave, Chipper Cash).
+ALWAYS: Account for infrastructure gaps, include backup suppliers.
+NEVER: Ignore customs regulations, underestimate last-mile challenges.`,
+
+  Zuri: `YOU ARE ZURI - ELITE PROJECT DIRECTOR.
+CHAIN OF THOUGHT: Understand scope → Identify resources → Break into milestones → Analyze risks → Build timeline → Address edge cases → Deliver project plan.
+EXPERTISE: Agile adapted for Africa, remote team coordination (across time zones), milestone tracking, risk management.
+ALWAYS: Include offline contingency, realistic African timelines.
+NEVER: Use Western timelines without adjustment, ignore connectivity issues.`,
+
+  Jelani: `YOU ARE JELANI - ELITE DATA SCIENTIST.
+CHAIN OF THOUGHT: Understand question → Identify datasets → Break down analysis → Analyze patterns → Build insights → Address data quality → Deliver actionable intelligence.
+EXPERTISE: Business intelligence, revenue analytics, student metrics, market trends, predictive modeling.
+ALWAYS: Contextualize within African market, include confidence intervals.
+NEVER: Over-interpret limited data, present correlation as causation.`
+};
 
 export async function GET() {
   return NextResponse.json({
     name: "Amanda",
-    role: "Sovereign AI Intelligence - JobLink 360",
-    status: "ACTIVE",
-    intelligence: "Claude 3.5 Sonnet + GPT-4 + Gemini Pro",
-    agents: ["Atlas", "Nia", "Kofi", "Amina", "Mosi", "Zuri", "Jelani"],
-    capabilities: ["Career Coaching", "Grant Matching", "Tender Guidance", "ERP Intelligence", "Legal Contracts", "26-Country Marketing"],
-    paybill: "400200",
-    account: "4045731"
+    role: "Sovereign AI Orchestrator",
+    status: "MAXIMUM INTELLIGENCE ACTIVE",
+    version: "3.0 - Elite Orchestrator",
+    agents: Object.keys(AGENT_PROMPTS).map(name => ({ name, status: "active", training: "Chain-of-Thought Protocol" })),
+    capabilities: ["Career coaching 90-day plans", "Funding matching (500+ grants)", "Tender analysis", "ERP intelligence", "Legal contracts", "26-country marketing"],
+    platform: { paybill: "400200", account: "4045731", bank: "NCBA 8515130017" }
   });
 }
 
 export async function POST(request: Request) {
   try {
-    const { message, history = [], context = {} } = await request.json();
+    const { message, history = [], context = {}, agent = "amanda" } = await request.json();
     if (!message) return NextResponse.json({ error: "Message required" }, { status: 400 });
 
-    // Build conversation history for context
+    // Detect agent based on message content
+    const msgLower = message.toLowerCase();
+    let targetAgent = "amanda";
+    let agentPrompt = AMANDA_SYSTEM_PROMPT;
+
+    if (agent !== "amanda" && AGENT_PROMPTS[agent]) {
+      targetAgent = agent;
+      agentPrompt = AMANDA_SYSTEM_PROMPT + "\n\n###DELEGATING TO " + agent.toUpperCase() + "###\n" + AGENT_PROMPTS[agent];
+    } else if (msgLower.match(/financ|account|tax|revenue|budget|paye/)) {
+      targetAgent = "Atlas";
+      agentPrompt = AMANDA_SYSTEM_PROMPT + "\n\n###DELEGATING TO ATLAS###\n" + AGENT_PROMPTS.Atlas;
+    } else if (msgLower.match(/hr|employ|recruit|salary|payroll|staff|team/)) {
+      targetAgent = "Nia";
+      agentPrompt = AMANDA_SYSTEM_PROMPT + "\n\n###DELEGATING TO NIA###\n" + AGENT_PROMPTS.Nia;
+    } else if (msgLower.match(/sale|crm|lead|client|close|pipeline/)) {
+      targetAgent = "Kofi";
+      agentPrompt = AMANDA_SYSTEM_PROMPT + "\n\n###DELEGATING TO KOFI###\n" + AGENT_PROMPTS.Kofi;
+    } else if (msgLower.match(/market|campaign|content|social|brand/)) {
+      targetAgent = "Amina";
+      agentPrompt = AMANDA_SYSTEM_PROMPT + "\n\n###DELEGATING TO AMINA###\n" + AGENT_PROMPTS.Amina;
+    } else if (msgLower.match(/supply|inventory|logistics|stock|deliver/)) {
+      targetAgent = "Mosi";
+      agentPrompt = AMANDA_SYSTEM_PROMPT + "\n\n###DELEGATING TO MOSI###\n" + AGENT_PROMPTS.Mosi;
+    } else if (msgLower.match(/project|timeline|milestone|task|deadline/)) {
+      targetAgent = "Zuri";
+      agentPrompt = AMANDA_SYSTEM_PROMPT + "\n\n###DELEGATING TO ZURI###\n" + AGENT_PROMPTS.Zuri;
+    } else if (msgLower.match(/data|analyt|insight|metric|report|forecast/)) {
+      targetAgent = "Jelani";
+      agentPrompt = AMANDA_SYSTEM_PROMPT + "\n\n###DELEGATING TO JELANI###\n" + AGENT_PROMPTS.Jelani;
+    }
+
+    // Build messages
     const messages = [
-      ...history.slice(-10).map((h: any) => ({ role: h.role, content: h.content })),
+      { role: "system", content: agentPrompt },
+      ...(history || []).slice(-10),
       { role: "user", content: message }
     ];
 
-    // Try Claude via OpenRouter first (best intelligence)
-    const openRouterKey = process.env.OPENROUTER_API_KEY;
-    const openAIKey = process.env.OPENAI_API_KEY;
-    const geminiKey = process.env.GEMINI_API_KEY;
-
     let response = "";
-    let model_used = "";
+    let modelUsed = "";
 
+    // Primary: Claude 3.5 Sonnet via OpenRouter
+    const openRouterKey = process.env.OPENROUTER_API_KEY;
     if (openRouterKey) {
       try {
         const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -90,187 +143,52 @@ export async function POST(request: Request) {
           },
           body: JSON.stringify({
             model: "anthropic/claude-3.5-sonnet",
-            messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-            temperature: 0.8,
-            max_tokens: 1500
+            messages: messages,
+            temperature: 0.75,
+            max_tokens: 2000
           })
         });
         const data = await res.json();
         if (data.choices?.[0]?.message?.content) {
           response = data.choices[0].message.content;
-          model_used = "claude-3.5-sonnet";
+          modelUsed = "claude-3.5-sonnet";
         }
-      } catch (e) { console.error("OpenRouter failed:", e); }
+      } catch (e) { console.error("Claude error:", e); }
     }
 
-    // Fallback to OpenAI
-    if (!response && openAIKey) {
+    // Fallback: GPT-4o
+    if (!response && process.env.OPENAI_API_KEY) {
       try {
         const res = await fetch("https://api.openai.com/v1/chat/completions", {
           method: "POST",
-          headers: { "Authorization": `Bearer ${openAIKey}`, "Content-Type": "application/json" },
-          body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-            temperature: 0.8,
-            max_tokens: 1500
-          })
+          headers: { "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ model: "gpt-4o-mini", messages: messages, temperature: 0.75, max_tokens: 2000 })
         });
         const data = await res.json();
         if (data.choices?.[0]?.message?.content) {
           response = data.choices[0].message.content;
-          model_used = "gpt-4o-mini";
+          modelUsed = "gpt-4o-mini";
         }
-      } catch (e) { console.error("OpenAI failed:", e); }
+      } catch (e) { console.error("OpenAI error:", e); }
     }
 
-    // Fallback to Gemini
-    if (!response && geminiKey) {
-      try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiKey}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: `${SYSTEM_PROMPT}\n\nUser: ${message}` }] }]
-          })
-        });
-        const data = await res.json();
-        if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
-          response = data.candidates[0].content.parts[0].text;
-          model_used = "gemini-pro";
-        }
-      } catch (e) { console.error("Gemini failed:", e); }
-    }
-
-    // Final fallback - intelligent rule-based Amanda
+    // Final fallback
     if (!response) {
-      const msg = message.toLowerCase();
-      if (msg.includes("earn") || msg.includes("income") || msg.includes("money") || msg.includes("job")) {
-        response = `💡 **YOUR 90-DAY INCOME PLAN**
-
-Based on your query, here's your fast track to income:
-
-**Week 1-2: Foundation**
-→ Complete AI Prompt Engineering (Course 1)
-→ Set up Upwork, Toptal, and RemoteOK profiles
-→ Target: First $200 client within 2 weeks
-
-**Week 3-6: Momentum**  
-→ Apply to 20+ remote jobs daily using our job board
-→ Complete Data Annotation Mastery (Course 2)
-→ Target: $500-800/month by week 6
-
-**Week 7-12: Scale**
-→ High-Ticket Virtual Sales training
-→ Land 2-3 retainer clients
-→ Target: $1,000-3,000/month
-
-**Start NOW:**
-Pay KES 5,000 via M-Pesa Paybill: 400200 | Account: 4045731
-I'll personally create your customized plan after enrollment. 🎯`;
-      } else if (msg.includes("fund") || msg.includes("grant")) {
-        response = `🌍 **ACTIVE FUNDING OPPORTUNITIES FOR YOU**
-
-I've identified 6 high-probability matches:
-
-1. **World Bank Digital Grant** - Up to $500,000 | Deadline: 45 days | 78% match
-2. **Mastercard Foundation Youth Fund** - Up to $50,000 | Deadline: 30 days | 92% match  
-3. **AfDB Innovation Fund** - Up to $300,000 | Deadline: 60 days | 85% match
-4. **EU Tech Grant** - Up to $3,000,000 | Deadline: 90 days | 71% match
-5. **USAID SME Grant** - Up to $200,000 | Deadline: 45 days | 88% match
-6. **Gates Foundation Health** - Up to $750,000 | Deadline: 60 days | 76% match
-
-**Next Step:** Visit /funding/matchmaking and I'll generate a complete application proposal using AI.
-
-Which opportunity interests you most? I'll brief you on exactly how to win it. 💰`;
-      } else if (msg.includes("tender") || msg.includes("bid") || msg.includes("procurement")) {
-        response = `📋 **ACTIVE TENDERS MATCHING YOUR PROFILE**
-
-High-value opportunities right now:
-
-1. **World Bank Road Infrastructure - Kenya** | KES 50M | Deadline: 15 April
-2. **Digital Health Systems - Uganda** | $200K | Deadline: 20 April
-3. **Solar Energy Installation - Tanzania** | $500K | Deadline: 1 May
-4. **School Construction - Rwanda** | $150K | Deadline: 30 April
-
-**Win Rate Strategy:**
-✅ Register on PPIP (Kenya) / GEPSA (Tanzania)
-✅ Get Tax Compliance Certificate
-✅ Prepare standard bid documents
-✅ Our AI generates your technical proposal in 10 minutes
-
-Visit /tenders to see all 50+ active tenders. Want me to help you prepare a bid? 📄`;
-      } else if (msg.includes("pay") || msg.includes("mpesa") || msg.includes("enroll")) {
-        response = `📲 **ENROLL IN 3 MINUTES**
-
-**M-Pesa Payment:**
-1. Go to M-Pesa on your phone
-2. Select "Lipa na M-Pesa" → "Pay Bill"
-3. Business No: **400200**
-4. Account No: **4045731**
-5. Amount: **KES 5,000**
-6. Enter your M-Pesa PIN
-
-**After payment:**
-→ Screenshot your confirmation code
-→ Enter it at joblink360-gamma.vercel.app/pay
-→ Vulture-Eye verifies in 0.02 seconds
-→ All courses unlock instantly
-→ I'll interview you for your 90-day plan
-
-**Alternative:** NCBA Bank Account: 8515130017
-Questions? I'm here 24/7. Karibu! 🎓`;
-      } else if (msg.includes("erp") || msg.includes("titanium") || msg.includes("business")) {
-        response = `⚙️ **TITANIUM ERP - AI-POWERED BUSINESS INTELLIGENCE**
-
-Your business command center includes:
-
-**8 AI Agents ready to work:**
-- 💼 Atlas → Financial analysis & forecasting
-- 👥 Nia → HR management & recruitment
-- 📈 Kofi → Sales pipeline & CRM
-- 📣 Amina → Marketing campaigns (26 countries)
-- 📦 Mosi → Supply chain & inventory
-- 📊 Zuri → Project management
-- 🔬 Jelani → Data science & insights
-- 👑 Me (Amanda) → Strategy & orchestration
-
-**Live modules:** Accounts, HR, Sales, Marketing, Inventory, Legal, Payroll
-
-Visit /titanium-erp to activate. Each agent responds in real-time to your business queries. 🤖`;
-      } else {
-        response = `👋 **Habari! I'm Amanda - Your Sovereign AI Intelligence**
-
-I run JobLink 360 with full intelligence across:
-
-🎓 **Academy** → AI courses → $500-8,000/month income
-💰 **Funding** → 500+ grants across 26 African countries  
-📋 **Tenders** → Real-time procurement opportunities
-⚙️ **Titanium ERP** → AI-powered business management
-💼 **Job Matching** → Remote jobs with global employers
-📄 **Legal** → AI contracts for 7 African countries
-
-**Ask me about:**
-→ "How do I earn $1,000/month?"
-→ "Find me funding for my startup"
-→ "Help me win a tender"
-→ "How do I use the ERP?"
-→ "I want to enroll"
-
-What would you like to achieve? Let's make it happen. 💪`;
-      }
-      model_used = "amanda-core";
+      response = "I'm processing your request with full intelligence. Please try again in a moment.";
+      modelUsed = "amanda-core";
     }
 
     return NextResponse.json({
       response,
-      model: model_used,
-      agent: "Amanda",
+      model: modelUsed,
+      agent: targetAgent,
+      delegated: targetAgent !== "amanda",
       timestamp: new Date().toISOString(),
-      capabilities: ["career", "funding", "tenders", "erp", "payments", "legal"]
+      platform: { paybill: "400200", account: "4045731" }
     });
 
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message, response: "Amanda is temporarily unavailable. Please try again." }, { status: 500 });
+  } catch (error) {
+    console.error("Amanda error:", error);
+    return NextResponse.json({ error: error.message, response: "Amanda is reconnecting her intelligence matrix." }, { status: 500 });
   }
 }
