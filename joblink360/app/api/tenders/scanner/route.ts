@@ -1,18 +1,18 @@
-﻿export const dynamic = 'force-dynamic'
-
-// app/api/tenders/scanner/route.ts
-import { NextResponse } from 'next/server';
-import { tenderScanner } from '@/lib/scrapers/tenders/tender-scanner';
+﻿export const dynamic = "force-dynamic";
+import { NextResponse } from "next/server";
+import { tenderScanner } from "@/lib/scrapers/tenders/tender-scanner";
 
 export async function GET() {
   try {
     const tenders = await tenderScanner.scanAll();
     return NextResponse.json({
-      success: true,
+      status: "active",
       count: tenders.length,
-      tenders: tenders
+      tenders: tenders.slice(0, 50),
+      lastScanned: new Date().toISOString(),
+      sources: ["World Bank Procurement", "AfDB", "UNDP", "UNOPS"]
     });
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
