@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_titanium_dashboard" model="ir.ui.view">
+        <field name="name">titanium.dashboard</field>
+        <field name="model">titanium.ai.bridge</field>
+        <field name="arch" type="xml">
+            <form string="Titanium Sovereign Dashboard">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_sync_swarm_data" type="object" 
+                                class="oe_highlight" string="Sync Swarm Data"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="supabase_url"/>
+                            <field name="supabase_key" password="True"/>
+                        </group>
+                        <group>
+                            <field name="sync_status" widget="badge"/>
+                            <field name="last_sync"/>
+                            <field name="sync_count"/>
+                        </group>
+                    </group>
+                    <group string="Sovereign Intelligence Stats">
+                        <group>
+                            <div class="alert alert-info">
+                                <h4>🏛️ Sovereign Intelligence</h4>
+                                <p>Active AI Agents: <strong>100+</strong></p>
+                                <p>Countries Monitoring: <strong>26</strong></p>
+                                <p>AI Automation: <strong>90%</strong></p>
+                            </div>
+                        </group>
+                        <group>
+                            <div class="alert alert-success">
+                                <h4>🚛 Lori Matchmaker</h4>
+                                <p>Active Matches: <strong id="lori-count">--</strong></p>
+                                <p>Avg Profit Margin: <strong>25%</strong></p>
+                            </div>
+                        </group>
+                        <group>
+                            <div class="alert alert-warning">
+                                <h4>💰 Capital Connect</h4>
+                                <p>Active Opportunities: <strong>--</strong></p>
+                                <p>Total Value: <strong>$150M+</strong></p>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Sync Log">
+                        <field name="error_message"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_titanium_dashboard" model="ir.actions.act_window">
+        <field name="name">Titanium Sovereign Dashboard</field>
+        <field name="res_model">titanium.ai.bridge</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_titanium_dashboard"/>
+    </record>
+</odoo>
