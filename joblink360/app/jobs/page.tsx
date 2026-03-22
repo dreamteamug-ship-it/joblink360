@@ -1,4 +1,4 @@
-﻿// app/jobs/page.tsx
+// app/jobs/page.tsx
 // DYNAMIC Jobs Page with filters
 
 'use client';
@@ -34,7 +34,7 @@ export default function JobsPage() {
                 </div>
             </header>
             <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-                <h1 style={{ color: '#f59e0b' }}>💼 Job Opportunities</h1>
+                <h1 style={{ color: '#f59e0b' }}>?? Job Opportunities</h1>
                 
                 <div style={{ display: 'flex', gap: '1rem', margin: '1rem 0' }}>
                     <button onClick={() => setFilter('all')} style={{ background: filter === 'all' ? '#f59e0b' : '#333', color: filter === 'all' ? '#000' : '#fff', padding: '0.5rem 1rem', border: 'none', borderRadius: '0.5rem' }}>All</button>
@@ -48,7 +48,7 @@ export default function JobsPage() {
                         <p>{job.company} - {job.location}</p>
                         <p style={{ color: '#9ca3af' }}>{job.description}</p>
                         <button onClick={() => window.open(job.url, '_blank')} style={{ background: '#f59e0b', color: '#000', padding: '0.5rem 1rem', border: 'none', borderRadius: '0.5rem', marginTop: '1rem', cursor: 'pointer' }}>
-                            Apply Now →
+                            Apply Now ?
                         </button>
                     </div>
                 ))}
