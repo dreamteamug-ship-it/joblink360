@@ -1,24 +1,24 @@
-// app/api/jobs/route.ts
+// app/api/funding/route.ts
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase/client";
 
 export async function GET() {
     try {
-        const { data: jobs, error } = await supabase
-            .from('jobs')
+        const { data: opportunities, error } = await supabase
+            .from('funding_opportunities')
             .select('*')
             .eq('is_active', true)
-            .order('created_at', { ascending: false });
+            .order('deadline', { ascending: true });
 
         if (error) throw error;
 
         return NextResponse.json({
             success: true,
-            count: jobs?.length || 0,
-            jobs: jobs || []
+            count: opportunities?.length || 0,
+            opportunities: opportunities || []
         });
     } catch (error: any) {
-        console.error("Jobs API error:", error);
+        console.error("Funding API error:", error);
         return NextResponse.json({
             success: false,
             error: error.message
