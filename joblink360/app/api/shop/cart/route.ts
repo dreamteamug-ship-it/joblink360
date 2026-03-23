@@ -1,26 +1,23 @@
-﻿export const dynamic = 'force-dynamic';
+﻿// app/api/shop/cart/route.ts
 import { NextResponse } from 'next/server';
 
-function db() {
-  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const k = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!u || u.includes('placeholder')) return null;
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { createClient } = require('@supabase/supabase-js');
-  return createClient(u, k);
-}
-
 export async function GET(request: Request) {
-  const sb = db();
-  if (!sb) return NextResponse.json({ items: [], total: 0 });
-  return NextResponse.json({ items: [], total: 0, currency: "KES" });
+  // Get cart from cookies/localStorage
+  const cart = request.headers.get('cookie')?.split(';')
+    .find(c => c.trim().startsWith('cart='))
+    ?.split('=')[1];
+  
+  return NextResponse.json({ cart: cart ? JSON.parse(decodeURIComponent(cart)) : [] });
 }
 
 export async function POST(request: Request) {
-  try {
-    const body = await request.json().catch(() => ({}));
-    const sb = db();
-    if (sb) { try { await sb.from("cart_items").upsert(body); } catch(e) {} }
-    return NextResponse.json({ success: true, cart: body });
-  } catch(e: any) { return NextResponse.json({ error: e.message }, { status: 500 }); }
+  const { productId, quantity, variantId } = await request.json();
+  
+  // Create response with cart cookie
+  const response = NextResponse.json({ success: true });
+  
+  // Set cart cookie (in production, use proper session management)
+  response.headers.set('Set-Cookie', `cart=${encodeURIComponent(JSON.stringify({ productId, quantity, variantId }))}; Path=/; HttpOnly`);
+  
+  return response;
 }

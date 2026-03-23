@@ -1,96 +1,284 @@
-﻿"use client";
-export const dynamic = 'force-dynamic';
-import { useState, useEffect } from "react";
-import Link from "next/link";
+﻿// app/shop/page.tsx
+"use client";
 
-interface Product { id: string; name: string; price: number; category: string; description: string; image: string; stock: number; }
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Search, Filter, Star, ShoppingCart, Heart, TrendingUp, Clock, Truck, Shield, Award } from 'lucide-react';
+import { PRODUCTS, getFeaturedProducts, getBestsellers, getOnSale } from '@/lib/shop/products';
 
 export default function ShopPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState<string[]>([]);
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
-  const [added, setAdded] = useState<string | null>(null);
-
+  const [products, setProducts] = useState(PRODUCTS);
+  const [filteredProducts, setFilteredProducts] = useState(PRODUCTS);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('featured');
+  const [priceRange, setPriceRange] = useState('all');
+  
+  const categories = ['all', ...new Set(PRODUCTS.map(p => p.category))];
+  const featuredProducts = getFeaturedProducts();
+  const bestsellers = getBestsellers();
+  const onSaleProducts = getOnSale();
+  
   useEffect(() => {
-    setProducts([
-      { id:"1", name:"AI Prompt Engineering Course", price:5000, category:"Courses", description:"Master AI prompts and earn $500-1000/month", image:"🤖", stock:999 },
-      { id:"2", name:"Data Annotation Mastery", price:5000, category:"Courses", description:"Professional data labeling for AI companies", image:"📊", stock:999 },
-      { id:"3", name:"Virtual Sales Elite Program", price:5000, category:"Courses", description:"High-ticket remote sales techniques", image:"💼", stock:999 },
-      { id:"4", name:"JobLink 360 Premium Membership", price:2500, category:"Membership", description:"90-day job placement guarantee", image:"⭐", stock:999 },
-      { id:"5", name:"Business Plan Template Bundle", price:1500, category:"Templates", description:"10 investor-ready business plan templates", image:"📋", stock:999 },
-      { id:"6", name:"Grant Writing Masterclass", price:3500, category:"Courses", description:"Win funding across 26 African countries", image:"🏆", stock:999 },
-      { id:"7", name:"ERP Setup Consultation", price:15000, category:"Services", description:"1-hour Titanium ERP onboarding session", image:"⚙️", stock:50 },
-      { id:"8", name:"Pan-African Trade AI Course", price:5000, category:"Courses", description:"AI tools for cross-border trade", image:"🌍", stock:999 },
-    ]);
-    setLoading(false);
-  }, []);
-
-  const addToCart = (id: string, name: string) => {
-    setCart([...cart, id]);
-    setAdded(name);
-    setTimeout(() => setAdded(null), 2000);
+    let filtered = products;
+    
+    // Filter by search
+    if (searchTerm) {
+      filtered = filtered.filter(p => 
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(p => p.category === selectedCategory);
+    }
+    
+    // Filter by price
+    if (priceRange !== 'all') {
+      if (priceRange === 'under50') filtered = filtered.filter(p => p.price < 50);
+      else if (priceRange === '50to100') filtered = filtered.filter(p => p.price >= 50 && p.price <= 100);
+      else if (priceRange === '100to200') filtered = filtered.filter(p => p.price > 100 && p.price <= 200);
+      else if (priceRange === 'over200') filtered = filtered.filter(p => p.price > 200);
+    }
+    
+    // Sort
+    if (sortBy === 'price-low') filtered.sort((a, b) => a.price - b.price);
+    if (sortBy === 'price-high') filtered.sort((a, b) => b.price - a.price);
+    if (sortBy === 'rating') filtered.sort((a, b) => b.rating - a.rating);
+    if (sortBy === 'bestseller') filtered.sort((a, b) => (b.bestseller ? 1 : 0) - (a.bestseller ? 1 : 0));
+    
+    setFilteredProducts(filtered);
+  }, [searchTerm, selectedCategory, sortBy, priceRange, products]);
+  
+  const addToCart = (product: any) => {
+    // Add to cart logic
+    console.log('Added to cart:', product.name);
+    alert(`Added ${product.name} to cart!`);
   };
-
-  const filtered = products.filter(p =>
-    (category === "all" || p.category === category) &&
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const categories = ["all", ...Array.from(new Set(products.map(p => p.category)))];
-
+  
   return (
-    <div style={{ minHeight:"100vh", background:"#000", color:"#fff", fontFamily:"system-ui" }}>
-      <nav style={{ borderBottom:"1px solid #333", padding:"1rem 2rem", display:"flex", justifyContent:"space-between", alignItems:"center", position:"sticky", top:0, background:"#000", zIndex:100 }}>
-        <h1 style={{ color:"#f59e0b", margin:0 }}>🛒 JobLink 360 Shop</h1>
-        <div style={{ display:"flex", gap:"1rem", alignItems:"center" }}>
-          <Link href="/" style={{ color:"#9ca3af", textDecoration:"none" }}>Home</Link>
-          <Link href="/shop/checkout" style={{ background:"#f59e0b", color:"#000", padding:"0.5rem 1rem", borderRadius:"0.5rem", textDecoration:"none", fontWeight:"bold" }}>
-            🛒 Cart ({cart.length})
-          </Link>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Banner */}
+      <div className="bg-gradient-to-r from-purple-900 to-indigo-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4">
+          <h1 className="text-4xl font-bold mb-4">DreamTeQ Sovereign Shop</h1>
+          <p className="text-xl text-purple-200 max-w-2xl">
+            Premium AI-powered products, courses, and merchandise for the sovereign mind
+          </p>
         </div>
-      </nav>
-
-      {added && (
-        <div style={{ position:"fixed", top:"80px", right:"20px", background:"#10b981", color:"#000", padding:"1rem 1.5rem", borderRadius:"0.5rem", fontWeight:"bold", zIndex:200 }}>
-          ✅ {added} added to cart!
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Features Bar */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-lg shadow p-4 flex items-center gap-3">
+            <Truck className="text-blue-600" size={24} />
+            <div>
+              <div className="font-semibold">Free Shipping</div>
+              <div className="text-sm text-gray-600">On orders over $100</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4 flex items-center gap-3">
+            <Shield className="text-green-600" size={24} />
+            <div>
+              <div className="font-semibold">Secure Payment</div>
+              <div className="text-sm text-gray-600">256-bit encryption</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4 flex items-center gap-3">
+            <Award className="text-purple-600" size={24} />
+            <div>
+              <div className="font-semibold">Premium Quality</div>
+              <div className="text-sm text-gray-600">Satisfaction guaranteed</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4 flex items-center gap-3">
+            <Clock className="text-orange-600" size={24} />
+            <div>
+              <div className="font-semibold">24/7 Support</div>
+              <div className="text-sm text-gray-600">AI-powered assistance</div>
+            </div>
+          </div>
         </div>
-      )}
-
-      <div style={{ maxWidth:"1200px", margin:"0 auto", padding:"2rem" }}>
-        <div style={{ display:"flex", gap:"1rem", marginBottom:"2rem", flexWrap:"wrap" }}>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..." style={{ flex:1, minWidth:"200px", padding:"0.75rem", background:"#111", border:"1px solid #333", borderRadius:"0.5rem", color:"#fff" }} />
-          <div style={{ display:"flex", gap:"0.5rem", flexWrap:"wrap" }}>
-            {categories.map(c => (
-              <button key={c} onClick={() => setCategory(c)} style={{ padding:"0.5rem 1rem", background: category === c ? "#f59e0b" : "#111", color: category === c ? "#000" : "#fff", border:"1px solid #333", borderRadius:"0.5rem", cursor:"pointer", fontWeight: category === c ? "bold" : "normal" }}>
-                {c === "all" ? "All" : c}
-              </button>
+        
+        {/* Featured Sections */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">🔥 Featured Products</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map(product => (
+              <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
             ))}
           </div>
         </div>
-
-        {loading ? <p style={{ color:"#9ca3af", textAlign:"center" }}>Loading products...</p> : (
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(280px, 1fr))", gap:"1.5rem" }}>
-            {filtered.map(p => (
-              <div key={p.id} style={{ background:"#111", border:"1px solid #222", borderRadius:"1rem", padding:"1.5rem", display:"flex", flexDirection:"column" }}>
-                <div style={{ fontSize:"3rem", marginBottom:"1rem", textAlign:"center" }}>{p.image}</div>
-                <span style={{ background:"rgba(245,158,11,0.2)", color:"#f59e0b", padding:"0.25rem 0.75rem", borderRadius:"2rem", fontSize:"0.75rem", alignSelf:"flex-start", marginBottom:"0.75rem" }}>{p.category}</span>
-                <h3 style={{ color:"#fff", margin:"0 0 0.5rem", fontSize:"1rem" }}>{p.name}</h3>
-                <p style={{ color:"#9ca3af", fontSize:"0.875rem", margin:"0 0 1rem", flex:1 }}>{p.description}</p>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                  <span style={{ color:"#f59e0b", fontWeight:"bold", fontSize:"1.25rem" }}>KES {p.price.toLocaleString()}</span>
-                  <button onClick={() => addToCart(p.id, p.name)} style={{ background:"#f59e0b", color:"#000", padding:"0.5rem 1rem", borderRadius:"0.5rem", border:"none", fontWeight:"bold", cursor:"pointer" }}>
-                    Add to Cart
-                  </button>
+        
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">⭐ Bestsellers</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {bestsellers.map(product => (
+              <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
+            ))}
+          </div>
+        </div>
+        
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">🏷️ On Sale</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {onSaleProducts.map(product => (
+              <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
+            ))}
+          </div>
+        </div>
+        
+        {/* All Products with Filters */}
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">All Products</h2>
+            <div className="flex gap-2">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg"
+              >
+                <option value="featured">Featured</option>
+                <option value="bestseller">Bestseller</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Filters Sidebar */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-lg shadow p-6 sticky top-8">
+                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Filter size={18} /> Filters
+                </h3>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  >
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat === 'all' ? 'All Categories' : cat}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
+                  <select
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                  >
+                    <option value="all">All Prices</option>
+                    <option value="under50">Under $50</option>
+                    <option value="50to100">$50 - $100</option>
+                    <option value="100to200">$100 - $200</option>
+                    <option value="over200">Over $200</option>
+                  </select>
+                </div>
+                
+                <div className="text-sm text-gray-600">
+                  {filteredProducts.length} products found
                 </div>
               </div>
-            ))}
+            </div>
+            
+            {/* Products Grid */}
+            <div className="lg:col-span-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map(product => (
+                  <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
+                ))}
+              </div>
+            </div>
           </div>
-        )}
-        {filtered.length === 0 && !loading && <p style={{ color:"#9ca3af", textAlign:"center", padding:"2rem" }}>No products found.</p>}
+        </div>
       </div>
     </div>
   );
 }
 
+function ProductCard({ product, onAddToCart }: { product: any; onAddToCart: (product: any) => void }) {
+  return (
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
+      <Link href={`/shop/products/${product.slug}`}>
+        <div className="relative h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+          {product.onSale && (
+            <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold">
+              SALE
+            </div>
+          )}
+          {product.bestseller && (
+            <div className="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded text-xs font-bold">
+              BESTSELLER
+            </div>
+          )}
+          <div className="text-6xl">📦</div>
+        </div>
+      </Link>
+      
+      <div className="p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+            {product.category}
+          </span>
+          <div className="flex items-center gap-1">
+            <Star className="text-yellow-500" size={14} fill="currentColor" />
+            <span className="text-sm font-medium">{product.rating}</span>
+            <span className="text-xs text-gray-500">({product.reviewCount})</span>
+          </div>
+        </div>
+        
+        <Link href={`/shop/products/${product.slug}`}>
+          <h3 className="font-semibold text-gray-900 mb-2 hover:text-blue-600 transition line-clamp-2">
+            {product.name}
+          </h3>
+        </Link>
+        
+        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          {product.description}
+        </p>
+        
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-xl font-bold text-blue-600">${product.price}</span>
+            {product.compareAtPrice && (
+              <span className="text-sm text-gray-400 line-through ml-2">${product.compareAtPrice}</span>
+            )}
+          </div>
+          
+          <button
+            onClick={() => onAddToCart(product)}
+            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-1"
+          >
+            <ShoppingCart size={16} />
+            <span className="text-sm">Add</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
