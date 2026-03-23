@@ -1,158 +1,238 @@
-﻿"use client";
-export const dynamic = 'force-dynamic';
-import { useState, useEffect } from "react";
-import Link from "next/link";
+"use client";
 
-export default function TitaniumERPPage() {
-  const [agents, setAgents] = useState<any[]>([]);
-  const [stats, setStats] = useState({ revenue:0, employees:0, orders:0, customers:0 });
-  const [task, setTask] = useState("");
-  const [agentResponse, setAgentResponse] = useState("");
-  const [processing, setProcessing] = useState(false);
-  const [activeAgent, setActiveAgent] = useState("");
-  const [pulse, setPulse] = useState(false);
+import React from 'react';
+import Link from 'next/link';
+import { 
+  LayoutDashboard, Building2, Users, Truck, ShoppingCart, 
+  BookOpen, Cpu, Globe, Leaf, Car, Battery, Sprout, 
+  City, TrendingUp, Shield, Award, Settings 
+} from 'lucide-react';
 
-  useEffect(() => {
-    setStats({ revenue:2450000, employees:47, orders:183, customers:1240 });
-    loadAgents();
-    const interval = setInterval(() => setPulse(p => !p), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadAgents = async () => {
-    try {
-      const res = await fetch("/api/titanium-erp");
-      const data = await res.json();
-      setAgents(data.agents || getDefaultAgents());
-    } catch {
-      setAgents(getDefaultAgents());
+export default function TitaniumERPComplete() {
+  const modules = {
+    'Finance & Accounting': {
+      icon: <DollarSign className="text-green-600" size={24} />,
+      modules: ['Accounting', 'Invoicing', 'Expenses', 'BI Analytics', 'Documents', 'Digital Sign'],
+      path: 'finance'
+    },
+    'Sales & CRM': {
+      icon: <TrendingUp className="text-blue-600" size={24} />,
+      modules: ['CRM', 'Sales Orders', 'Point of Sale', 'Subscriptions', 'Rental', 'Website'],
+      path: 'sales'
+    },
+    'Supply Chain': {
+      icon: <Truck className="text-orange-600" size={24} />,
+      modules: ['Inventory', 'Manufacturing', 'Procurement', 'Maintenance', 'Quality', 'PLM'],
+      path: 'supply-chain'
+    },
+    'Human Resources': {
+      icon: <Users className="text-purple-600" size={24} />,
+      modules: ['Employees', 'Recruitment', 'Time Off', 'Appraisals', 'Fleet'],
+      path: 'hr'
+    },
+    'Marketing & Services': {
+      icon: <Globe className="text-pink-600" size={24} />,
+      modules: ['Marketing Automation', 'Projects', 'Field Service', 'Helpdesk', 'Appointments', 'WhatsApp'],
+      path: 'marketing'
+    },
+    'E-commerce': {
+      icon: <ShoppingCart className="text-teal-600" size={24} />,
+      modules: ['Website Builder', 'eCommerce', 'Blog', 'Forum', 'Live Chat'],
+      path: 'ecommerce'
+    },
+    'Education & eLearning': {
+      icon: <BookOpen className="text-indigo-600" size={24} />,
+      modules: ['eLearning Platform', 'Certifications', 'Assessments'],
+      path: 'education'
+    },
+    'IoT & Technology': {
+      icon: <Cpu className="text-cyan-600" size={24} />,
+      modules: ['IoT Devices', 'Telematics', 'Fleet Analytics'],
+      path: 'iot'
+    },
+    'Logistics & Transport': {
+      icon: <Truck className="text-amber-600" size={24} />,
+      modules: ['Lori Matchmaker', 'Cross-Border Trade', 'Fleet Management'],
+      path: 'logistics'
+    },
+    'Energy & EV': {
+      icon: <Battery className="text-yellow-600" size={24} />,
+      modules: ['EV Fleet Management', 'Carbon Credit Trading', 'Charging Network'],
+      path: 'energy'
+    },
+    'Agriculture': {
+      icon: <Sprout className="text-lime-600" size={24} />,
+      modules: ['Farm Management', 'AgriTech Solutions', 'Farmer Loan Scoring'],
+      path: 'agriculture'
+    },
+    'Urban & Smart City': {
+      icon: <City className="text-rose-600" size={24} />,
+      modules: ['Smart Parking', 'Landscaping', 'Irrigation Systems'],
+      path: 'urban'
     }
   };
 
-  const getDefaultAgents = () => [
-    { id:"001", name:"Amanda", role:"Executive Director", status:"active", capabilities:["orchestration","strategy","decision-making"] },
-    { id:"002", name:"Atlas", role:"Financial Analyst", status:"idle", capabilities:["accounting","forecasting","budgeting"] },
-    { id:"003", name:"Nia", role:"HR Strategist", status:"idle", capabilities:["recruitment","performance","culture"] },
-    { id:"004", name:"Kofi", role:"Sales Director", status:"idle", capabilities:["crm","pipeline","closing"] },
-    { id:"005", name:"Amina", role:"Marketing Director", status:"idle", capabilities:["campaigns","content","analytics"] },
-    { id:"006", name:"Mosi", role:"Supply Chain", status:"idle", capabilities:["inventory","logistics","demand"] },
-    { id:"007", name:"Zuri", role:"Project Director", status:"idle", capabilities:["tasks","milestones","resources"] },
-    { id:"008", name:"Jelani", role:"Data Scientist", status:"idle", capabilities:["analytics","insights","forecasting"] },
-  ];
-
-  const delegateTask = async () => {
-    if (!task.trim()) return;
-    setProcessing(true);
-    setAgentResponse("");
-    setActiveAgent("Analyzing...");
-    try {
-      const res = await fetch("/api/titanium-erp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ task })
-      });
-      const data = await res.json();
-      setAgentResponse(data.result || "Task processed successfully.");
-      setActiveAgent(data.agent || "Amanda");
-    } catch {
-      setAgentResponse("Amanda says: Processing your request. All agents are standing by.");
-      setActiveAgent("Amanda");
-    }
-    setProcessing(false);
-    setTask("");
-  };
-
-  const modules = [
-    { label:"💼 Accounts", href:"/titanium-erp/accounts", agent:"Atlas", desc:"Financial management & invoicing" },
-    { label:"👥 HR", href:"/erp/hr", agent:"Nia", desc:"Staff & payroll management" },
-    { label:"📈 Sales", href:"/erp/sales", agent:"Kofi", desc:"CRM & pipeline management" },
-    { label:"📣 Marketing", href:"/erp/marketing", agent:"Amina", desc:"26-country campaigns" },
-    { label:"📦 Inventory", href:"/shop", agent:"Mosi", desc:"Stock & supply chain" },
-    { label:"📊 Analytics", href:"/admin/revenue", agent:"Jelani", desc:"Business intelligence" },
+  const subsidiaries = [
+    { name: 'JobLinks Africa', icon: '??', sector: 'Recruitment', valuation: '$25M' },
+    { name: 'Altovex Global', icon: '??', sector: 'Logistics', valuation: '$18M' },
+    { name: 'DreamTeQ 360', icon: '??', sector: 'AgriTech', valuation: '$15M' },
+    { name: 'SinoAfric EV', icon: '?', sector: 'EV Mobility', valuation: '$12M' },
+    { name: 'Urbanis Parks', icon: '???', sector: 'Smart Parking', valuation: '$8M' },
+    { name: 'JetPro Powerwash', icon: '??', sector: 'Services', valuation: '$6M' },
+    { name: 'Lori Matchmaker', icon: '??', sector: 'Logistics Tech', valuation: '$5M' },
+    { name: 'Carbon Credit Exchange', icon: '??', sector: 'Green Tech', valuation: '$4M' },
+    { name: 'Digital Den IoT', icon: '??', sector: 'IoT', valuation: '$7M' }
   ];
 
   return (
-    <div style={{ minHeight:"100vh", background:"#000", color:"#fff", fontFamily:"system-ui" }}>
-      <nav style={{ borderBottom:"1px solid #333", padding:"1rem 2rem", display:"flex", justifyContent:"space-between", alignItems:"center", position:"sticky", top:0, background:"#000", zIndex:100 }}>
-        <div style={{ display:"flex", alignItems:"center", gap:"1rem" }}>
-          <h1 style={{ color:"#f59e0b", margin:0 }}>⚙️ Titanium ERP</h1>
-          <div style={{ display:"flex", alignItems:"center", gap:"0.5rem" }}>
-            <div style={{ width:"10px", height:"10px", borderRadius:"50%", background: pulse?"#10b981":"#065f46", transition:"0.2s", boxShadow: pulse?"0 0 8px #10b981":"none" }}></div>
-            <span style={{ color:"#10b981", fontSize:"0.75rem", fontWeight:"bold" }}>SWARM ACTIVE</span>
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center gap-3 mb-4">
+            <Building2 size={40} />
+            <h1 className="text-4xl font-bold">Titanium ERP Suite</h1>
           </div>
-        </div>
-        <div style={{ display:"flex", gap:"1rem" }}>
-          <Link href="/" style={{ color:"#9ca3af", textDecoration:"none" }}>Home</Link>
-          <Link href="/admin" style={{ color:"#9ca3af", textDecoration:"none" }}>Admin</Link>
-        </div>
-      </nav>
-
-      <div style={{ maxWidth:"1400px", margin:"0 auto", padding:"2rem" }}>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))", gap:"1rem", marginBottom:"2rem" }}>
-          {[
-            { label:"Revenue", value:`KES ${stats.revenue.toLocaleString()}`, color:"#f59e0b", icon:"💰" },
-            { label:"Employees", value:stats.employees, color:"#10b981", icon:"👥" },
-            { label:"Active Orders", value:stats.orders, color:"#3b82f6", icon:"📦" },
-            { label:"Customers", value:stats.customers, color:"#8b5cf6", icon:"👤" },
-          ].map((s,i) => (
-            <div key={i} style={{ background:"#111", border:"1px solid #222", borderRadius:"1rem", padding:"1rem", textAlign:"center" }}>
-              <div style={{ fontSize:"1.5rem" }}>{s.icon}</div>
-              <p style={{ color:"#9ca3af", fontSize:"0.7rem", margin:"0.25rem 0", textTransform:"uppercase", letterSpacing:"1px" }}>{s.label}</p>
-              <p style={{ color:s.color, fontSize:"1.25rem", fontWeight:"bold", margin:0 }}>{s.value}</p>
+          <p className="text-xl text-blue-200 max-w-3xl">
+            Complete Enterprise Resource Planning System � 50+ AI-Powered Modules � 312 Intelligent Agents
+          </p>
+          <div className="mt-6 flex gap-3">
+            <div className="bg-white/20 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold">$100M</div>
+              <div className="text-sm">Valuation Goal</div>
             </div>
-          ))}
-        </div>
-
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"2rem", marginBottom:"2rem" }}>
-          <div style={{ background:"#111", border:"1px solid #222", borderRadius:"1rem", padding:"1.5rem" }}>
-            <h2 style={{ color:"#f59e0b", marginBottom:"1rem" }}>🤖 AI Agent Swarm</h2>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.75rem" }}>
-              {(agents.length ? agents : getDefaultAgents()).map(a => (
-                <div key={a.id} style={{ background:"#0a0a0a", border:`1px solid ${a.status==="active"?"#10b981":"#222"}`, borderRadius:"0.5rem", padding:"0.75rem", cursor:"pointer" }}
-                  onClick={() => { setTask(`${a.name}, analyze our current ${a.capabilities[0]} situation and give me 3 actionable recommendations`); }}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                    <p style={{ color:"#f59e0b", margin:0, fontWeight:"bold", fontSize:"0.875rem" }}>{a.name}</p>
-                    <div style={{ width:"8px", height:"8px", borderRadius:"50%", background:a.status==="active"?"#10b981":"#333" }}></div>
-                  </div>
-                  <p style={{ color:"#9ca3af", margin:"0.25rem 0 0", fontSize:"0.7rem" }}>{a.role}</p>
-                </div>
-              ))}
+            <div className="bg-white/20 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold">90%</div>
+              <div className="text-sm">Automation Rate</div>
+            </div>
+            <div className="bg-white/20 rounded-lg px-4 py-2">
+              <div className="text-2xl font-bold">9</div>
+              <div className="text-sm">Subsidiaries</div>
             </div>
           </div>
+        </div>
+      </div>
 
-          <div style={{ background:"#111", border:"1px solid #222", borderRadius:"1rem", padding:"1.5rem" }}>
-            <h2 style={{ color:"#f59e0b", marginBottom:"1rem" }}>💬 Delegate to Swarm</h2>
-            <textarea value={task} onChange={e => setTask(e.target.value)} placeholder="e.g. Atlas, analyze our Q1 financials and identify cost reduction opportunities..." style={{ width:"100%", minHeight:"100px", padding:"0.75rem", background:"#0a0a0a", border:"1px solid #333", borderRadius:"0.5rem", color:"#fff", fontFamily:"system-ui", resize:"vertical", boxSizing:"border-box" }} />
-            <button onClick={delegateTask} disabled={processing || !task.trim()} style={{ width:"100%", background:processing?"#333":"#f59e0b", color:processing?"#666":"#000", padding:"0.75rem", borderRadius:"0.5rem", border:"none", fontWeight:"bold", cursor:processing?"not-allowed":"pointer", marginTop:"0.5rem" }}>
-              {processing ? `🤖 ${activeAgent} is processing...` : "🚀 Deploy Agent"}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Executive Dashboard Link */}
+        <div className="mb-8">
+          <Link href="/titanium-dashboard">
+            <button className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition">
+              ??? Launch Executive Dashboard
             </button>
-            {agentResponse && (
-              <div style={{ marginTop:"1rem", background:"#0a0a0a", border:"1px solid rgba(16,185,129,0.3)", borderRadius:"0.5rem", padding:"1rem" }}>
-                <p style={{ color:"#10b981", margin:"0 0 0.5rem", fontSize:"0.75rem", fontWeight:"bold" }}>AGENT RESPONSE — {activeAgent}</p>
-                <p style={{ color:"#e5e7eb", margin:0, fontSize:"0.875rem", lineHeight:1.6, whiteSpace:"pre-wrap" }}>{agentResponse}</p>
+          </Link>
+        </div>
+
+        {/* Module Categories */}
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">?? AI-Powered Modules</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {Object.entries(modules).map(([category, data]) => (
+            <div key={category} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition p-6">
+              <div className="flex items-center gap-3 mb-4">
+                {data.icon}
+                <h3 className="text-lg font-bold text-gray-900">{category}</h3>
               </div>
-            )}
+              <div className="flex flex-wrap gap-2 mb-4">
+                {data.modules.map((mod, i) => (
+                  <span key={i} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    {mod}
+                  </span>
+                ))}
+              </div>
+              <Link href={`/titanium-erp/${data.path}`}>
+                <button className="w-full mt-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm">
+                  View Module ?
+                </button>
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        {/* Subsidiary Integration */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">?? Subsidiary Companies</h2>
+          <p className="text-gray-600 mb-6">Fully integrated with Titanium ERP for unified operations</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {subsidiaries.map(sub => (
+              <div key={sub.name} className="bg-white rounded-lg p-4 text-center shadow">
+                <div className="text-3xl mb-2">{sub.icon}</div>
+                <div className="font-semibold text-gray-900 text-sm">{sub.name}</div>
+                <div className="text-xs text-gray-500">{sub.sector}</div>
+                <div className="text-xs font-bold text-green-600 mt-1">{sub.valuation}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        <h2 style={{ color:"#f59e0b", marginBottom:"1rem" }}>⚡ ERP Modules</h2>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))", gap:"1rem" }}>
-          {modules.map(m => (
-            <Link key={m.label} href={m.href} style={{ textDecoration:"none" }}>
-              <div style={{ background:"#111", border:"1px solid #222", borderRadius:"1rem", padding:"1.25rem", cursor:"pointer" }}
-                onMouseEnter={e => (e.currentTarget.style.borderColor="#f59e0b")}
-                onMouseLeave={e => (e.currentTarget.style.borderColor="#222")}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"start" }}>
-                  <h3 style={{ color:"#f59e0b", margin:"0 0 0.25rem", fontSize:"1rem" }}>{m.label}</h3>
-                  <span style={{ color:"#9ca3af", fontSize:"0.7rem", background:"#0a0a0a", padding:"0.2rem 0.5rem", borderRadius:"0.25rem" }}>Agent: {m.agent}</span>
+        {/* AI Swarm Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">?? AI Swarm Intelligence</h3>
+            <div className="space-y-3">
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Active Agents</span>
+                  <span className="font-bold text-blue-600">312/312</span>
                 </div>
-                <p style={{ color:"#9ca3af", margin:0, fontSize:"0.8rem" }}>{m.desc}</p>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-green-500 h-2 rounded-full" style={{ width: '100%' }}></div>
+                </div>
               </div>
-            </Link>
-          ))}
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Automation Coverage</span>
+                  <span className="font-bold text-blue-600">90%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: '90%' }}></div>
+                </div>
+              </div>
+              <div className="pt-2 text-sm text-gray-600">
+                <Shield className="inline mr-1" size={14} /> Sovereign Intelligence � Real-time Processing � 24/7 Operations
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">? Quick Actions</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
+                Generate Report
+              </button>
+              <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm">
+                Sync All Modules
+              </button>
+              <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm">
+                AI Insights
+              </button>
+              <button className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-sm">
+                Deploy Agent
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Odoo Integration Status */}
+        <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900">?? Odoo Backend Integration</h3>
+              <p className="text-sm text-gray-600 mt-1">Real-time sync with JetPro Powerwash Odoo instance</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-green-600">Connected</span>
+            </div>
+          </div>
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <a href="https://jetpro-powerwash.odoo.com" target="_blank" rel="noopener noreferrer">
+              <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                Access Odoo Backend ?
+              </button>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
