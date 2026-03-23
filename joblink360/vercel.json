@@ -1,8 +1,12 @@
 {
   "crons": [
     {
-      "path": "/api/executive/dispatch-briefing",
+      "path": "/api/executive/dispatch-briefing?type=morning",
       "schedule": "0 5 * * *" 
+    },
+    {
+      "path": "/api/executive/dispatch-briefing?type=evening",
+      "schedule": "0 17 * * *"
     }
   ]
 }
