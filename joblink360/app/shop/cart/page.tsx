@@ -1,4 +1,4 @@
-﻿// app/shop/cart/page.tsx
+// app/shop/cart/page.tsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -10,7 +10,6 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    // Load cart from localStorage
     const savedCart = localStorage.getItem('shop_cart');
     if (savedCart) {
       setCart(JSON.parse(savedCart));
@@ -74,7 +73,7 @@ export default function CartPage() {
             {cart.map((item, index) => (
               <div key={index} className="bg-white rounded-lg shadow p-4 flex gap-4">
                 <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-2xl">📦</span>
+                  <span className="text-2xl">??</span>
                 </div>
                 <div className="flex-1">
                   <Link href={`/shop/products/${item.slug}`}>
