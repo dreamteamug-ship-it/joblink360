@@ -1,3 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+:root {
+  --ocean-blue: #050B14;
+  --sovereign-gold: #D4AF37;
+  --royal-silver: #C0C0C0;
+}
+
+@theme {
+  --color-primary: var(--ocean-blue);
+  --color-accent: var(--sovereign-gold);
+}
