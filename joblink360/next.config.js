@@ -1,11 +1,13 @@
-﻿/** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
-  env: {
-    NEXT_PUBLIC_SUPABASE_URL: "https://YOUR-PROJECT-REF.supabase.co",
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: "YOUR-ANON-KEY-HERE",
+  typescript: {
+    ignoreBuildErrors: true,
   },
-};
-module.exports = nextConfig;
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  // Ensure dynamic routes don't break static generation
+  output: 'standalone', 
+}
+
+module.exports = nextConfig
