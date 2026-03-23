@@ -1,0 +1,27 @@
+/* odoo-modules/titanium_theme/static/src/css/titanium.css */
+:root {
+    --titanium-primary: #001F3F; /* Deep Dark Blue */
+    --titanium-gold: #D4AF37;    /* Gold */
+    --titanium-silver: #C0C0C0;  /* Silver */
+}
+
+.o_main_navbar {
+    background-color: var(--titanium-primary) !important;
+    border-bottom: 2px solid var(--titanium-gold);
+}
+
+.o_menu_brand { 
+    color: var(--titanium-gold) !important; 
+    font-weight: 800; 
+}
+
+.btn-primary {
+    background-color: var(--titanium-gold) !important;
+    border-color: var(--titanium-gold) !important;
+    color: var(--titanium-primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: #b89a2d !important;
+    border-color: #b89a2d !important;
+}
