@@ -1,11 +1,27 @@
-import React from 'react';
+// app/layout.tsx
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
+import { AuthProvider } from '@/lib/auth/AuthContext';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'JobLink 360 - AI Skills for Africa',
+  description: 'Learn AI, find jobs, and get funding for your business',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className="bg-[#050B14] text-white">
-        {children}
+      <body className={inter.className}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
