@@ -1,9 +1,9 @@
-﻿'use client';
+'use client';
 // app/auth/reset-password/page.tsx
 export const dynamic = 'force-dynamic';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { updatePassword } from '@/lib/supabase/client';
+// import { updatePassword } from '@/lib/supabase/client';
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
