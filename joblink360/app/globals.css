@@ -7,3 +7,8 @@
   --sovereign-gold: #D4AF37;
   --royal-silver: #C0C0C0;
 }
+
+body {
+  color: white;
+  background-color: var(--ocean-blue);
+}
