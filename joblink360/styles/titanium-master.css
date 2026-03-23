@@ -1,0 +1,10 @@
+:root {
+    --titanium-primary: #001F3F; 
+    --titanium-gold: #D4AF37;    
+    --titanium-silver: #C0C0C0;  
+}
+.o_main_navbar { 
+    background-color: var(--titanium-primary) !important;
+    border-bottom: 2px solid var(--titanium-gold);
+}
+.o_menu_brand { color: var(--titanium-gold) !important; font-weight: 800; }
