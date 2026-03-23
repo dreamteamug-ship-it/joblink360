@@ -1,14 +1,14 @@
 // app/ecosystem/page.tsx
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { 
   Building2, Briefcase, Truck, Car, Sprout, 
   ParkingSquare, Landmark, Cpu, Droplets, 
   Factory, TrendingUp, Users, Globe, Crown,
   ArrowRight, Activity, Zap, Shield, Award,
-  BookOpen, Brain, Command, Settings
+  BookOpen, Brain, Command, Settings, DollarSign
 } from 'lucide-react';
 
 export default function EcosystemDashboard() {
@@ -31,8 +31,7 @@ export default function EcosystemDashboard() {
     valuation: "100M",
     countries: 26,
     profitMargin: 30,
-    tasksCompleted: 1247,
-    activeSubsidiaries: 2
+    tasksCompleted: 1247
   };
   
   return (
@@ -87,7 +86,7 @@ export default function EcosystemDashboard() {
             <div className="text-xs text-gray-600">Automation</div>
           </div>
           <div className="bg-white rounded-xl shadow p-4 text-center">
-            <TrendingUp className="mx-auto text-green-600 mb-2" size={24} />
+            <DollarSign className="mx-auto text-green-600 mb-2" size={24} />
             <div className="text-xl font-bold">${metrics.valuation}</div>
             <div className="text-xs text-gray-600">Valuation</div>
           </div>
@@ -115,9 +114,9 @@ export default function EcosystemDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {subsidiaries.map((sub, idx) => (
             <Link key={idx} href={`/${sub.path}`}>
-              <div className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition p-6 cursor-pointer border-l-4 border-${sub.color}-500`}>
+              <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition p-6 cursor-pointer border-l-4 border-blue-500">
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`p-3 bg-${sub.color}-100 rounded-lg`}>
+                  <div className="p-3 bg-blue-50 rounded-lg">
                     {sub.icon}
                   </div>
                   {sub.status === 'active' ? (
@@ -145,28 +144,24 @@ export default function EcosystemDashboard() {
             description="Chat with your AI assistant" 
             href="/amanda-dashboard"
             icon="??"
-            color="purple"
           />
           <QuickActionCard 
             title="Resource Library" 
             description="Access all documents & training" 
             href="/resource-library"
             icon="??"
-            color="blue"
           />
           <QuickActionCard 
             title="Titanium ERP" 
             description="Manage operations & finances" 
             href="/titanium-dashboard"
             icon="??"
-            color="gray"
           />
           <QuickActionCard 
             title="Command Center" 
             description="CTO oversight dashboard" 
             href="/command-center"
             icon="???"
-            color="red"
           />
         </div>
         
@@ -199,7 +194,7 @@ export default function EcosystemDashboard() {
             </div>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
               <span className="text-gray-600">DeepSeek v3</span>
               <span className="text-gray-600">Claude Code</span>
               <span className="text-gray-600">Gemini Ultra</span>
@@ -213,17 +208,10 @@ export default function EcosystemDashboard() {
   );
 }
 
-function QuickActionCard({ title, description, href, icon, color }: any) {
-  const colors: any = {
-    purple: "from-purple-50 to-purple-100 border-purple-200",
-    blue: "from-blue-50 to-blue-100 border-blue-200",
-    gray: "from-gray-50 to-gray-100 border-gray-200",
-    red: "from-red-50 to-red-100 border-red-200"
-  };
-  
+function QuickActionCard({ title, description, href, icon }: any) {
   return (
     <Link href={href}>
-      <div className={`bg-gradient-to-br ${colors[color]} rounded-xl p-6 border hover:shadow-lg transition cursor-pointer`}>
+      <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border hover:shadow-lg transition cursor-pointer">
         <div className="text-3xl mb-3">{icon}</div>
         <h3 className="font-semibold text-gray-900 mb-1">{title}</h3>
         <p className="text-sm text-gray-600">{description}</p>
