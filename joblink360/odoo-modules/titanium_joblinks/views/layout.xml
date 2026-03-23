@@ -1,0 +1,18 @@
+﻿<odoo>
+    <template id="titanium_joblinks_ui" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <style>
+                :root {
+                    --titanium-primary: #001F3F; /* Deep Dark Blue */
+                    --titanium-gold: #D4AF37;    /* Gold */
+                    --titanium-silver: #C0C0C0;  /* Silver */
+                }
+                .o_main_navbar { 
+                    background-color: #001F3F !important;
+                    border-bottom: 2px solid #D4AF37;
+                }
+                .o_menu_brand { color: #D4AF37 !important; font-family: 'Playfair Display', serif; }
+            </style>
+        </xpath>
+    </template>
+</odoo>
