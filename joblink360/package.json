@@ -12,6 +12,7 @@
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.99.3",
     "date-fns": "^3.0.0",
+    "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^0.577.0",
@@ -21,9 +22,9 @@
     "rss-parser": "^3.13.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/node": "^20.19.37",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.0.0",
     "eslint-config-next": "14.2.35",

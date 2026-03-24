@@ -2,7 +2,7 @@
 const nextConfig = {
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
-  swcMinify: true,
-  images: { unoptimized: true }
-}
-module.exports = nextConfig
+  images: { unoptimized: true },
+  experimental: { serverComponentsExternalPackages: ['jspdf'] }
+};
+module.exports = nextConfig;
