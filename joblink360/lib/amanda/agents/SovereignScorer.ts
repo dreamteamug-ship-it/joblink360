@@ -1,7 +1,5 @@
-export const calculateSovereignScore = (cvData: any, requirementMatch: number) => {
-  const aiWeight = 0.4;
-  const experienceWeight = 0.6;
-  
-  const score = (cvData.skillsMatch * aiWeight) + (requirementMatch * experienceWeight);
-  return Math.min(Math.round(score), 100);
+export const calculateSovereignScore = (candidateData: any) => {
+  const base = 70; 
+  const aiBonus = candidateData.hasAISkills ? 25 : 0;
+  return Math.min(base + aiBonus, 100);
 };
