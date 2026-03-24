@@ -1,0 +1,61 @@
+// public/offline.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AMANDA Offline Mode</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #050B14 0%, #0A0F1A 100%);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .offline-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 400px;
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        h1 { color: #D4AF37; margin-bottom: 1rem; }
+        .status { background: rgba(212,175,55,0.2); padding: 0.5rem; border-radius: 2rem; margin: 1rem 0; }
+        .features { text-align: left; margin-top: 2rem; }
+        .features li { margin: 0.5rem 0; list-style: none; }
+        button {
+            background: #D4AF37;
+            color: #050B14;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="icon">??</div>
+        <h1>AMANDA Offline Mode</h1>
+        <div class="status">? DeepSeek AI Active ? Recording Available</div>
+        <p>You're operating offline. All meetings and messages are being stored locally.</p>
+        <div class="features">
+            <h3>Available Offline:</h3>
+            <li>?? 8K Video Recording</li>
+            <li>?? DeepSeek Local AI</li>
+            <li>?? Chat with AMANDA</li>
+            <li>?? Meeting Transcripts</li>
+            <li>?? Local File Storage</li>
+        </div>
+        <button onclick="location.reload()">Check Connection</button>
+    </div>
+</body>
+</html>

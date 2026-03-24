@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --deep-ocean: #050B14;
+  --gold-leaf: #D4AF37;
+  --silver-matte: #C0C0C0;
+}
+
+body {
+  background: var(--deep-ocean);
+  color: white;
+}
+
+.gold-text {
+  color: var(--gold-leaf);
+}
+
+.silver-text {
+  color: var(--silver-matte);
+}

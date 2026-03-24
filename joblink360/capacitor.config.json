@@ -1,0 +1,29 @@
+{
+  "appId": "com.dreamteq.amanda",
+  "appName": "AMANDA Universe",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "capacitor"
+  },
+  "plugins": {
+    "CapacitorCamera": {
+      "allowEditing": true,
+      "saveToGallery": true,
+      "presentationStyle": "fullscreen",
+      "quality": 100
+    },
+    "CapacitorNetwork": {
+      "status": true
+    },
+    "CapacitorApp": {
+      "backgroundColor": "#050B14"
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#D4AF37",
+      "sound": "beep.wav"
+    }
+  }
+}

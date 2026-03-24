@@ -8,9 +8,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'ocean-blue': '#050B14',
-        'sovereign-gold': '#D4AF37',
-        'royal-silver': '#C0C0C0',
+        gold: '#D4AF37',
+        ocean: '#050B14',
       },
     },
   },
