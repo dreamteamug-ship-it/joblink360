@@ -1,8 +1,13 @@
-'use client';
+﻿'use client';
 import { ventures } from '@/lib/projects-data';
 
 export default function SovereignCommand() {
-  const date = new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const date = new Date().toLocaleDateString('en-KE', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 p-6 md:p-12 font-sans">
@@ -19,24 +24,26 @@ export default function SovereignCommand() {
           </div>
         </div>
       </header>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <section className="bg-zinc-900/40 border border-zinc-800 p-8 rounded-sm">
-           <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-600 mb-6 border-l-2 border-emerald-500 pl-4">Priority Briefing</h2>
-           <p className="text-sm leading-relaxed text-zinc-300">
-             System status: Green. Abim and Naivasha nodes are currently syncing telemetry. 
-             Logistics corridor A104 monitoring active.
-           </p>
+          <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-600 mb-6 border-l-2 border-emerald-500 pl-4">Priority Briefing</h2>
+          <p className="text-sm leading-relaxed text-zinc-300">
+            System status: Green. Abim and Naivasha nodes are currently syncing telemetry. 
+            Logistics corridor A104 monitoring active.
+          </p>
         </section>
+
         <section className="bg-zinc-900/40 border border-zinc-800 p-8 rounded-sm">
-           <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-600 mb-6 border-l-2 border-zinc-800 pl-4">Global Health</h2>
-           <div className="space-y-4">
-             {ventures.map((v) => (
-               <div key={v.id} className="flex justify-between items-center border-b border-zinc-800 pb-2">
-                 <span className="text-xs uppercase font-bold">{v.name}</span>
-                 <span className="text-xs font-mono text-emerald-500">{v.progress}%</span>
-               </div>
-             ))}
-           </div>
+          <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-600 mb-6 border-l-2 border-zinc-800 pl-4">Global Health</h2>
+          <div className="space-y-4">
+            {ventures.map((v) => (
+              <div key={v.id} className="flex justify-between items-center border-b border-zinc-800 pb-2">
+                <span className="text-xs uppercase font-bold">{v.name}</span>
+                <span className="text-xs font-mono text-emerald-500">{v.progress}%</span>
+              </div>
+            ))}
+          </div>
         </section>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 export default function EVPlantTracker() {
   const [lineStatus, setLineStatus] = useState('OPERATIONAL');
-  
+
   const assets = [
     { id: 'AST-NV-001', name: 'Lithium Battery Station', status: 'Active', health: 98 },
     { id: 'AST-NV-002', name: 'Chassis Welding Robot', status: 'Maintenance', health: 65 },
@@ -25,35 +25,30 @@ export default function EVPlantTracker() {
           <div className="w-px h-10 bg-zinc-800"></div>
           <div className="text-right">
             <p className="text-[10px] text-zinc-500 uppercase">System Status</p>
-            <p className={	ext-xl font-mono }>{lineStatus}</p>
+            <p className={`text-xl font-mono ${lineStatus === 'OPERATIONAL' ? 'text-emerald-500' : 'text-red-500'}`}>{lineStatus}</p>
           </div>
         </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Asset Grid */}
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
           {assets.map((asset) => (
             <div key={asset.id} className="bg-zinc-900 border border-zinc-800 p-6 hover:border-blue-500/50 transition-all">
               <div className="flex justify-between items-start mb-4">
                 <span className="text-[10px] font-mono text-zinc-500">{asset.id}</span>
-                <span className={	ext-[9px] px-2 py-0.5 rounded-full uppercase font-bold }>
+                <span className={`text-[9px] px-2 py-0.5 rounded-full uppercase font-bold ${asset.status === 'Active' ? 'bg-emerald-900/30 text-emerald-500' : 'bg-orange-900/30 text-orange-500'}`}>
                   {asset.status}
                 </span>
               </div>
               <h3 className="text-sm font-bold uppercase mb-2">{asset.name}</h3>
               <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                <div 
-                  className={h-full } 
-                  style={{ width: \\%\ }}
-                ></div>
+                <div className={`h-full ${asset.health > 90 ? 'bg-emerald-500' : 'bg-orange-500'}`} style={{width: `${asset.health}%`}}></div>
               </div>
               <p className="text-[10px] text-zinc-500 mt-2 italic text-right">Health: {asset.health}%</p>
             </div>
           ))}
         </div>
 
-        {/* Component Inventory (The "Parts" Tracker) */}
         <div className="bg-zinc-900/50 border border-zinc-800 p-6 border-l-4 border-l-blue-500">
           <h3 className="text-xs font-bold uppercase mb-6 tracking-widest">Inventory (ERP Sync)</h3>
           <div className="space-y-6">

@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 
 export default function EnergyDashboard() {
-  const [solarOutput, setSolarOutput] = useState(32); // Mocked live percentage
+  const [solarOutput, setSolarOutput] = useState(32);
   const [biogasStatus, setBiogasStatus] = useState('RAMPING UP');
-  const [gridDraw, setGridDraw] = useState(12); // kW draw from KPLC
+  const [gridDraw, setGridDraw] = useState(12);
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 p-8 font-sans">
@@ -20,7 +20,6 @@ export default function EnergyDashboard() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Solar Panel Status */}
         <div className="bg-zinc-900 border border-zinc-800 p-6 relative overflow-hidden">
           <div className="flex justify-between items-start mb-8">
             <h3 className="text-xs font-bold uppercase text-zinc-500">Solar Array PV</h3>
@@ -29,11 +28,10 @@ export default function EnergyDashboard() {
           <p className="text-5xl font-black mb-2">{solarOutput}%</p>
           <p className="text-[10px] text-zinc-500 uppercase">Current Irradiance: 340 W/m²</p>
           <div className="absolute bottom-0 left-0 w-full h-1 bg-zinc-800">
-            <div className="bg-amber-500 h-full transition-all duration-1000" style={{ width: \\%\ }}></div>
+            <div className="bg-amber-500 h-full transition-all duration-1000" style={{width: `${solarOutput}%`}}></div>
           </div>
         </div>
 
-        {/* Biogas Digester Status */}
         <div className="bg-zinc-900 border border-zinc-800 p-6 border-t-4 border-t-emerald-500">
           <div className="flex justify-between items-start mb-8">
             <h3 className="text-xs font-bold uppercase text-zinc-500">Biogas Cogeneration</h3>
@@ -44,47 +42,15 @@ export default function EnergyDashboard() {
           <p className="text-[10px] text-emerald-600/70 mt-4 uppercase">Compensating for Solar Deficit</p>
         </div>
 
-        {/* Grid Management */}
         <div className="bg-zinc-900 border border-zinc-800 p-6">
           <div className="flex justify-between items-start mb-8">
             <h3 className="text-xs font-bold uppercase text-zinc-500">KPLC Grid Sync</h3>
             <span className="text-[10px] font-mono text-blue-500 font-bold">BACKUP ONLY</span>
           </div>
           <p className="text-5xl font-black mb-2">{gridDraw} kW</p>
-          <p className="text-[10px] text-zinc-500 uppercase">Tariff Rate: .12 / kWh</p>
+          <p className="text-[10px] text-zinc-500 uppercase">Tariff Rate: $0.12 / kWh</p>
           <button className="mt-6 w-full py-2 bg-zinc-800 text-[10px] font-bold uppercase hover:bg-zinc-700 transition-all">Manual Grid Bypass</button>
         </div>
-      </div>
-
-      {/* Production Impact Table */}
-      <div className="mt-12 bg-zinc-900/50 border border-zinc-800 p-8">
-        <h3 className="text-xs font-bold uppercase mb-6 tracking-widest text-zinc-400 text-center">Assembly Line Impact Analysis</h3>
-        <table className="w-full text-left text-[11px] uppercase font-mono">
-          <thead>
-            <tr className="border-b border-zinc-800 text-zinc-500">
-              <th className="pb-4">Line Section</th>
-              <th className="pb-4 text-center">Power Source</th>
-              <th className="pb-4 text-right">Operational Capacity</th>
-            </tr>
-          </thead>
-          <tbody className="text-zinc-300">
-            <tr className="border-b border-zinc-800/50">
-              <td className="py-4">EV Chassis Welding</td>
-              <td className="py-4 text-center">Biogas</td>
-              <td className="py-4 text-right text-emerald-500">100%</td>
-            </tr>
-            <tr className="border-b border-zinc-800/50">
-              <td className="py-4">Battery Cell Integration</td>
-              <td className="py-4 text-center">Solar + Grid</td>
-              <td className="py-4 text-right text-amber-500">85%</td>
-            </tr>
-            <tr>
-              <td className="py-4">Final Testing & QC</td>
-              <td className="py-4 text-center">Biogas</td>
-              <td className="py-4 text-right text-emerald-500">100%</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   );
