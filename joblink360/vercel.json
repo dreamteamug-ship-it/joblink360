@@ -1,10 +1,4 @@
 {
   "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "ignore": [
-    "../joblink360-mobile/**",
-    "joblink360-mobile/**",
-    "**/*.dll",
-    "**/*.sql"
-  ]
+  "buildCommand": "npm run build"
 }

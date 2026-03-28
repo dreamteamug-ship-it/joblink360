@@ -1,0 +1,7 @@
+﻿../joblink360-mobile/
+joblink360-mobile/
+**/*.dll
+**/*.sql
+node_modules
+.next
+.vercel
