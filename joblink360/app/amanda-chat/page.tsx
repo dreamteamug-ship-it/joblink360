@@ -1,67 +1,36 @@
-﻿"use client";
-
-import { useState } from "react";
-import { MessageSquare, Send, Mic, Crown } from "lucide-react";
+﻿'use client';
+import { useState } from 'react';
+import { config } from '@/lib/amanda-config';
 
 export default function AmandaChat() {
-  const [messages, setMessages] = useState([
-    { role: "amanda", content: "Welcome! AMANDA here. How can I help you today?" }
-  ]);
-  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([{ role: 'ai', text: 'Sovereign System Online. How can I assist your development today?' }]);
+  const [input, setInput] = useState('');
 
-  const responses = [
-    "I can help with that. Please provide more details.",
-    "The system is operating at optimal levels. All subsidiaries reporting normal activity.",
-    "Would you like me to generate a full report?",
-    "I'm processing your request through the intelligence swarm."
-  ];
-
-  const sendMessage = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
-    setMessages(prev => [...prev, { role: "user", content: input }]);
-    setInput("");
-    setTimeout(() => {
-      const response = responses[Math.floor(Math.random() * responses.length)];
-      setMessages(prev => [...prev, { role: "amanda", content: response }]);
-    }, 500);
+    setMessages(prev => [...prev, { role: 'user', text: input }]);
+    setInput('');
+    // Logic link to the upcoming Gemini Stream API
+    console.log("System Status:", config.isProd ? "Production" : "Development");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#050B14] to-[#0A0F1A]">
-      <header className="bg-[#0A0F1A] border-b border-[#D4AF37]/30 p-4">
-        <div className="max-w-4xl mx-auto flex items-center gap-3">
-          <Crown className="text-[#D4AF37]" size={28} />
-          <div>
-            <h1 className="text-xl font-bold">AMANDA Chat</h1>
-            <p className="text-xs opacity-70">AI Assistant · 312 Agents</p>
-          </div>
-        </div>
+    <div className="flex flex-col h-screen bg-black text-zinc-100 font-sans p-6">
+      <header className="border-b border-zinc-800 pb-4 mb-6">
+        <h1 className="text-xl font-light tracking-widest uppercase">Amanda Core <span className="text-emerald-500 text-xs ml-2 italic">● Active</span></h1>
       </header>
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-[#0A0F1A] rounded-2xl border border-[#D4AF37]/20 overflow-hidden">
-          <div className="h-[500px] overflow-y-auto p-4 space-y-4">
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "amanda" ? "justify-start" : "justify-end"}`}>
-                <div className={`max-w-[80%] p-3 rounded-xl ${msg.role === "amanda" ? "bg-[#1A1F2E] border-l-4 border-[#D4AF37]" : "bg-[#D4AF37] text-black"}`}>
-                  <p className="text-sm">{msg.content}</p>
-                </div>
-              </div>
-            ))}
+      <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2">
+        {messages.map((m, i) => (
+          <div key={i} className={max-w-[85%] p-4 rounded-2xl }>
+            <p className="text-sm leading-relaxed">{m.text}</p>
           </div>
-          <div className="p-4 border-t border-[#D4AF37]/20 flex gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-              placeholder="Type your message..."
-              className="flex-1 px-4 py-2 bg-[#050B14] rounded-lg border border-[#D4AF37]/30 focus:border-[#D4AF37] outline-none"
-            />
-            <button onClick={sendMessage} className="px-4 py-2 bg-[#D4AF37] text-black rounded-lg">
-              <Send size={18} />
-            </button>
-          </div>
-        </div>
+        ))}
+      </div>
+      <div className="relative">
+        <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleSend()} placeholder="Command Amanda..." className="w-full bg-zinc-900 border border-zinc-800 rounded-full py-4 px-6 focus:outline-none focus:border-emerald-500 transition-all text-sm" />
+        <button onClick={handleSend} className="absolute right-3 top-2.5 bg-emerald-600 hover:bg-emerald-500 p-2 rounded-full transition-colors">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+        </button>
       </div>
     </div>
   );
