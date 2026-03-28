@@ -6,3 +6,5 @@
 joblink360-mobile/
 *.backup
 *.sql
+.vercel
+.env*.local
