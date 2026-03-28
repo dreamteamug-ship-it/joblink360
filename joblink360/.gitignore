@@ -1,10 +1,21 @@
 ﻿node_modules
 .next
 .vercel
-*.dll
-../joblink360-mobile/
-joblink360-mobile/
-*.backup
-*.sql
-.vercel
+.env
+.env.local
+.env.production
 .env*.local
+
+# Mobile project (already isolated)
+joblink360-mobile
+joblink360-app
+**/expo/
+**/.expo
+**/android/
+**/ios/
+
+# Build artifacts
+dist
+build
+coverage
+*.log
