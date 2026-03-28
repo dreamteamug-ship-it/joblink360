@@ -55,3 +55,6 @@ export default function EnergyDashboard() {
     </div>
   );
 }
+
+export const dynamic = 'force-dynamic';
+

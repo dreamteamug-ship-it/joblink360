@@ -82,3 +82,6 @@ export default function EVPlantTracker() {
     </div>
   );
 }
+
+export const dynamic = 'force-dynamic';
+

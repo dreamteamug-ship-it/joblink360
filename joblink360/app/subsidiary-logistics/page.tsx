@@ -48,3 +48,6 @@ export default function LogisticsDashboard() {
     </div>
   );
 }
+
+export const revalidate = 0;
+

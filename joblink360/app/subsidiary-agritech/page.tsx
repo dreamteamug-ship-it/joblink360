@@ -79,3 +79,6 @@ export default function AgritechForecaster() {
     </div>
   );
 }
+
+export const dynamic = 'force-dynamic';
+

@@ -58,3 +58,6 @@ export default function JobLinkCore() {
     </div>
   );
 }
+
+export const dynamic = 'force-dynamic';
+

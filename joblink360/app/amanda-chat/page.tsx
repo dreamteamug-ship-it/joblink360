@@ -120,3 +120,6 @@ export default function SovereignReport() {
     </div>
   );
 }
+
+export const dynamic = 'force-dynamic';
+
