@@ -1,12 +1,10 @@
-{
-  "crons": [
-    {
-      "path": "/api/executive/dispatch-briefing?type=morning",
-      "schedule": "0 5 * * *" 
-    },
-    {
-      "path": "/api/executive/dispatch-briefing?type=evening",
-      "schedule": "0 17 * * *"
-    }
+﻿{
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "ignore": [
+    "../joblink360-mobile/**",
+    "joblink360-mobile/**",
+    "**/*.dll",
+    "**/*.sql"
   ]
 }

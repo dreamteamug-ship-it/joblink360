@@ -1,2 +1,8 @@
+﻿node_modules
+.next
 .vercel
-.env*.local
+*.dll
+../joblink360-mobile/
+joblink360-mobile/
+*.backup
+*.sql
