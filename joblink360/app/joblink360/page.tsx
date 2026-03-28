@@ -1,63 +1,55 @@
 ﻿'use client';
-import { useState } from 'react';
 
-export default function JobLinkCore() {
-  const [scoring, setScoring] = useState<string | null>(null);
-
-  const runAIScore = async () => {
-    setScoring("Analyzing...");
-    const res = await fetch('/api/score-candidate', {
-      method: 'POST',
-      body: JSON.stringify({ 
-        candidateData: "5 years experience in center-pivot irrigation systems, Nairobi based.",
-        jobRequirements: "Irrigation Engineer for Abim District rollout." 
-      })
-    });
-    const data = await res.json();
-    setScoring(data.analysis);
-  };
-
+export default function JobLinksAfrica() {
   return (
     <div className="min-h-screen bg-black text-zinc-100 p-8 font-sans">
-      <header className="mb-12 border-b border-zinc-800 pb-6 flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-black uppercase tracking-widest text-emerald-500">JobLink 360</h1>
-          <p className="text-xs text-zinc-500 font-mono mt-1 uppercase">Talent Subsidiary // AI Scoring Active</p>
-        </div>
-        <button onClick={runAIScore} className="bg-emerald-600 px-6 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-500 transition-all">
-          Trigger Global AI Audit
-        </button>
-      </header>
+      <div className="max-w-5xl mx-auto">
+        <header className="mb-12 border-b border-emerald-500 pb-6">
+          <div className="flex justify-between items-end">
+            <div>
+              <span className="text-emerald-500 text-sm font-bold tracking-widest">DELITE PRODUCTIONS</span>
+              <h1 className="text-4xl font-black tracking-tighter">JobLinks Africa</h1>
+              <p className="text-zinc-500">Talent Acquisition • AI Scoring • Sovereign Workforce Platform</p>
+            </div>
+            <div className="text-right">
+              <span className="text-emerald-400 text-sm">9th Company under DreamTeam Consulting</span>
+            </div>
+          </div>
+        </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 space-y-4">
-          <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-600 mb-6">Candidate Pipeline</h2>
-          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-sm">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm font-bold uppercase">Lead Irrigation Specialist</p>
-                <p className="text-xs text-zinc-500 mt-1">Status: Applied via Titanium Portal</p>
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="bg-zinc-900 border border-emerald-500/30 p-8 rounded-3xl">
+            <h3 className="text-xl font-semibold mb-6">Live Talent Pipeline</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-4 bg-zinc-800 rounded-2xl">
+                <div>
+                  <p className="font-medium">Irrigation Engineer – Abim Rollout</p>
+                  <p className="text-xs text-emerald-400">AI Score: 94%</p>
+                </div>
+                <button className="bg-emerald-600 text-white px-5 py-2 rounded-full text-sm">Review</button>
               </div>
-              <div className="text-right">
-                <p className="text-[10px] text-zinc-500 uppercase">AI Sovereign Score</p>
-                <p className="text-xl font-mono text-emerald-500">{scoring || '--'}</p>
+              <div className="flex justify-between items-center p-4 bg-zinc-800 rounded-2xl">
+                <div>
+                  <p className="font-medium">EV Assembly Technician – Naivasha</p>
+                  <p className="text-xs text-emerald-400">AI Score: 87%</p>
+                </div>
+                <button className="bg-emerald-600 text-white px-5 py-2 rounded-full text-sm">Review</button>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-zinc-900/30 border border-zinc-800 p-6">
-          <h3 className="text-xs font-bold uppercase mb-4 text-zinc-500">Subsidiary Health</h3>
-          <div className="space-y-3 font-mono text-[10px]">
-            <div className="flex justify-between border-b border-zinc-800 pb-2"><span>Agri-Talent:</span> <span className="text-emerald-500">92% Match</span></div>
-            <div className="flex justify-between border-b border-zinc-800 pb-2"><span>EV-Talent:</span> <span className="text-blue-500">45% Match</span></div>
-            <div className="flex justify-between"><span>Logistics:</span> <span className="text-zinc-500">Idle</span></div>
+          <div className="bg-zinc-900 border border-zinc-700 p-8 rounded-3xl">
+            <h3 className="text-xl font-semibold mb-4">Delite Productions Mandate</h3>
+            <p className="text-zinc-400 leading-relaxed">
+              As the official talent arm of DreamTeam Consulting, JobLinks Africa sources, vets, and deploys high-caliber professionals across all 9 sovereign subsidiaries.
+            </p>
+            <div className="mt-8 text-xs uppercase tracking-widest text-emerald-400">
+              Currently powering recruitment for:<br/>
+              Naivasha EV • Abim Agritech • Altovex Logistics • Digital Den
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-export const dynamic = 'force-dynamic';
-
