@@ -60,3 +60,4 @@ export default function AgritechHub() {
     </div>
   );
 }
+export const dynamic = 'force-dynamic';

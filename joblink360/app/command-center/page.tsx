@@ -64,3 +64,4 @@ export default function SovereignCommand() {
     </div>
   );
 }
+export const dynamic = 'force-dynamic';
