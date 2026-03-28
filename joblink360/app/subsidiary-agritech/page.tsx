@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState, useEffect } from 'react';
 
 export default function AgritechHub() {
@@ -10,6 +10,10 @@ export default function AgritechHub() {
       .then(res => res.json())
       .then(data => {
         setLogic(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
         setLoading(false);
       });
   }, []);
@@ -31,33 +35,32 @@ export default function AgritechHub() {
         <div className="bg-zinc-900/50 p-6 border border-zinc-800">
           <p className="text-[10px] text-zinc-500 uppercase">Target Market</p>
           <p className="text-xl font-bold text-white">Rice Deficit (KE)</p>
-          <p className="text-[9px] text-zinc-600 mt-2 italic">Landed Cost: {loading ? '...' : 'KSh ' + logic?.metrics?.landed_cost + '/kg'}</p>
+          <p className="text-[9px] text-zinc-600 mt-2 italic">
+            Landed Cost: {loading ? '...' : 'KSh ' + (logic?.metrics?.landed_cost || '—') + '/kg'}
+          </p>
         </div>
-        
+
         <div className="bg-emerald-950/20 p-6 border border-emerald-500/30">
           <p className="text-[10px] text-emerald-500 uppercase font-bold">Projected Margin</p>
-          <p className="text-3xl font-black text-white">{loading ? '...' : logic?.metrics?.potential_margin_percent}</p>
-          <div className="mt-2 flex items-center gap-2">
-            <div className={w-2 h-2 rounded-full }></div>
-            <p className="text-[9px] uppercase tracking-tighter">{logic?.metrics?.status}</p>
-          </div>
+          <p className="text-3xl font-black text-white">
+            {loading ? '...' : logic?.metrics?.potential_margin_percent || '—'}
+          </p>
         </div>
 
         <div className="bg-zinc-900/50 p-6 border border-zinc-800">
           <p className="text-[10px] text-zinc-500 uppercase">Logistics Hub</p>
           <p className="text-xl font-bold text-white">Katito / Ahero</p>
-          <p className="text-[9px] text-zinc-600 mt-2 italic">Route: A104 Northern Corridor</p>
         </div>
       </div>
 
       <section className="bg-zinc-900/20 border border-zinc-800 p-8 rounded-sm">
         <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-600 mb-6">Market Intelligence Brief</h2>
-        <p className="text-sm leading-relaxed text-zinc-400 max-w-2xl">
-          {logic?.summary}: The price arbitrage between Abim production and Nyanza retail remains stable. 
-          Current strategy focuses on high-yield WITA 9 varieties to maximize the {logic?.metrics?.potential_margin_percent} margin.
+        <p className="text-sm leading-relaxed text-zinc-400">
+          {logic?.summary || 'Loading corridor analysis...'}: The price arbitrage between Abim production and Nyanza retail remains stable.
         </p>
       </section>
     </div>
   );
 }
+
 export const dynamic = 'force-dynamic';
